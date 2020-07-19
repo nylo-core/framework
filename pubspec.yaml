@@ -4,17 +4,22 @@ version: 0.0.1
 author:
 homepage:
 
+# Call the endpoints file to generate the models, service
+#
+# flutter_secure_storage for saving to shared preference
+#
+# wip
+
 environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   http: ^0.12.1
-  shared_preferences: ^0.5.6+3
   url_launcher: ^5.4.2
   dynamic_theme: ^1.0.0
   intl: ^0.16.1
   google_fonts: ^1.1.0
-  lottie: ^0.3.3
+  flutter_secure_storage: ^3.3.3
   flutter:
     sdk: flutter
   flutter_localizations:
