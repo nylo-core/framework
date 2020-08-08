@@ -1,25 +1,27 @@
 name: nylo_framework
-description: A new Flutter package.
+description: Flutter bootstrap for developers. Build something amazing with Nylo, provides an elegant way to create apps without breaking a sweat.
 version: 0.0.1
-author:
-homepage:
-
-# Call the endpoints file to generate the models, service
-#
-# flutter_secure_storage for saving to shared preference
-#
-# wip
+author: Anthony Gordon
+homepage: https://nylo.dev
+repository: https://github.com/nylo-core/framework
+issue_tracker: https://github.com/nylo-core/framework/issues
+documentation: https://github.com/nylo-core/framework
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
-  http: ^0.12.1
-  url_launcher: ^5.4.2
+  http: ^0.12.2
+  json_to_dart: ^1.0.4
+  auto_json_to_dart_converter: ^1.0.1
+  url_launcher: ^5.5.0
   dynamic_theme: ^1.0.0
   intl: ^0.16.1
+  process_run: ^0.10.10+2
+  sailor: ^0.7.1
   google_fonts: ^1.1.0
   flutter_secure_storage: ^3.3.3
+  flutter_dotenv: ^2.1.0
   flutter:
     sdk: flutter
   flutter_localizations:

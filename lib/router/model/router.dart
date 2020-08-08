@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:nylo_framework/router/router.dart';
 
 class AppRoute {
   String path = "";
@@ -15,6 +16,10 @@ class AppRoute {
         this.name,
         this.middleware,
         this.isInitialRoute});
+
+  AppRoute.prefix(prefix, Router router, {List<AppRoute> routes}) {
+    router.addRoutes(routes: routes);
+  }
 
   AppRoute setPath(String path) {
     this.path = "";

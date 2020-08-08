@@ -4,6 +4,8 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:nylo_framework/localization/app_localization.dart';
 
 class AppBuildSettings<T> {
   Locale locale;
@@ -16,21 +18,17 @@ class AppBuildSettings<T> {
   AppBuildSettings({this.defaultBrightness, this.debugMode = false, this.themeData, this.locale, this.title = "", this.supportedLocales});
 }
 
-Future<void> initMain({List<DeviceOrientation> preferredOrientations, Future<void> didFinishInit}) async {
-await SystemChrome.setPreferredOrientations(preferredOrientations);
-
-return await didFinishInit;
-}
-
 // ignore: must_be_immutable
 class AppBuild extends StatelessWidget {
   final String initialRoute;
    AppBuildSettings appBuildSettings;
+  Brightness defaultBrightness;
+  ThemeData themeData;
 
   final Route<dynamic> Function(RouteSettings settings) onGenerateRoute;
-  Brightness defaultBrightness;
+//  Brightness defaultBrightness;
 
-  AppBuild({Key key, this.initialRoute, this.appBuildSettings, this.defaultBrightness, this.onGenerateRoute}) : super(key: key);
+  AppBuild({Key key, this.initialRoute, this.appBuildSettings, this.defaultBrightness, this.themeData, this.onGenerateRoute}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,11 +45,11 @@ class AppBuild extends StatelessWidget {
             onGenerateRoute: this.onGenerateRoute,
             theme: theme,
             supportedLocales: appBuildSettings.supportedLocales ?? [],
-//            localizationsDelegates: [
-//              AppLocalizations.delegate,
-//              GlobalWidgetsLocalizations.delegate,
-//              GlobalMaterialLocalizations.delegate
-//            ],
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate
+            ],
             localeResolutionCallback:
                 (Locale locale, Iterable<Locale> supportedLocales) {
               return locale;
