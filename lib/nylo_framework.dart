@@ -1,50 +1,98 @@
 library nylo_framework;
 
 import 'package:dynamic_theme/dynamic_theme.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:nylo_framework/localization/app_localization.dart';
 
-class AppBuildSettings<T> {
-  Locale locale;
-  String title;
-  Iterable<Locale> supportedLocales;
-  Brightness defaultBrightness;
-  ThemeData themeData;
-  bool debugMode;
-
-  AppBuildSettings({this.defaultBrightness, this.debugMode = false, this.themeData, this.locale, this.title = "", this.supportedLocales});
+Future initNylo() async {
+  await DotEnv().load('.env');
 }
+
+const String nyloVersion = "1.0.0";
 
 // ignore: must_be_immutable
 class AppBuild extends StatelessWidget {
   final String initialRoute;
-   AppBuildSettings appBuildSettings;
   Brightness defaultBrightness;
   ThemeData themeData;
+  ThemeData darkTheme;
+  Locale locale;
+  String title;
+  bool debugShowCheckedModeBanner;
+  bool debugShowMaterialGrid;
+  bool showPerformanceOverlay;
+  bool checkerboardRasterCacheImages;
+  bool checkerboardOffscreenLayers;
+  bool showSemanticsDebugger;
+  Map<LogicalKeySet, Intent> shortcuts;
+  Map<Type, Action<Intent>> actions;
+  List<Locale> supportedLocales;
+  ThemeMode themeMode;
+  Color color;
+  GenerateAppTitle onGenerateTitle;
+  TransitionBuilder builder;
+  List<NavigatorObserver> navigatorObservers;
+  RouteFactory onUnknownRoute;
+  InitialRouteListFactory onGenerateInitialRoutes;
+  GlobalKey<NavigatorState> navigatorKey;
 
   final Route<dynamic> Function(RouteSettings settings) onGenerateRoute;
 //  Brightness defaultBrightness;
 
-  AppBuild({Key key, this.initialRoute, this.appBuildSettings, this.defaultBrightness, this.themeData, this.onGenerateRoute}) : super(key: key);
+  AppBuild({Key key, this.initialRoute, this.title, this.defaultBrightness, this.locale, this.themeData, this.onGenerateRoute, this.navigatorKey,
+    this.onGenerateInitialRoutes,
+    this.onUnknownRoute,
+    this.navigatorObservers = const <NavigatorObserver>[],
+    this.builder,
+    this.onGenerateTitle,
+    this.color,
+    this.darkTheme,
+    this.themeMode = ThemeMode.system,
+    this.supportedLocales = const <Locale>[Locale('en', 'US')],
+    this.debugShowMaterialGrid = false,
+    this.showPerformanceOverlay = false,
+    this.checkerboardRasterCacheImages = false,
+    this.checkerboardOffscreenLayers = false,
+    this.showSemanticsDebugger = false,
+    this.debugShowCheckedModeBanner = true,
+    this.shortcuts,
+    this.actions,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return DynamicTheme(
-      defaultBrightness: appBuildSettings.defaultBrightness,
-      data: (brightness) => appBuildSettings.themeData,
+      defaultBrightness: Brightness.light,
+      data: (brightness) => themeData,
       themedWidgetBuilder: (context, theme) {
         return ValueListenableBuilder(
-          valueListenable: ValueNotifier(appBuildSettings.locale),
-          builder: (context, Locale value, _) => MaterialApp(
-            title: appBuildSettings.title,
-            debugShowCheckedModeBanner: false,
+          valueListenable: ValueNotifier(locale),
+          builder: (context, Locale locale, _) => MaterialApp(
+            navigatorKey:navigatorKey,
+            themeMode:themeMode,
+            onGenerateTitle:onGenerateTitle,
+            onGenerateInitialRoutes:onGenerateInitialRoutes,
+            onUnknownRoute:onUnknownRoute,
+            builder:builder,
+            navigatorObservers:navigatorObservers,
+            color:color,
+            supportedLocales:supportedLocales,
+            debugShowMaterialGrid:debugShowMaterialGrid,
+            showPerformanceOverlay:showPerformanceOverlay,
+            checkerboardRasterCacheImages:checkerboardRasterCacheImages,
+            checkerboardOffscreenLayers:checkerboardOffscreenLayers,
+            showSemanticsDebugger:showSemanticsDebugger,
+            debugShowCheckedModeBanner:debugShowCheckedModeBanner,
+            shortcuts:shortcuts,
+            actions: actions,
+            title: title ?? "",
+            darkTheme: darkTheme,
             initialRoute: initialRoute,
             onGenerateRoute: this.onGenerateRoute,
+            locale: locale,
             theme: theme,
-            supportedLocales: appBuildSettings.supportedLocales ?? [],
             localizationsDelegates: [
               AppLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,

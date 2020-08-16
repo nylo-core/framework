@@ -1,13 +1,14 @@
 
 
 String controllerStub({String controllerName}) => '''
-import 'controller.dart';
-import 'package:nylo_framework/view/ny_view.dart';
-import 'package:flutter/widgets.dart';
+import 'package:nylo_framework/metro/controllers/controller.dart';
+import 'package:flutter/material.dart';
 
-class $controllerName extends Controller {
-  $controllerName();
-
+class ${controllerName}Controller extends Controller {
+  
+  ${controllerName}Controller.of(BuildContext context) {
+    super.context = context;
+  }
 
 } 
 ''';

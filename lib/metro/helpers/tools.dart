@@ -1,4 +1,3 @@
-
 import 'dart:developer';
 
 String capitalize(String input) {

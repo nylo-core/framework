@@ -84,6 +84,36 @@ class NyApiRequest {
     return str;
   }
 
+  String getBaseUrl() {
+    RegExp regExp = new RegExp(
+      r"(http[s]?:\/\/)?([^\/\s]+)(.*)",
+      caseSensitive: false,
+      multiLine: false,
+    );
+
+    return regExp.firstMatch(this.url).group(2);
+  }
+
+  String getUrlPath() {
+    RegExp regExp = new RegExp(
+      r"(http[s]?:\/\/)?([^\/\s]+\/)(.*)",
+      caseSensitive: false,
+      multiLine: false,
+    );
+
+    return regExp.firstMatch(this.url).group(3);
+  }
+
+  String getProtocol() {
+    RegExp regExp = new RegExp(
+      r"^[^:]+(?=:\/\/)",
+      caseSensitive: false,
+      multiLine: false,
+    );
+
+    return regExp.stringMatch(this.url).toString();
+  }
+
 }
 
 class Headers {

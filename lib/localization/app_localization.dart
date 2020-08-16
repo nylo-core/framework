@@ -1,19 +1,8 @@
-//  Label StoreMAX
-//
-//  Created by Anthony Gordon.
-//  Copyright © 2019 WooSignal. All rights reserved.
-//
-
-//  Unless required by applicable law or agreed to in writing, software
-//  distributed under the License is distributed on an "AS IS" BASIS,
-//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
-import 'package:nylo_framework/config/config_manager.dart';
 
 class AppLocalizations {
   Locale locale;
@@ -30,8 +19,10 @@ class AppLocalizations {
   Map<String, String> _localizedStrings;
 
   Future load() async {
+
     String jsonString =
-    await rootBundle.loadString('../lang/${locale.languageCode}.json');
+    await rootBundle.loadString('lang/${locale.languageCode}.json');
+
     Map<String, dynamic> jsonMap = json.decode(jsonString);
 
     _localizedStrings = jsonMap.map((k, v) {
@@ -46,12 +37,12 @@ class AppLocalizations {
 
 class _AppLocalizationsDelegate
     extends LocalizationsDelegate<AppLocalizations> {
+
   const _AppLocalizationsDelegate();
 
   @override
-  bool isSupported(Locale locale) => NyConfigManager.instance.nyConfig
-      .supportedLocales
-      .map((e) => e.languageCode)
+  bool isSupported(Locale locale) =>
+      ["aa","ab","af","ak","sq","am","ar","an","hy","as","av","ae","ay","az","ba","bm","eu","be","bn","bh","bi","bs","br","bg","my","ca","ch","ce","zh","cu","cv","kw","co","cr","cs","da","dv","nl","dz","en","eo","et","ee","fo","fj","fi","fr","fy","ff","ka","de","gd","ga","gl","gv","el","gn","gu","ht","ha","he","hz","hi","ho","hr","hu","ig","is","io","ii","iu","ie","ia","id","ik","it","jv","ja","kl","kn","ks","kr","kk","km","ki","rw","ky","kv","kg","ko","kj","ku","lo","la","lv","li","ln","lt","lb","lu","lg","mk","mh","ml","mi","mr","ms","mg","mt","mn","na","nv","nr","nd","ng","ne","nn","nb","no","ny","oc","oj","or","om","os","pa","fa","pi","pl","pt","ps","qu","rm","ro","rn","ru","sg","sa","si","sk","sl","se","sm","sn","sd","so","st","es","sc","sr","ss","su","sw","sv","ty","ta","tt","te","tg","tl","th","bo","ti","to","tn","ts","tk","tr","tw","ug","uk","ur","uz","ve","vi","vo","cy","wa","wo","xh","yi","yo","za","zu"]
       .contains(locale.languageCode);
 
   @override
@@ -67,7 +58,22 @@ class _AppLocalizationsDelegate
 String trans(BuildContext context, String key) =>
     AppLocalizations.of(context).trans(key);
 
-reloadLocale(BuildContext context, Locale locale) {
+reloadLocale(BuildContext context, Locale locale) async {
   AppLocalizations.of(context).locale = locale;
-  AppLocalizations.of(context).load();
+  await AppLocalizations.of(context).load();
+}
+
+
+class AppLocale {
+
+  Locale locale = Locale("en");
+
+  AppLocale._privateConstructor();
+  static final AppLocale instance = AppLocale._privateConstructor();
+
+  updateLocale(BuildContext context, Locale locale) {
+    this.locale = locale;
+    reloadLocale(context, locale);
+  }
+
 }

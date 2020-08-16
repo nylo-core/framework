@@ -1,107 +1,44 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:nylo_framework/middleware/register.dart';
-import 'package:nylo_framework/router/model/router.dart';
+import 'package:flutter/widgets.dart';
+import 'package:sailor/sailor.dart';
 
-class Router {
-  List<AppRoute> routes = [];
+class NyRouter extends Sailor {
 
-  Router();
+  SailorRouteBuilder builder;
 
-  Router addRoute(AppRoute route) {
-    this.routes.add(route);
-    return this;
-  }
-
-  Router addRoutes({@required List<AppRoute> routes}) {
-    this.routes.addAll(routes);
-    return this;
-  }
-
-  Map<String, WidgetBuilder> buildRoutes(BuildContext context) {
-    Map<String, WidgetBuilder> map = {};
-    this.routes.forEach((r) {
-      map.addAll({r.path: (context) => r.doAction()});
-    });
-    return map;
-  }
-
-  Route<dynamic> buildAppRoutes(RouteSettings settings) {
-    AppRoute appRoute = this.routes.firstWhere((r) => r.path == settings.name);
-
-    return MaterialPageRoute(
-      settings: settings,
-      builder: (context) {
-        if (appRoute.middleware != null) {
-          for (final el in appRoute.middleware
-              .where((element) => element != null)
-              .toList()) {
-            AppRoute routeMiddle =
-            register()[el].handle(context, settings.arguments);
-            if (routeMiddle != null) {
-              return routeMiddle.doAction(settings: settings);
-            }
-          }
-        }
-        if (settings.arguments != null) {
-          return appRoute.doAction(settings: settings);
-        } else {
-          return appRoute.doAction();
-        }
-      },
-    );
-  }
-
-  String getInitialRoute() {
-    if (this
-        .routes
-        .firstWhere((e) => e.isInitialRoute == true, orElse: () => null) !=
-        null) {
-      return this
-          .routes
-          .firstWhere((e) => e.isInitialRoute == true, orElse: () => null)
-          .path;
-    }
-    return "/";
-  }
-
-  getRouteNamed(String routeName) {
-    return this.routes.firstWhere((e) => e.name == routeName);
-  }
-
-  pushTo(BuildContext context,
-      {@required String routeName,
-        Object arguments,
-        bool forgetAll = false,
-        int forgetLast}) {
-    AppRoute route = this
-        .routes
-        .firstWhere((element) => element.name == routeName, orElse: () => null);
-
-    if (forgetAll) {
-      Navigator.of(context).pushNamedAndRemoveUntil(
-          routeName, (Route<dynamic> route) => false,
-          arguments: arguments ?? null);
-    }
-    if (forgetLast != null) {
-      int count = 0;
-      Navigator.of(context).popUntil((route) {
-        return count++ == forgetLast;
-      });
-    }
-    Navigator.of(context).pushNamed(route.path, arguments: arguments ?? null);
-  }
+  NyRouter({
+    options = const SailorOptions(isLoggingEnabled: false),
+  })  : super(
+    options:options,
+  );
 }
 
-Router buildRoutes(Function(Router) router) {
-  Router initRouter = Router();
-  return router(initRouter);
+class NyRoute extends SailorRoute {
+  NyRoute({
+    @required name,
+    @required builder,
+    defaultArgs,
+    defaultTransitions,
+    defaultTransitionDuration,
+    defaultTransitionCurve,
+    params,
+    customTransition,
+    routeGuards,
+}) : super(
+  name: name,
+  builder: builder,
+  defaultArgs: defaultArgs,
+  defaultTransitions: defaultTransitions,
+  defaultTransitionDuration: defaultTransitionDuration,
+  defaultTransitionCurve: defaultTransitionCurve,
+  params: params,
+  customTransition: customTransition,
+  routeGuards:routeGuards,
+);
 }
 
-Router routes(RouteCallback router) {
-  Router routers = new Router();
-  List<AppRoute> routes = router(routers);
-  return routers.addRoutes(routes: routes);
+NyRouter nyCreateRoutes(Function(NyRouter router) build) {
+  NyRouter nyRouter = NyRouter();
+  build(nyRouter);
+  return nyRouter;
 }
 
-typedef RouteCallback = List<AppRoute> Function(Router router);

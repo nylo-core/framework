@@ -1,6 +1,6 @@
 
 String pageStub({String pageName}) => '''
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter/widgets.dart';
 
 class ${pageName}Page extends StatefulWidget {

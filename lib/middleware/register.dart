@@ -1,4 +1,0 @@
-
-Map<String, dynamic> register() => {
-
-};

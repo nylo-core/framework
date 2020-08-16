@@ -1,15 +1,14 @@
 
 import 'package:nylo_framework/metro/helpers/tools.dart';
 
-String pageWithInterfaceStub({String className, String importName}) => '''
+String pageWithControllerStub({String className, String importName}) => '''
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import '../../app/interface/${importName.toLowerCase()}_page_interface.dart';
+import '../../app/controllers/${importName.toLowerCase()}_controller.dart';
 
 class ${capitalize(className)}Page extends StatefulWidget {
-  final ${capitalize(className)}PageInterface interface;
+  final ${capitalize(className)}Controller controller;
   
-  ${capitalize(className)}Page({Key key, this.interface}) : super(key: key);
+  ${capitalize(className)}Page({Key key, this.controller}) : super(key: key);
   
   @override
   _${capitalize(className)}PageState createState() => _${capitalize(className)}PageState();
