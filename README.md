@@ -1,14 +1,44 @@
-# nylo_framework
+![Nylo Banner](https://woosignal.com/images/nylo.png)
 
-A new Flutter package.
+<p align="center">
+  <a href="/"><img src="https://img.shields.io/github/v/release/woosignal/flutter-woocommerce-app?style=plastic" alt="Latest Release Version"></a>
+  <a href="/"><img src="https://img.shields.io/github/license/woosignal/flutter-woocommerce-app?style=plastic" alt="Latest Stable Version"></a>
+  <a href="/"><img alt="GitHub stars" src="https://img.shields.io/github/stars/woosignal/flutter-woocommerce-app?style=plastic"></a>
+</p>
 
-## Getting Started
+## Nylo Framework
 
-This project is a starting point for a Dart
-[package](https://flutter.dev/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
+Nylo is a micro-framework for Flutter which is designed to help simplify developing apps. Every project provides a simple bolierplate and MVC pattern to help you build apps easier. 
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+This project is open source and MIT-licenced, we welcome any contributions. You can join as a backer/sponsor to fund future development for this project [here](https://nylo.dev)
+
+> **Note:** If you want to build an application using Nylo, please visit the main [Nylo repository](https://github.com/nylo-core/nylo). This repository contains the code for the framework Nylo uses.
+
+---
+
+## Features
+Some core features available 
+* Auto generate models from API urls
+* Cli for generating new files 
+* Router file to manage routes 
+* Project stucture for widgets, assets, controllers + more
+
+## Documentation
+
+Visit the docs on [Nylo](https://nylo.dev/docs) to view our extensive and thorough documentation. 
+
+## Changelog
+Please see [CHANGELOG](https://nylo.dev/docs/1.x/changelog) for more information what has changed recently.
+
+## Social
+* [Twitter](https://twitter.com/nylo_dev)
+
+## Security
+If you discover any security related issues, please email support@nylo.dev instead of using the issue tracker.
+
+## Credits
+* [Anthony Gordon](https://github.com/agordn52)
+
+## Licence
+
+The MIT License (MIT). Please view the [License](https://github.com/nylo-core/nylo/blob/master/licence) File for more information.
