@@ -7,7 +7,7 @@ class BaseApi {
   BaseApi();
 
   debugHttpLogger(Response response) async {
-    bool debug = getEnv("APP_DEBUG") == 'true' ? true : false;
+    bool debug = getEnv("APP_DEBUG");
 
     if (debug) {
       NyLogger()

@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
-class Controller {
+abstract class BaseController {
   BuildContext context;
 
-  Controller({this.context});
+  BaseController({this.context});
 }
