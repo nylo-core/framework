@@ -1,16 +1,16 @@
 ![Nylo Banner](https://woosignal.com/images/nylo.png)
 
 <p align="center">
-  <a href="/"><img src="https://img.shields.io/github/v/release/woosignal/flutter-woocommerce-app?style=plastic" alt="Latest Release Version"></a>
-  <a href="/"><img src="https://img.shields.io/github/license/woosignal/flutter-woocommerce-app?style=plastic" alt="Latest Stable Version"></a>
-  <a href="/"><img alt="GitHub stars" src="https://img.shields.io/github/stars/woosignal/flutter-woocommerce-app?style=plastic"></a>
+  <a href="/"><img src="https://img.shields.io/github/v/release/nylo-core/framework?style=plastic" alt="Latest Release Version"></a>
+  <a href="/"><img src="https://img.shields.io/github/license/nylo-core/framework?style=plastic" alt="Latest Stable Version"></a>
+  <a href="/"><img alt="GitHub stars" src="https://img.shields.io/github/stars/nylo-core/framework?style=plastic"></a>
 </p>
 
 ## Nylo Framework
 
-Nylo is a micro-framework for Flutter which is designed to help simplify developing apps. Every project provides a simple bolierplate and MVC pattern to help you build apps easier. 
+Nylo is a micro-framework for Flutter which is designed to help simplify app development. Every project provides a simple bolierplate and MVC pattern to help you build apps easier. 
 
-This project is open source and MIT-licenced, we welcome any contributions. You can join as a backer/sponsor to fund future development for this project [here](https://nylo.dev)
+This project is open source and MIT-licenced, we welcome any contributions. You can join as a backer/sponsor to fund future development for this project [here](https://nylo.dev/contributions)
 
 > **Note:** If you want to build an application using Nylo, please visit the main [Nylo repository](https://github.com/nylo-core/nylo). This repository contains the code for the framework Nylo uses.
 
@@ -28,7 +28,7 @@ Some core features available
 Visit the docs on [Nylo](https://nylo.dev/docs) to view our extensive and thorough documentation. 
 
 ## Changelog
-Please see [CHANGELOG](https://nylo.dev/docs/1.x/changelog) for more information what has changed recently.
+Please see [CHANGELOG](https://github.com/nylo-core/framework/blob/master/CHANGELOG.md) for more information what has changed recently.
 
 ## Social
 * [Twitter](https://twitter.com/nylo_dev)
