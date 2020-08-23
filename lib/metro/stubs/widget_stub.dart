@@ -1,7 +1,6 @@
 
 String widgetStub(String widgetName) => '''
-import 'package:flutter/widgets.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 class ${widgetName}Widget extends StatefulWidget {
   @override

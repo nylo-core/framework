@@ -2,12 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-String getEnv(String key) {
-  return DotEnv().env[key];
+dynamic getEnv(String key) {
+  String value = DotEnv().env[key];
+
+  if (value == null) {
+    return null;
+  }
+
+  if (value.toLowerCase() == 'true') {
+    return true;
+  }
+
+  if (value.toLowerCase() == 'false') {
+    return false;
+  }
+
+  return value;
 }
 
 String getImageAsset(String imageName) {
   return "${getEnv("ASSET_PATH_IMAGES")}/$imageName";
+}
+
+String getPublicAsset(String asset) {
+  return "${getEnv("ASSET_PATH_PUBLIC")}/$asset";
 }
 
 TextTheme getAppTextTheme(TextStyle appThemeFont, TextTheme textTheme) {

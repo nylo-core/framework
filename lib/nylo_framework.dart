@@ -40,7 +40,6 @@ class AppBuild extends StatelessWidget {
   GlobalKey<NavigatorState> navigatorKey;
 
   final Route<dynamic> Function(RouteSettings settings) onGenerateRoute;
-//  Brightness defaultBrightness;
 
   AppBuild({Key key, this.initialRoute, this.title, this.defaultBrightness, this.locale, this.themeData, this.onGenerateRoute, this.navigatorKey,
     this.onGenerateInitialRoutes,
