@@ -1,4 +1,3 @@
-
 String widgetStub(String widgetName) => '''
 import 'package:flutter/material.dart';
 

@@ -1,8 +1,8 @@
-
 String pageStub({String pageName}) => '''
 import 'package:flutter/material.dart';
+import 'package:nylo_framework/widgets/stateful_page_widget.dart';
 
-class ${pageName}Page extends StatefulWidget {
+class ${pageName}Page extends StatefulPageWidget {
   
   ${pageName}Page({Key key}) : super(key: key);
   
