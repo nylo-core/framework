@@ -2,13 +2,10 @@ library metro;
 
 import 'dart:convert';
 import 'package:flutter_launcher_icons/main.dart' as launcherIcons;
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart' as http show Response;
 import 'package:args/args.dart';
 import 'package:json_to_dart/json_to_dart.dart';
-
-import 'package:nylo_framework/metro/constants/arg_flags.dart';
-import 'package:nylo_framework/metro/constants/folders.dart';
-
+import 'package:nylo_framework/metro/constants/strings.dart';
 import 'package:nylo_framework/metro/models/ny_api_request.dart';
 import 'package:nylo_framework/metro/networking/api_request_networking.dart';
 import 'package:nylo_framework/metro/stubs/api_request_stub.dart';
@@ -18,38 +15,48 @@ import 'package:nylo_framework/metro/stubs/model_stub.dart';
 import 'package:nylo_framework/metro/stubs/page_stub.dart';
 import 'package:nylo_framework/metro/stubs/page_w_controller_stub.dart';
 import 'package:nylo_framework/metro/stubs/widget_stub.dart';
-
-import 'helpers/tools.dart';
 import 'models/ny_command.dart';
 import 'dart:io';
 
+List<NyCommand> _allProjectCommands = [
+  NyCommand(name: "init", options: 1, arguments: ["-h"], action: _projectInit),
+];
+
 List<NyCommand> _allMakeCommands = [
-  NyCommand(name: "controller", options: 1, arguments: ["-h", "-f"], action: _makeController),
-  NyCommand(name: "model", options: 1, arguments: ["-h"], action: _makeModel),
-  NyCommand(name: "page", options: 1, arguments: ["-h"], action: _makePage),
-  NyCommand(name: "widget", options: 1, arguments: ["-h"], action: _makeWidget),
+  NyCommand(
+      name: "controller",
+      options: 1,
+      arguments: ["-h", "-f"],
+      action: _makeController),
+  NyCommand(
+      name: "model", options: 1, arguments: ["-h", "-f"], action: _makeModel),
+  NyCommand(
+      name: "page", options: 1, arguments: ["-h", "-f"], action: _makePage),
+  NyCommand(
+      name: "widget", options: 1, arguments: ["-h", "-f"], action: _makeWidget),
 ];
 
 List<NyCommand> _allApiSpecCommands = [
-  NyCommand(name: "build", options: 1, arguments: ["-h"], action: _apiSpecBuild),
+  NyCommand(
+      name: "build", options: 1, arguments: ["-h"], action: _apiSpecBuild),
 ];
 
 List<NyCommand> _allAppIconsCommands = [
-  NyCommand(name: "build", options: 1, arguments: ["-h"], action: _makeAppIcons),
+  NyCommand(
+      name: "build", options: 1, arguments: ["-h"], action: _makeAppIcons),
 ];
 
 Future<void> commands(List<String> arguments) async {
-
   if (arguments.length == 0) {
     _handleMenu();
-    return;
+    exit(0);
   }
 
   List<String> argumentSplit = arguments[0].split(":");
 
-  if (argumentSplit.length == 0) {
+  if (argumentSplit.length == 0 || argumentSplit.length <= 1) {
     writeInBlack('Invalid arguments ' + arguments.toString());
-    return;
+    exit(2);
   }
 
   String type = argumentSplit[0];
@@ -57,21 +64,36 @@ Future<void> commands(List<String> arguments) async {
 
   NyCommand nyCommand;
   switch (type) {
-    case "make": {
-      nyCommand = _allMakeCommands.firstWhere((command) => command.name == action, orElse: () => null);
-      break;
-    }
-    case "apispec": {
-      nyCommand = _allApiSpecCommands.firstWhere((command) => command.name == action, orElse: () => null);
-      break;
-    }
-    case "appicons": {
-      nyCommand = _allAppIconsCommands.firstWhere((command) => command.name == action, orElse: () => null);
-      break;
-    }
-    default: {
-
-    }
+    case "project":
+      {
+        nyCommand = _allProjectCommands.firstWhere(
+            (command) => command.name == action,
+            orElse: () => null);
+        break;
+      }
+    case "make":
+      {
+        nyCommand = _allMakeCommands.firstWhere(
+            (command) => command.name == action,
+            orElse: () => null);
+        break;
+      }
+    case "apispec":
+      {
+        nyCommand = _allApiSpecCommands.firstWhere(
+            (command) => command.name == action,
+            orElse: () => null);
+        break;
+      }
+    case "appicons":
+      {
+        nyCommand = _allAppIconsCommands.firstWhere(
+            (command) => command.name == action,
+            orElse: () => null);
+        break;
+      }
+    default:
+      {}
   }
 
   if (nyCommand == null) {
@@ -84,7 +106,8 @@ Future<void> commands(List<String> arguments) async {
 }
 
 _handleMenu() {
-  writeInBlack('Metro - Nylo\'s Companion to Build Flutter apps by Anthony Gordon');
+  writeInBlack(
+      'Metro - Nylo\'s Companion to Build Flutter apps by Anthony Gordon');
   writeInBlack('Version: 1.0.0');
 
   writeInBlack('');
@@ -99,6 +122,13 @@ _handleMenu() {
   writeInBlack('');
 
   writeInBlack('All commands:');
+
+  writeInGreen(' project');
+  _allProjectCommands.forEach((command) {
+    writeInBlack('  project:' + command.name);
+  });
+
+  writeInBlack('');
 
   writeInGreen(' make');
   _allMakeCommands.forEach((command) {
@@ -118,13 +148,36 @@ _handleMenu() {
   _allApiSpecCommands.forEach((command) {
     writeInBlack('  apispec:' + command.name);
   });
+}
 
+_projectInit(List<String> arguments) async {
+  final ArgParser parser = ArgParser(allowTrailingOptions: true);
+
+  parser.addFlag(helpFlag,
+      abbr: 'h', help: 'Initializes the Nylo project', negatable: false);
+
+  final ArgResults argResults = parser.parse(arguments);
+
+  if (argResults[helpFlag]) {
+    writeInBlack('Help - Initializes the Nylo project');
+    writeInBlack(parser.usage);
+    exit(0);
+  }
+
+  final File envExample = File('.env-example');
+  final File env = File('.env');
+
+  await env.writeAsString(await envExample.readAsString());
+
+  writeInGreen('Project initialized, create something great 🎉');
+  exit(0);
 }
 
 _makeWidget(List<String> arguments) async {
   final ArgParser parser = ArgParser(allowTrailingOptions: true);
 
-  parser.addFlag(helpFlag, abbr: 'h', help: 'e.g. make:controller DashboardController', negatable: false);
+  parser.addFlag(helpFlag,
+      abbr: 'h', help: 'e.g. make:widget UserWidget', negatable: false);
 
   final ArgResults argResults = parser.parse(arguments);
 
@@ -133,12 +186,10 @@ _makeWidget(List<String> arguments) async {
     writeInBlack(parser.usage);
     exit(0);
   }
-
-  List<String> split = argResults.arguments.first.split("_");
-  List<String> map = split.map((e) => capitalize(e)).toList();
-  String newStr = map.join("");
-
-  String path = '$widgetFolder/${argResults.arguments.first}.dart';
+  String widgetName =
+      argResults.arguments.first.replaceAll(RegExp(r'(_?widget)'), "");
+  writeInBlack(widgetName);
+  String path = '$widgetFolder/${widgetName.toLowerCase()}_widget.dart';
 
   if (await File(path).exists()) {
     writeInRed(argResults.arguments.first + ' already exists');
@@ -147,7 +198,7 @@ _makeWidget(List<String> arguments) async {
 
   final File file = File(path);
 
-  await file.writeAsString(widgetStub(newStr));
+  await file.writeAsString(widgetStub(_parseToPascal(widgetName)));
 
   writeInGreen(argResults.arguments.first + ' created 🎉');
 
@@ -157,7 +208,10 @@ _makeWidget(List<String> arguments) async {
 _makeAppIcons(List<String> arguments) async {
   final ArgParser parser = ArgParser(allowTrailingOptions: true);
 
-  parser.addFlag(helpFlag, abbr: 'h', help: 'e.g. make:app_icons', negatable: false);
+  parser.addFlag(helpFlag,
+      abbr: 'h',
+      help: 'Generates your app icons in the project.',
+      negatable: false);
 
   final ArgResults argResults = parser.parse(arguments);
 
@@ -173,12 +227,17 @@ _makeAppIcons(List<String> arguments) async {
   exit(0);
 }
 
-
 _makeController(List<String> arguments) async {
   final ArgParser parser = ArgParser(allowTrailingOptions: true);
 
-  parser.addFlag(helpFlag, abbr: 'h', help: 'Used to make new controllers e.g. home_controller', negatable: false);
-  parser.addFlag(forceFlag, abbr: 'f', help: 'Creates a new controller even if it already exists.', negatable: false);
+  parser.addFlag(helpFlag,
+      abbr: 'h',
+      help: 'Used to make new controllers e.g. home_controller',
+      negatable: false);
+  parser.addFlag(forceFlag,
+      abbr: 'f',
+      help: 'Creates a new controller even if it already exists.',
+      negatable: false);
 
   final ArgResults argResults = parser.parse(arguments);
 
@@ -195,8 +254,9 @@ _makeController(List<String> arguments) async {
     exit(0);
   }
 
-  String firstArg = argResults.arguments.first;
-  String path = '$controllerFolder/$firstArg.dart';
+  String firstArg =
+      argResults.arguments.first.replaceAll(RegExp(r'(_?controller)'), "");
+  String path = '$controllerFolder/${firstArg.toLowerCase()}_controller.dart';
 
   if (await File(path).exists() && hasForceFlag == false) {
     writeInRed(firstArg + ' already exists');
@@ -213,23 +273,17 @@ _makeController(List<String> arguments) async {
   exit(0);
 }
 
-String _parseToPascal(name) {
-  List<String> split = name.split("_");
-  List<String> map = split.map((e) => capitalize(e)).toList();
-  return map.join("");
-}
-
-_writeToFilePath(path, strFile) async {
-  final File file = File(path);
-
-  await file.writeAsString(strFile);
-}
-
 _makeModel(List<String> arguments) async {
   final ArgParser parser = ArgParser(allowTrailingOptions: true);
 
-  parser.addFlag(helpFlag, abbr: 'h', help: 'Used to make new controllers e.g. home_controller', negatable: false);
-  parser.addFlag(forceFlag, abbr: 'f', help: 'Creates a new controller even if it already exists.', negatable: false);
+  parser.addFlag(helpFlag,
+      abbr: 'h',
+      help: 'Creates a new Model in your project.',
+      negatable: false);
+  parser.addFlag(forceFlag,
+      abbr: 'f',
+      help: 'Creates a new model even if it already exists.',
+      negatable: false);
 
   final ArgResults argResults = parser.parse(arguments);
 
@@ -247,7 +301,7 @@ _makeModel(List<String> arguments) async {
   }
 
   String firstArg = argResults.arguments.first;
-  String path = '$modelFolder/$firstArg.dart';
+  String path = '$modelFolder/${firstArg.toLowerCase()}.dart';
 
   if (await File(path).exists() && hasForceFlag == false) {
     writeInRed(firstArg + ' already exists');
@@ -269,10 +323,16 @@ _makeModel(List<String> arguments) async {
 _makePage(List<String> arguments) async {
   final ArgParser parser = ArgParser(allowTrailingOptions: true);
 
-  parser.addFlag(helpFlag, abbr: 'h', help: 'e.g. make:page Menu', negatable: false);
+  parser.addFlag(helpFlag,
+      abbr: 'h',
+      help: 'Creates a new page widget for your project.',
+      negatable: false);
 
   bool shouldCreateController = false;
-  parser.addFlag("controller", abbr: 'c', help: 'Creates a new page with a controller', negatable: false);
+  parser.addFlag(controllerFlag,
+      abbr: 'c',
+      help: 'Creates a new page with a controller',
+      negatable: false);
 
   final ArgResults argResults = parser.parse(arguments);
 
@@ -290,37 +350,37 @@ _makePage(List<String> arguments) async {
     exit(0);
   }
 
-  String optionName;
+  String className =
+      argResults.arguments.first.replaceAll(RegExp(r'(_?page)'), "");
 
-  optionName = capitalize(argResults.arguments.first.replaceAll("_page", ""));
-
-  List<String> split = optionName.split("_");
-  List<String> map = split.map((e) => capitalize(e)).toList();
-  String className = map.join("");
-
-  String pathPage = '$pageFolder/${optionName.toLowerCase()}_page.dart';
-  String pathController = '$controllerFolder/${optionName.toLowerCase()}_controller.dart';
+  String pathPage = '$pageFolder/${className.toLowerCase()}_page.dart';
+  String pathController =
+      '$controllerFolder/${className.toLowerCase()}_controller.dart';
   if (shouldCreateController) {
     if (await File(pathPage).exists()) {
-      writeInRed(optionName + 'Page already exists');
+      writeInRed('${_parseToPascal(className)}Page already exists');
       return;
     }
 
     if (await File(pathController).exists()) {
-      writeInRed(optionName + 'Controller already exists');
+      writeInRed('${_parseToPascal(className)}Controller already exists');
       return;
     }
 
     final File filePage = File(pathPage);
-    await filePage.writeAsString(pageWithControllerStub(className: className, importName: argResults.arguments.first.replaceAll("_page", "")));
+    await filePage.writeAsString(pageWithControllerStub(
+        className: _parseToPascal(className),
+        importName: argResults.arguments.first.replaceAll("_page", "")));
 
     final File fileInterface = File(pathController);
 
-    String strInterface = controllerStub(controllerName: className);
+    String strInterface =
+        controllerStub(controllerName: _parseToPascal(className));
 
     await fileInterface.writeAsString(strInterface);
 
-    writeInGreen('${className}Page & ${className}Controller created 🎉');
+    writeInGreen(
+        '${_parseToPascal(className)}Page & ${_parseToPascal(className)}Controller created 🎉');
     exit(0);
   }
 
@@ -330,10 +390,9 @@ _makePage(List<String> arguments) async {
   }
 
   final File file = File(pathPage);
-
   await file.writeAsString(pageStub(pageName: className));
 
-  writeInGreen('${optionName}Page created 🎉');
+  writeInGreen('${_parseToPascal(className)}Page created 🎉');
 
   exit(0);
 }
@@ -345,26 +404,31 @@ _apiSpecBuild(List<String> arguments) async {
   Iterable json;
 
   try {
-
     file = File("apispec.json");
     json = jsonDecode(await file.readAsString());
-
   } on Exception catch (e) {
     writeInRed("Error");
     writeInBlack("Please check your apispec.yaml");
     writeInBlack(e.toString());
-    return;
+    exit(2);
   }
 
-  List<NyApiRequest> nyApiRequests = List.of(json).map((e) => NyApiRequest.fromJson(e)).toList();
+  List<NyApiRequest> nyApiRequests =
+      List.of(json).map((e) => NyApiRequest.fromJson(e)).toList();
 
   String apiRequests = "";
   String importApiRequests = "";
 
   final ArgParser parser = ArgParser(allowTrailingOptions: true);
 
-  parser.addFlag(helpFlag, abbr: 'h', help: 'Used to auto build models from your apispec.yaml', negatable: false);
-  parser.addFlag(forceFlag, abbr: 'f', help: 'Forcefully creates models even if they exist.', negatable: false);
+  parser.addFlag(helpFlag,
+      abbr: 'h',
+      help: 'Used to auto build models from your apispec.yaml',
+      negatable: false);
+  parser.addFlag(forceFlag,
+      abbr: 'f',
+      help: 'Forcefully creates models even if they exist.',
+      negatable: false);
 
   final ArgResults argResults = parser.parse(arguments);
 
@@ -377,8 +441,8 @@ _apiSpecBuild(List<String> arguments) async {
   }
 
   for (int i = 0; i < nyApiRequests.length; i++) {
-
-    String modelPath = '$modelFolder/${nyApiRequests[i].modelName.toLowerCase()}.dart';
+    String modelPath =
+        '$modelFolder/${nyApiRequests[i].modelName.toLowerCase()}.dart';
 
     if (await File(modelPath).exists() && hasForceFlag == false) {
       writeInBlue(nyApiRequests[i].modelName + ' already exists, skipping...');
@@ -397,12 +461,15 @@ _apiSpecBuild(List<String> arguments) async {
 
     apiRequests = apiRequestStub(nyApiRequests[i]) + "\n" + apiRequests;
 
-    importApiRequests = "import \"../models/${nyApiRequests[i].modelName.toLowerCase()}.dart\";\n" + importApiRequests;
+    importApiRequests =
+        "import \"../models/${nyApiRequests[i].modelName.toLowerCase()}.dart\";\n" +
+            importApiRequests;
   }
 
   String networkingServicePath = '$networkServicesFolder/base_api_service.dart';
   final File networkingServiceFile = File(networkingServicePath);
-  await networkingServiceFile.writeAsString(apiServiceStub(imports: importApiRequests, apiRequests: apiRequests));
+  await networkingServiceFile.writeAsString(
+      apiServiceStub(imports: importApiRequests, apiRequests: apiRequests));
 
   writeInGreen("Api Spec Built 🚨");
   exit(0);
@@ -422,4 +489,26 @@ writeInBlue(String message) {
 
 writeInBlack(String message) {
   stdout.writeln(message);
+}
+
+String _parseToPascal(name) {
+  List<String> split = name.split("_");
+  List<String> map = split.map((e) => capitalize(e)).toList();
+  return map.join("");
+}
+
+_writeToFilePath(path, strFile) async {
+  final File file = File(path);
+
+  await file.writeAsString(strFile);
+}
+
+String capitalize(String input) {
+  if (input == null) {
+    throw new ArgumentError("string: $input");
+  }
+  if (input.length == 0) {
+    return input;
+  }
+  return input[0].toUpperCase() + input.substring(1);
 }
