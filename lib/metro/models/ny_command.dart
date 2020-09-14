@@ -1,3 +1,4 @@
+/// Model class used for defining commands
 class NyCommand {
   String name;
   int options;

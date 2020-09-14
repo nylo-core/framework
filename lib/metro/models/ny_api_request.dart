@@ -1,3 +1,4 @@
+/// Base class used to represent an API request object used in [Metro] cli.
 class NyApiRequest {
   String url;
   String method;
@@ -7,7 +8,12 @@ class NyApiRequest {
   dynamic data;
 
   NyApiRequest(
-      {this.url, this.method, this.headers, this.modelName, this.modelType, this.data});
+      {this.url,
+      this.method,
+      this.headers,
+      this.modelName,
+      this.modelType,
+      this.data});
 
   NyApiRequest.fromJson(Map<String, dynamic> json) {
     url = json['url'];
@@ -64,8 +70,10 @@ class NyApiRequest {
   String strUrlParams() {
     String str = "";
     List<String> urlParams = this.urlPrams();
-    for (int i = 0; i < urlParams.length; i++ ) {
-      str = str + "dynamic ${urlParams[i]}" + ((i + 1) == urlParams.length ? '' : ', ');
+    for (int i = 0; i < urlParams.length; i++) {
+      str = str +
+          "dynamic ${urlParams[i]}" +
+          ((i + 1) == urlParams.length ? '' : ', ');
     }
     return str;
   }
@@ -75,11 +83,12 @@ class NyApiRequest {
   }
 
   String mapQueryParams() {
-
     String str = "";
     List<String> urlParams = this.urlPrams();
-    for (int i = 0; i < urlParams.length; i++ ) {
-      str = str + "'${urlParams[i]}': ${urlParams[i]}" + ((i + 1) == urlParams.length ? '' : ', ');
+    for (int i = 0; i < urlParams.length; i++) {
+      str = str +
+          "'${urlParams[i]}': ${urlParams[i]}.toString()" +
+          ((i + 1) == urlParams.length ? '' : ', ');
     }
     return str;
   }
@@ -94,14 +103,20 @@ class NyApiRequest {
     return regExp.firstMatch(this.url).group(2);
   }
 
-  String getUrlPath() {
+  String getUrlPath({bool withQuery = false}) {
     RegExp regExp = new RegExp(
       r"(http[s]?:\/\/)?([^\/\s]+\/)(.*)",
       caseSensitive: false,
       multiLine: false,
     );
 
-    return regExp.firstMatch(this.url).group(3);
+    String strWithQuery = regExp.firstMatch(this.url).group(3);
+
+    if (withQuery == false && strWithQuery.contains("?")) {
+      return strWithQuery.split("?")[0];
+    }
+
+    return strWithQuery;
   }
 
   String getProtocol() {
@@ -113,7 +128,6 @@ class NyApiRequest {
 
     return regExp.stringMatch(this.url).toString();
   }
-
 }
 
 class Headers {
