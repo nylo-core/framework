@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
+import 'package:nylo_framework/localization/app_localization.dart';
 import 'package:nylo_framework/router/router.dart';
 import 'package:sailor/sailor.dart';
 
@@ -360,4 +361,11 @@ class NyLogger {
   }
 }
 
+/// Returns the translation value from the [key] you provide.
+/// E.g. trans(context, "hello")
+/// lang translation will be returned for the app locale.
+String trans(BuildContext context, String key) =>
+    AppLocalizations.of(context).trans(key);
+
+/// Nylo version
 const String nyloVersion = 'v0.3-beta.0';

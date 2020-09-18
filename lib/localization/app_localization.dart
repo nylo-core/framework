@@ -239,12 +239,6 @@ class _AppLocalizationsDelegate
   }
 }
 
-/// Returns the translation value from the [key] you provide.
-/// E.g. trans(context, "hello")
-/// lang translation will be returned for the app locale.
-String trans(BuildContext context, String key) =>
-    AppLocalizations.of(context).trans(key);
-
 /// Reloads the locale for the [AppLocalizations] class with a locale.
 reloadLocale(BuildContext context, Locale locale) async {
   AppLocalizations.of(context).locale = locale;

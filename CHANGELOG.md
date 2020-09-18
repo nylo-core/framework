@@ -2,6 +2,7 @@
 
 * Bug fix for controller when fetching request data
 * Tweak to routes and transitions
+* Improvements to Metro Cli
 
 ## [0.2.0] - 2020-09-15
 
