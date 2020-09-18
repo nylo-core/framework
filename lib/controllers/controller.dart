@@ -50,7 +50,7 @@ class NyRequest {
 
   /// Returns data passed as an argument to a route
   dynamic data() {
-    return _args.data;
+    return _args == null ? null : _args.data;
   }
 
   /// Returns a parameter used in the router.dart file for a route

@@ -27,22 +27,23 @@ class ApiRender<T> extends FutureBuilder {
       Widget whenLoading = const CircularProgressIndicator(),
       Widget initialWidget})
       : super(
-            key: key,
-            future: api,
-            initialData: initialWidget,
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                  if (initialWidget == null) {
-                    return whenLoading;
-                  }
-                  return initialWidget;
-                default:
-                  if (snapshot.hasError) {
-                    NyLogger.debug(snapshot.error);
-                    return widget(null);
-                  } else
-                    return widget(snapshot.data);
-              }
-            });
+          key: key,
+          future: api,
+          initialData: initialWidget,
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+                if (initialWidget == null) {
+                  return whenLoading;
+                }
+                return initialWidget;
+              default:
+                if (snapshot.hasError) {
+                  NyLogger.debug(snapshot.error);
+                  return widget(null);
+                } else
+                  return widget(snapshot.data);
+            }
+          },
+        );
 }

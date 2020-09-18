@@ -1,3 +1,8 @@
+## [0.3.0] - 2020-09-18
+
+* Bug fix for controller when fetching request data
+* Tweak to routes and transitions
+
 ## [0.2.0] - 2020-09-15
 
 * Controllers can now return arguments from routes

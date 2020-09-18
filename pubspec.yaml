@@ -1,6 +1,6 @@
 name: nylo_framework
-description: Nylo, a micro-framework for Flutter that's built to simplify app development for Flutter projects.
-version: 0.2.0
+description: Micro-framework for Flutter that's built to simplify app development for Flutter projects.
+version: 0.3.0
 homepage: https://nylo.dev
 repository: https://github.com/nylo-core/framework
 issue_tracker: https://github.com/nylo-core/framework/issues
