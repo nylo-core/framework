@@ -123,28 +123,28 @@ _handleMenu() {
 
   writeInBlack('All commands:');
 
-  writeInGreen(' project');
+  _writeInGreen(' project');
   _allProjectCommands.forEach((command) {
     writeInBlack('  project:' + command.name);
   });
 
   writeInBlack('');
 
-  writeInGreen(' make');
+  _writeInGreen(' make');
   _allMakeCommands.forEach((command) {
     writeInBlack('  make:' + command.name);
   });
 
   writeInBlack('');
 
-  writeInGreen(' appicons');
+  _writeInGreen(' appicons');
   _allApiSpecCommands.forEach((command) {
     writeInBlack('  appicons:' + command.name);
   });
 
   writeInBlack('');
 
-  writeInGreen(' apispec');
+  _writeInGreen(' apispec');
   _allApiSpecCommands.forEach((command) {
     writeInBlack('  apispec:' + command.name);
   });
@@ -169,7 +169,7 @@ _projectInit(List<String> arguments) async {
 
   await env.writeAsString(await envExample.readAsString());
 
-  writeInGreen('Project initialized, create something great 🎉');
+  _writeInGreen('Project initialized, create something great 🎉');
   exit(0);
 }
 
@@ -177,30 +177,41 @@ _makeWidget(List<String> arguments) async {
   final ArgParser parser = ArgParser(allowTrailingOptions: true);
 
   parser.addFlag(helpFlag,
-      abbr: 'h', help: 'e.g. make:widget UserWidget', negatable: false);
+      abbr: 'h',
+      help: 'e.g. make:widget video_player_widget',
+      negatable: false);
+  parser.addFlag(forceFlag,
+      abbr: 'f',
+      help: 'Creates a new widget even if it already exists.',
+      negatable: false);
 
   final ArgResults argResults = parser.parse(arguments);
 
-  if (argResults[helpFlag]) {
-    writeInBlack('Help - Creates a new controller in Nylo');
+  bool hasForceFlag = argResults[forceFlag];
+  bool hasHelpFlag = argResults[helpFlag];
+
+  if (hasHelpFlag) {
     writeInBlack(parser.usage);
     exit(0);
   }
+
   String widgetName =
       argResults.arguments.first.replaceAll(RegExp(r'(_?widget)'), "");
-  writeInBlack(widgetName);
+
   String path = '$widgetFolder/${widgetName.toLowerCase()}_widget.dart';
 
-  if (await File(path).exists()) {
-    writeInRed(argResults.arguments.first + ' already exists');
-    return;
+  if (await File(path).exists() && hasForceFlag == false) {
+    _writeInRed(widgetName + '_widget already exists');
+    exit(0);
   }
 
   final File file = File(path);
 
+  await _makeDirectory(widgetFolder);
+
   await file.writeAsString(widgetStub(_parseToPascal(widgetName)));
 
-  writeInGreen(argResults.arguments.first + ' created 🎉');
+  _writeInGreen(widgetName + '_widget created 🎉');
 
   exit(0);
 }
@@ -223,7 +234,7 @@ _makeAppIcons(List<String> arguments) async {
 
   launcherIcons.createIconsFromArguments(arguments);
 
-  writeInGreen('App icons created 🎉');
+  _writeInGreen('App icons created 🎉');
   exit(0);
 }
 
@@ -254,21 +265,21 @@ _makeController(List<String> arguments) async {
     exit(0);
   }
 
-  String firstArg =
+  String className =
       argResults.arguments.first.replaceAll(RegExp(r'(_?controller)'), "");
-  String path = '$controllerFolder/${firstArg.toLowerCase()}_controller.dart';
+  String path = '$controllerFolder/${className.toLowerCase()}_controller.dart';
 
   if (await File(path).exists() && hasForceFlag == false) {
-    writeInRed(firstArg + ' already exists');
+    _writeInRed(className + ' already exists');
     exit(0);
   }
 
-  String controllerName = _parseToPascal(firstArg);
+  String controllerName = _parseToPascal(className);
   String strController = controllerStub(controllerName: controllerName);
 
   await _writeToFilePath(path, strController);
 
-  writeInGreen(firstArg + ' created 🎉');
+  _writeInGreen(className + '_controller created 🎉');
 
   exit(0);
 }
@@ -278,7 +289,7 @@ _makeModel(List<String> arguments) async {
 
   parser.addFlag(helpFlag,
       abbr: 'h',
-      help: 'Creates a new Model in your project.',
+      help: 'Creates a new model in your project.',
       negatable: false);
   parser.addFlag(forceFlag,
       abbr: 'f',
@@ -304,7 +315,7 @@ _makeModel(List<String> arguments) async {
   String path = '$modelFolder/${firstArg.toLowerCase()}.dart';
 
   if (await File(path).exists() && hasForceFlag == false) {
-    writeInRed(firstArg + ' already exists');
+    _writeInRed(firstArg + ' already exists');
     exit(0);
   }
 
@@ -313,9 +324,11 @@ _makeModel(List<String> arguments) async {
   String modelName = _parseToPascal(firstArg);
   String strModel = modelStub(modelName: modelName);
 
+  await _makeDirectory(modelFolder);
+
   await file.writeAsString(strModel);
 
-  writeInGreen(modelName + ' created 🎉');
+  _writeInGreen(modelName + ' created 🎉');
 
   exit(0);
 }
@@ -358,41 +371,46 @@ _makePage(List<String> arguments) async {
       '$controllerFolder/${className.toLowerCase()}_controller.dart';
   if (shouldCreateController) {
     if (await File(pathPage).exists()) {
-      writeInRed('${_parseToPascal(className)}Page already exists');
+      _writeInRed('${className}_page already exists');
       return;
     }
 
     if (await File(pathController).exists()) {
-      writeInRed('${_parseToPascal(className)}Controller already exists');
+      _writeInRed('${className}_controller already exists');
       return;
     }
 
     final File filePage = File(pathPage);
+
+    await _makeDirectory(controllerFolder);
+
     await filePage.writeAsString(pageWithControllerStub(
         className: _parseToPascal(className),
         importName: argResults.arguments.first.replaceAll("_page", "")));
 
-    final File fileInterface = File(pathController);
+    final File fileController = File(pathController);
 
-    String strInterface =
+    String strController =
         controllerStub(controllerName: _parseToPascal(className));
 
-    await fileInterface.writeAsString(strInterface);
+    await fileController.writeAsString(strController);
 
-    writeInGreen(
-        '${_parseToPascal(className)}Page & ${_parseToPascal(className)}Controller created 🎉');
+    _writeInGreen('${className}_page & ${className}_controller created 🎉');
     exit(0);
   }
 
   if (await File(pathPage).exists()) {
-    writeInRed(argResults.arguments.first + ' already exists');
+    _writeInRed(argResults.arguments.first + ' already exists');
     return;
   }
 
   final File file = File(pathPage);
+
+  await _makeDirectory(pageFolder);
+
   await file.writeAsString(pageStub(pageName: className));
 
-  writeInGreen('${_parseToPascal(className)}Page created 🎉');
+  _writeInGreen('${className}_page created 🎉');
 
   exit(0);
 }
@@ -407,7 +425,7 @@ _apiSpecBuild(List<String> arguments) async {
     file = File("apispec.json");
     json = jsonDecode(await file.readAsString());
   } on Exception catch (e) {
-    writeInRed("Error");
+    _writeInRed("Error");
     writeInBlack("Please check your apispec.yaml");
     writeInBlack(e.toString());
     exit(2);
@@ -445,7 +463,7 @@ _apiSpecBuild(List<String> arguments) async {
         '$modelFolder/${nyApiRequests[i].modelName.toLowerCase()}.dart';
 
     if (await File(modelPath).exists() && hasForceFlag == false) {
-      writeInBlue(nyApiRequests[i].modelName + ' already exists, skipping...');
+      _writeInBlue(nyApiRequests[i].modelName + ' already exists, skipping...');
       continue;
     }
 
@@ -457,7 +475,7 @@ _apiSpecBuild(List<String> arguments) async {
 
     final File file = File(modelPath);
     await file.writeAsString(dartCode.code);
-    writeInBlue(nyApiRequests[i].modelName + " model created");
+    _writeInBlue(nyApiRequests[i].modelName + " model created");
 
     apiRequests = apiRequestStub(nyApiRequests[i]) + "\n" + apiRequests;
 
@@ -466,24 +484,27 @@ _apiSpecBuild(List<String> arguments) async {
             importApiRequests;
   }
 
-  String networkingServicePath = '$networkServicesFolder/base_api_service.dart';
+  String networkingServicePath = '$networkServicesFolder/api_service.dart';
   final File networkingServiceFile = File(networkingServicePath);
+
+  await _makeDirectory(networkServicesFolder);
+
   await networkingServiceFile.writeAsString(
       apiServiceStub(imports: importApiRequests, apiRequests: apiRequests));
 
-  writeInGreen("Api Spec Built 🚨");
+  _writeInGreen("Api Spec Built 🚨");
   exit(0);
 }
 
-writeInGreen(String message) {
+_writeInGreen(String message) {
   stdout.writeln('\x1B[92m' + message + '\x1B[0m');
 }
 
-writeInRed(String message) {
+_writeInRed(String message) {
   stdout.writeln('\x1B[91m' + message + '\x1B[0m');
 }
 
-writeInBlue(String message) {
+_writeInBlue(String message) {
   stdout.writeln('\x1B[94m' + message + '\x1B[0m');
 }
 
@@ -501,6 +522,13 @@ _writeToFilePath(path, strFile) async {
   final File file = File(path);
 
   await file.writeAsString(strFile);
+}
+
+_makeDirectory(String path) async {
+  final File dirFolder = File(path);
+  if (!(await dirFolder.exists())) {
+    await Directory(path).create();
+  }
 }
 
 String capitalize(String input) {

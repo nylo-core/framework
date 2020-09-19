@@ -29,13 +29,10 @@ class NyRoute extends SailorRoute {
   NyRoute({
     @required name,
     @required NyRouteView view,
-    defaultArgs,
-    defaultTransitions,
+    List<RouteTransition> defaultTransitions,
     defaultTransitionDuration,
     defaultTransitionCurve,
-    params,
-    customTransition,
-    routeGuards,
+    CustomRouteTransition customTransition,
   }) : super(
           name: name,
           builder: (context, arg, paramMap) {
@@ -48,23 +45,14 @@ class NyRoute extends SailorRoute {
             }
             return widget;
           },
-          defaultArgs: defaultArgs,
-          defaultTransitions: defaultTransitions,
+          defaultArgs: null,
+          defaultTransitions: [],
           defaultTransitionDuration: defaultTransitionDuration,
           defaultTransitionCurve: defaultTransitionCurve,
-          params: params,
+          params: [],
           customTransition: customTransition,
-          routeGuards: routeGuards,
+          routeGuards: [],
         );
-}
-
-/// Parameters to pass into the route
-class NyParam<T> extends SailorParam {
-  NyParam({
-    name,
-    defaultValue,
-    isRequired = false,
-  }) : super(name: name, defaultValue: defaultValue, isRequired: isRequired);
 }
 
 /// Builds the routes in the router.dart file
@@ -74,4 +62,34 @@ NyRouter nyCreateRoutes(Function(NyRouter router) build) {
 
   NyNavigator.instance.router = nyRouter;
   return nyRouter;
+}
+
+/// Custom route transition
+abstract class CustomRouteTransition extends CustomSailorTransition {
+  Widget buildTransition(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  );
+}
+
+enum RouteTransition {
+  /// Slide in the new page from right
+  slide_from_right,
+
+  /// Slide in the new page from left
+  slide_from_left,
+
+  /// Slide in the new page from top
+  slide_from_top,
+
+  /// Slide in the new page from bottom
+  slide_from_bottom,
+
+  /// Zoom in the page
+  zoom_in,
+
+  /// Fade in the page
+  fade_in
 }

@@ -1,3 +1,14 @@
+## [0.3.1] - 2020-09-19
+
+* Small fix to Metro cli tool
+* Update to readme
+
+## [0.3.0] - 2020-09-18
+
+* Bug fix for controller when fetching request data
+* Tweak to routes and transitions
+* Improvements to Metro Cli
+
 ## [0.2.0] - 2020-09-15
 
 * Controllers can now return arguments from routes

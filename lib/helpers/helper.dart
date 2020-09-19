@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
+import 'package:nylo_framework/localization/app_localization.dart';
 import 'package:nylo_framework/router/router.dart';
 import 'package:sailor/sailor.dart';
 
@@ -298,18 +299,73 @@ class NyNav {
   }
 }
 
+NavigationType navigationType(NavType navType) {
+  if (navType == NavType.push) {
+    return NavigationType.push;
+  }
+  if (navType == NavType.pushReplace) {
+    return NavigationType.pushReplace;
+  }
+  if (navType == NavType.pushAndRemoveUntil) {
+    return NavigationType.pushAndRemoveUntil;
+  }
+  if (navType == NavType.popAndPushNamed) {
+    return NavigationType.popAndPushNamed;
+  }
+  return null;
+}
+
+enum NavType { push, pushReplace, pushAndRemoveUntil, popAndPushNamed }
+
+List<SailorTransition> routeTransitions(
+    void Function(List<RouteTransition> list) transition) {
+  List<RouteTransition> transitions = [];
+  transition(transitions);
+  List<SailorTransition> tmp = [];
+
+  if (transitions.contains(RouteTransition.fade_in)) {
+    tmp.add(SailorTransition.fade_in);
+  }
+  if (transitions.contains(RouteTransition.slide_from_right)) {
+    tmp.add(SailorTransition.slide_from_right);
+  }
+  if (transitions.contains(RouteTransition.slide_from_left)) {
+    tmp.add(SailorTransition.slide_from_left);
+  }
+  if (transitions.contains(RouteTransition.slide_from_top)) {
+    tmp.add(SailorTransition.slide_from_top);
+  }
+  if (transitions.contains(RouteTransition.slide_from_bottom)) {
+    tmp.add(SailorTransition.slide_from_bottom);
+  }
+  if (transitions.contains(RouteTransition.zoom_in)) {
+    tmp.add(SailorTransition.zoom_in);
+  }
+  return tmp;
+}
+
 /// Logger used for messages you want to print to the console.
 class NyLogger {
   Logger _logger = Logger(
-      printer: PrettyPrinter(
-          methodCount: 0,
-          errorMethodCount: 8,
-          lineLength: 100,
-          colors: true,
-          printEmojis: false,
-          printTime: true));
+    printer: PrettyPrinter(
+        methodCount: 0,
+        errorMethodCount: 8,
+        lineLength: 100,
+        colors: true,
+        printEmojis: false,
+        printTime: true),
+  );
 
   NyLogger.debug(String message) {
     _logger.d(message);
   }
 }
+
+/// Returns the translation value from the [key] you provide.
+/// E.g. trans(context, "hello")
+/// lang translation will be returned for the app locale.
+String trans(BuildContext context, String key) =>
+    AppLocalizations.of(context).trans(key);
+
+/// Nylo version
+const String nyloVersion = 'v0.3-beta.0';
