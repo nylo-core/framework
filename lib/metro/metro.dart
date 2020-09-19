@@ -178,7 +178,7 @@ _makeWidget(List<String> arguments) async {
 
   parser.addFlag(helpFlag,
       abbr: 'h',
-      help: 'e.g. make:widget video_player_Widget',
+      help: 'e.g. make:widget video_player_widget',
       negatable: false);
   parser.addFlag(forceFlag,
       abbr: 'f',
@@ -484,7 +484,7 @@ _apiSpecBuild(List<String> arguments) async {
             importApiRequests;
   }
 
-  String networkingServicePath = '$networkServicesFolder/base_api_service.dart';
+  String networkingServicePath = '$networkServicesFolder/api_service.dart';
   final File networkingServiceFile = File(networkingServicePath);
 
   await _makeDirectory(networkServicesFolder);
