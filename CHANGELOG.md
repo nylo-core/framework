@@ -1,3 +1,7 @@
+## [0.3.2] - 2020-09-23
+
+* ApiRender widget updated with new required parameters and change in functionality.
+
 ## [0.3.1] - 2020-09-19
 
 * Small fix to Metro cli tool
