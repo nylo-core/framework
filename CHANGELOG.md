@@ -1,3 +1,11 @@
+## [0.4.0] - 2020-12-21
+
+* New default state widget NyState
+* Updates to Metro stubs
+* APIRender Widget parameter refactor
+* Helper class small refactor
+* Dart code formatting
+
 ## [0.3.2] - 2020-09-23
 
 * ApiRender widget updated with new required parameters and change in functionality.

@@ -23,7 +23,7 @@ class ApiRender<T> extends FutureBuilder {
   ApiRender(
       {Key key,
       @required Future api,
-      @required Widget Function(T model) widget,
+      @required Widget Function(T model) child,
       Widget whenLoading,
       Widget initialWidget})
       : super(
@@ -43,11 +43,11 @@ class ApiRender<T> extends FutureBuilder {
                 if (snapshot.hasError) {
                   NyLogger.debug(snapshot.error);
                   if (initialWidget == null) {
-                    return widget(null);
+                    return child(null);
                   }
                   return initialWidget;
                 } else
-                  return widget(snapshot.data);
+                  return child(snapshot.data);
             }
           },
         );
