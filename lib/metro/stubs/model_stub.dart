@@ -3,5 +3,5 @@ class $modelName {
   
   $modelName();
 
-} 
+}
 ''';
