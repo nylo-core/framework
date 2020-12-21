@@ -14,6 +14,7 @@ Future initNylo({ThemeData theme}) async {
     CurrentTheme.instance.theme = theme;
   }
   BusQueue.instance.queue = Queue(
-      delay: Duration(milliseconds: getEnv("QUEUE_DELAY", defaultValue: 10)),
-      parallel: getEnv("QUEUE_PARALLEL", defaultValue: 1));
+    delay: Duration(milliseconds: getEnv("QUEUE_DELAY", defaultValue: 10)),
+    parallel: getEnv("QUEUE_PARALLEL", defaultValue: 1),
+  );
 }

@@ -443,14 +443,14 @@ _apiSpecBuild(List<String> arguments) async {
       abbr: 'h',
       help: 'Used to auto build models from your apispec.yaml',
       negatable: false);
-  parser.addFlag(forceFlag,
-      abbr: 'f',
-      help: 'Forcefully creates models even if they exist.',
+  parser.addFlag('payload',
+      abbr: 'p',
+      help: 'Add a representation of the JSON used to create the model',
       negatable: false);
 
   final ArgResults argResults = parser.parse(arguments);
 
-  bool hasForceFlag = argResults[forceFlag];
+  bool hasIncludePayloadFlag = argResults['payload'];
   bool hasHelpFlag = argResults[helpFlag];
 
   if (hasHelpFlag) {
@@ -462,21 +462,21 @@ _apiSpecBuild(List<String> arguments) async {
     String modelPath =
         '$modelFolder/${nyApiRequests[i].modelName.toLowerCase()}.dart';
 
-    if (await File(modelPath).exists() && hasForceFlag == false) {
-      _writeInBlue(nyApiRequests[i].modelName + ' already exists, skipping...');
-      continue;
-    }
-
     http.Response json = await metroApiRequest(nyApiRequests[i]);
-
     final classGenerator = new ModelGenerator(nyApiRequests[i].modelName);
-
     DartCode dartCode = classGenerator.generateDartClasses(json.body);
 
     final File file = File(modelPath);
-    await file.writeAsString(dartCode.code);
+    await file.writeAsString(dartCode.code +
+        (hasIncludePayloadFlag == true
+            ? '''
+    
+/* PAYLOAD USED IN CREATION
+  ${json.body}
+*/
+    '''
+            : ''));
     _writeInBlue(nyApiRequests[i].modelName + " model created");
-
     apiRequests = apiRequestStub(nyApiRequests[i]) + "\n" + apiRequests;
 
     importApiRequests =

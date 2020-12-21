@@ -10,11 +10,11 @@ class ${pageName}Page extends StatefulPageWidget {
   _${pageName}PageState createState() => _${pageName}PageState();
 }
 
-class _${pageName}PageState extends State<${pageName}Page> {
+class _${pageName}PageState extends NyState<${pageName}Page> {
 
   @override
-  void initState() {
-    super.initState();
+  widgetDidLoad() async {
+  
   }
   
   @override
@@ -29,7 +29,7 @@ class _${pageName}PageState extends State<${pageName}Page> {
         
       ),
       body: SafeArea(
-        
+         child: Container(),
       ),
     );
   }

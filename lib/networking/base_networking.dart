@@ -31,8 +31,7 @@ abstract class BaseApi {
     var connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.mobile) {
       return "mobile";
-    }
-    if (connectivityResult == ConnectivityResult.wifi) {
+    } else if (connectivityResult == ConnectivityResult.wifi) {
       return "wifi";
     }
     return null;

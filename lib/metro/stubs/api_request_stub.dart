@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:nylo_framework/metro/models/ny_api_request.dart';
 
 String apiRequestStub(NyApiRequest nyApiRequest) => '''
-Future<${nyApiRequest.modelType == 'list' ? 'List<${nyApiRequest.modelName}>' : nyApiRequest.modelName}> fetch${nyApiRequest.modelType == 'list' ? 'List' + nyApiRequest.modelName : nyApiRequest.modelName}({${nyApiRequest.strUrlParams()}}) async {
+Future<${nyApiRequest.modelType == 'list' ? 'List<${nyApiRequest.modelName}>' : nyApiRequest.modelName}> fetch${nyApiRequest.modelType == 'list' ? 'List' + nyApiRequest.modelName : nyApiRequest.modelName}(${nyApiRequest.strUrlParams() != "" ? "{${nyApiRequest.strUrlParams()}}" : ''}) async {
   
   try {
       Map<String, String> queryParameters = {${nyApiRequest.mapQueryParams()}};
