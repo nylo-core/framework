@@ -1,3 +1,13 @@
+## [0.5.0] - 2021-01-30
+
+* Metro new commands: create stateless widgets, stateful widgets and storable models
+* "common" folder renamed to "resources"
+* Router new `route` method to create routes
+* Controller refactored to remove .of(BuildContext context)
+* New Storable method `save('key')` to store to secure storage
+* onPop parameter added to `routeTo` method
+* Small under hood improvements
+
 ## [0.4.0] - 2020-12-21
 
 * New default state widget NyState

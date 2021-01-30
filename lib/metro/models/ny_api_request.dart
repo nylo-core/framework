@@ -45,12 +45,27 @@ class NyApiRequest {
   }
 
   Map<String, String> headerMap() {
-    Map<String, String> headers;
+    Map<String, String> headers = {};
 
     if (this.headers.length > 0) {
       this.headers.forEach((header) {
         headers.addAll({header.key.toString(): header.value.toString()});
       });
+    }
+
+    return headers;
+  }
+
+  String headerString() {
+    String headers = "";
+
+    if (this.headers.length > 0) {
+      this.headers.forEach((header) {
+        headers += "\"${header.key.toString()}\": \"${header.value.toString()}\",";
+      });
+      if (headers.endsWith(",")) {
+        headers = headers.substring(0, headers.length - 1);
+      }
     }
 
     return headers;

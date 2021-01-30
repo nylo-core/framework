@@ -140,13 +140,28 @@ abstract class Storable {
   /// }
   ///
   fromStorage(dynamic data) {}
+
+  /// Save the object to secure storage using a unique [key].
+  /// E.g. User class
+  ///
+  /// User user = new User();
+  /// user.name = "Anthony";
+  /// user.save('com.company.app.auth_user');
+  ///
+  /// Get user
+  /// User user = await NyStorage.read<User>('com.company.app.auth_user', model: new User());
+  save(String key) {
+   NyStorage.store(key, this);
+  }
+
+  /// Check if the object implements [Storable].
+  isStoreable() {
+    return true;
+  }
 }
 
 class StorageManager {
-  final storage = new FlutterSecureStorage();
-  StorageManager._privateConstructor();
-
-  static final StorageManager instance = StorageManager._privateConstructor();
+  static final storage = new FlutterSecureStorage();
 }
 
 /// Base class to help manage local storage
@@ -156,22 +171,22 @@ class NyStorage {
     assert(object != null);
 
     if (object is String) {
-      return await StorageManager.instance.storage
+      return await StorageManager.storage
           .write(key: key, value: object);
     }
 
     if (object is int) {
-      return await StorageManager.instance.storage
+      return await StorageManager.storage
           .write(key: key, value: object.toString());
     }
 
     if (object is double) {
-      return await StorageManager.instance.storage
+      return await StorageManager.storage
           .write(key: key, value: object.toString());
     }
 
     if (object is Storable) {
-      return await StorageManager.instance.storage
+      return await StorageManager.storage
           .write(key: key, value: jsonEncode(object.toStorage()));
     }
   }
@@ -180,24 +195,40 @@ class NyStorage {
   static Future<dynamic> read<T>(String key, {Storable model}) async {
     assert(key != null);
 
-    String data = await NyStorage.read(key);
+    String data = await StorageManager.storage.read(key: key);
     if (data == null) {
       return null;
     }
 
-    if (T is Storable) {
-      return model.fromStorage(data);
+    if (model != null) {
+      try {
+        if (model.isStoreable() != null && model.isStoreable() == true) {
+          String data = await StorageManager.storage.read(key: key);
+          if (data == null) {
+            return null;
+          }
+
+          model.fromStorage(jsonDecode(data));
+          return model;
+        }
+      } on Exception catch(e) {
+        print(e.toString());
+      }
     }
 
-    if (T is String) {
+    if (T == null) {
+      return data;
+    }
+
+    if (T.toString() == "String") {
       return data.toString();
     }
 
-    if (T is int) {
-      return int.parse(data);
+    if (T.toString() == "int") {
+      return int.parse(data.toString());
     }
 
-    if (T is double) {
+    if (T.toString() == "double") {
       return double.parse(data);
     }
 
@@ -206,7 +237,7 @@ class NyStorage {
 
   /// Deletes associated value for the given [key].
   static delete(String key) async {
-    return await StorageManager.instance.storage.delete(key: key);
+    return await StorageManager.storage.delete(key: key);
   }
 }
 
@@ -323,4 +354,4 @@ String trans(BuildContext context, String key) =>
     AppLocalizations.of(context).trans(key);
 
 /// Nylo version
-const String nyloVersion = 'v0.4-beta.0';
+const String nyloVersion = 'v0.5-beta.0';

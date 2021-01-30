@@ -4,13 +4,12 @@ String pageWithControllerStub({String className, String importName}) => '''
 import 'package:flutter/material.dart';
 import 'package:nylo_framework/widgets/stateful_page_widget.dart';
 import '../../app/controllers/${importName.toLowerCase()}_controller.dart';
-import 'package:nylo_framework/widgets/stateful_page_widget.dart';
 import 'package:nylo_framework/widgets/ny_state.dart';
 
 class ${capitalize(className)}Page extends StatefulPageWidget {
-  final ${capitalize(className)}Controller controller;
+  final ${capitalize(className)}Controller controller = ${capitalize(className)}Controller();
   
-  ${capitalize(className)}Page({Key key, this.controller}) : super(key: key);
+  ${capitalize(className)}Page({Key key}) : super(key: key);
   
   @override
   _${capitalize(className)}PageState createState() => _${capitalize(className)}PageState();
