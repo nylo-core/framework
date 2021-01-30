@@ -11,6 +11,15 @@ class NyRouter extends Sailor {
   }) : super(
           options: options,
         );
+
+  route(String name,
+      NyRouteView view,
+  {List<RouteTransition> defaultTransitions,
+      defaultTransitionDuration,
+      defaultTransitionCurve,
+      CustomRouteTransition customTransition}) {
+    this.addRoute(NyRoute(name: name, view: view, defaultTransitions: defaultTransitions, defaultTransitionCurve: defaultTransitionCurve, defaultTransitionDuration: defaultTransitionDuration, customTransition:customTransition));
+  }
 }
 
 class NyNavigator {
@@ -41,6 +50,7 @@ class NyRoute extends SailorRoute {
               if (widget.controller != null) {
                 widget.controller.request =
                     NyRequest(currentRoute: name, args: arg, params: paramMap);
+                widget.controller.context = context;
               }
             }
             return widget;

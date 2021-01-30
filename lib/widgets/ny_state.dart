@@ -5,6 +5,7 @@ import 'package:nylo_framework/router/router.dart';
 import 'package:sailor/sailor.dart';
 
 abstract class NyState<T extends StatefulWidget> extends State<T> {
+
   @override
   void initState() {
     super.initState();
@@ -32,6 +33,7 @@ abstract class NyState<T extends StatefulWidget> extends State<T> {
     Curve transitionCurve,
     Map<String, dynamic> params,
     CustomSailorTransition customTransition,
+        Function() onPop
   }) {
     NyArgument nyArgument = NyArgument(data);
     NyNavigator.instance.router.navigate(
@@ -45,6 +47,6 @@ abstract class NyState<T extends StatefulWidget> extends State<T> {
       transitionCurve: transitionCurve,
       params: params,
       customTransition: customTransition,
-    );
+    ).then((v) => onPop());
   }
 }

@@ -14,7 +14,8 @@ import 'package:nylo_framework/metro/stubs/controller_stub.dart';
 import 'package:nylo_framework/metro/stubs/model_stub.dart';
 import 'package:nylo_framework/metro/stubs/page_stub.dart';
 import 'package:nylo_framework/metro/stubs/page_w_controller_stub.dart';
-import 'package:nylo_framework/metro/stubs/widget_stub.dart';
+import 'package:nylo_framework/metro/stubs/widget_stateful_stub.dart';
+import 'package:nylo_framework/metro/stubs/widget_stateless_stub.dart';
 import 'models/ny_command.dart';
 import 'dart:io';
 
@@ -29,11 +30,13 @@ List<NyCommand> _allMakeCommands = [
       arguments: ["-h", "-f"],
       action: _makeController),
   NyCommand(
-      name: "model", options: 1, arguments: ["-h", "-f"], action: _makeModel),
+      name: "model", options: 1, arguments: ["-h", "-f", "-s"], action: _makeModel),
   NyCommand(
       name: "page", options: 1, arguments: ["-h", "-f"], action: _makePage),
   NyCommand(
-      name: "widget", options: 1, arguments: ["-h", "-f"], action: _makeWidget),
+      name: "stateful_widget", options: 1, arguments: ["-h", "-f"], action: _makeStatefulWidget),
+  NyCommand(
+      name: "stateless_widget", options: 1, arguments: ["-h", "-f"], action: _makeStatelessWidget),
 ];
 
 List<NyCommand> _allApiSpecCommands = [
@@ -173,7 +176,7 @@ _projectInit(List<String> arguments) async {
   exit(0);
 }
 
-_makeWidget(List<String> arguments) async {
+_makeStatefulWidget(List<String> arguments) async {
   final ArgParser parser = ArgParser(allowTrailingOptions: true);
 
   parser.addFlag(helpFlag,
@@ -209,7 +212,50 @@ _makeWidget(List<String> arguments) async {
 
   await _makeDirectory(widgetFolder);
 
-  await file.writeAsString(widgetStub(_parseToPascal(widgetName)));
+  await file.writeAsString(widgetStatefulStub(_parseToPascal(widgetName)));
+
+  _writeInGreen(widgetName + '_widget created 🎉');
+
+  exit(0);
+}
+
+_makeStatelessWidget(List<String> arguments) async {
+  final ArgParser parser = ArgParser(allowTrailingOptions: true);
+
+  parser.addFlag(helpFlag,
+      abbr: 'h',
+      help: 'e.g. make:widget video_player_widget',
+      negatable: false);
+  parser.addFlag(forceFlag,
+      abbr: 'f',
+      help: 'Creates a new widget even if it already exists.',
+      negatable: false);
+
+  final ArgResults argResults = parser.parse(arguments);
+
+  bool hasForceFlag = argResults[forceFlag];
+  bool hasHelpFlag = argResults[helpFlag];
+
+  if (hasHelpFlag) {
+    writeInBlack(parser.usage);
+    exit(0);
+  }
+
+  String widgetName =
+  argResults.arguments.first.replaceAll(RegExp(r'(_?widget)'), "");
+
+  String path = '$widgetFolder/${widgetName.toLowerCase()}_widget.dart';
+
+  if (await File(path).exists() && hasForceFlag == false) {
+    _writeInRed(widgetName + '_widget already exists');
+    exit(0);
+  }
+
+  final File file = File(path);
+
+  await _makeDirectory(widgetFolder);
+
+  await file.writeAsString(widgetStatelessStub(_parseToPascal(widgetName)));
 
   _writeInGreen(widgetName + '_widget created 🎉');
 
@@ -295,6 +341,10 @@ _makeModel(List<String> arguments) async {
       abbr: 'f',
       help: 'Creates a new model even if it already exists.',
       negatable: false);
+  parser.addFlag(storableFlag,
+      abbr: 's',
+      help: 'Create a new Storable model.',
+      negatable: false);
 
   final ArgResults argResults = parser.parse(arguments);
 
@@ -305,6 +355,7 @@ _makeModel(List<String> arguments) async {
 
   bool hasForceFlag = argResults[forceFlag];
   bool hasHelpFlag = argResults[helpFlag];
+  bool hasStorableFlag = argResults[storableFlag];
 
   if (hasHelpFlag) {
     writeInBlack(parser.usage);
@@ -322,7 +373,7 @@ _makeModel(List<String> arguments) async {
   final File file = File(path);
 
   String modelName = _parseToPascal(firstArg);
-  String strModel = modelStub(modelName: modelName);
+  String strModel = modelStub(modelName: modelName, isStorable: hasStorableFlag);
 
   await _makeDirectory(modelFolder);
 
