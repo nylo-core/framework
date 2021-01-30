@@ -1,3 +1,7 @@
+## [0.5.1] - 2021-01-30
+
+* `flutter format`
+
 ## [0.5.0] - 2021-01-30
 
 * Metro new commands: create stateless widgets, stateful widgets and storable models
