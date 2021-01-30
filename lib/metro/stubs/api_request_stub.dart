@@ -10,7 +10,7 @@ Future<${nyApiRequest.modelType == 'list' ? 'List<${nyApiRequest.modelName}>' : 
     
       var uri = Uri.${nyApiRequest.getProtocol() == 'https' ? 'https' : 'http'}("${nyApiRequest.getBaseUrl()}", "/${nyApiRequest.getUrlPath()}", queryParameters);
     
-      Response response = await _client.${nyApiRequest.method}(uri, ${nyApiRequest.method == 'post' ? 'body: ${jsonDecode(nyApiRequest.data).toString()},' : ''} headers: ${nyApiRequest.headerMap()});
+      Response response = await _client.${nyApiRequest.method}(uri, ${nyApiRequest.method == 'post' ? 'body: ${jsonDecode(nyApiRequest.data).toString()}' : ''} ${nyApiRequest.headerMap().isNotEmpty ? 'headers: {${nyApiRequest.headerString()}}' : ''});
       this.debugHttpLogger(response);
 
       dynamic json = jsonDecode(response.body);

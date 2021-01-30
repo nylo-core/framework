@@ -8,7 +8,7 @@ import 'package:nylo_framework/theme/helper/theme_helper.dart';
 import 'package:queue/queue.dart';
 
 /// Run to init classes used in Nylo
-Future initNylo({ThemeData theme}) async {
+Future initNylo({@required ThemeData theme}) async {
   await DotEnv().load('.env');
   if (theme != null) {
     CurrentTheme.instance.theme = theme;

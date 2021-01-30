@@ -36,6 +36,8 @@ abstract class BaseController {
   BusQueue queue = BusQueue.instance;
 
   BaseController({this.context, this.request});
+
+  dynamic data() => this.request.data();
 }
 
 /// Base class to handle requests
@@ -46,6 +48,11 @@ class NyRequest {
   NyRequest({this.currentRoute, NyArgument args, ParamMap params}) {
     _args = args;
     _params = params;
+  }
+
+  /// Write [data] to controller
+  setData(dynamic data) {
+    _args.data = data;
   }
 
   /// Returns data passed as an argument to a route

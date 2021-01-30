@@ -1,5 +1,6 @@
 String pageStub({String pageName}) => '''
 import 'package:flutter/material.dart';
+import 'package:nylo_framework/widgets/ny_state.dart';
 import 'package:nylo_framework/widgets/stateful_page_widget.dart';
 
 class ${pageName}Page extends StatefulPageWidget {
