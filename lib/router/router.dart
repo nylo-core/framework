@@ -12,13 +12,18 @@ class NyRouter extends Sailor {
           options: options,
         );
 
-  route(String name,
-      NyRouteView view,
-  {List<RouteTransition> defaultTransitions,
+  route(String name, NyRouteView view,
+      {List<RouteTransition> defaultTransitions,
       defaultTransitionDuration,
       defaultTransitionCurve,
       CustomRouteTransition customTransition}) {
-    this.addRoute(NyRoute(name: name, view: view, defaultTransitions: defaultTransitions, defaultTransitionCurve: defaultTransitionCurve, defaultTransitionDuration: defaultTransitionDuration, customTransition:customTransition));
+    this.addRoute(NyRoute(
+        name: name,
+        view: view,
+        defaultTransitions: defaultTransitions,
+        defaultTransitionCurve: defaultTransitionCurve,
+        defaultTransitionDuration: defaultTransitionDuration,
+        customTransition: customTransition));
   }
 }
 
