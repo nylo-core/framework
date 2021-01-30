@@ -151,7 +151,7 @@ abstract class Storable {
   /// Get user
   /// User user = await NyStorage.read<User>('com.company.app.auth_user', model: new User());
   save(String key) {
-   NyStorage.store(key, this);
+    NyStorage.store(key, this);
   }
 
   /// Check if the object implements [Storable].
@@ -171,8 +171,7 @@ class NyStorage {
     assert(object != null);
 
     if (object is String) {
-      return await StorageManager.storage
-          .write(key: key, value: object);
+      return await StorageManager.storage.write(key: key, value: object);
     }
 
     if (object is int) {
@@ -211,7 +210,7 @@ class NyStorage {
           model.fromStorage(jsonDecode(data));
           return model;
         }
-      } on Exception catch(e) {
+      } on Exception catch (e) {
         print(e.toString());
       }
     }
