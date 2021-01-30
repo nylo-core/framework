@@ -61,7 +61,8 @@ class NyApiRequest {
 
     if (this.headers.length > 0) {
       this.headers.forEach((header) {
-        headers += "\"${header.key.toString()}\": \"${header.value.toString()}\",";
+        headers +=
+            "\"${header.key.toString()}\": \"${header.value.toString()}\",";
       });
       if (headers.endsWith(",")) {
         headers = headers.substring(0, headers.length - 1);

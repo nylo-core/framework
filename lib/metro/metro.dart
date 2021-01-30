@@ -30,13 +30,22 @@ List<NyCommand> _allMakeCommands = [
       arguments: ["-h", "-f"],
       action: _makeController),
   NyCommand(
-      name: "model", options: 1, arguments: ["-h", "-f", "-s"], action: _makeModel),
+      name: "model",
+      options: 1,
+      arguments: ["-h", "-f", "-s"],
+      action: _makeModel),
   NyCommand(
       name: "page", options: 1, arguments: ["-h", "-f"], action: _makePage),
   NyCommand(
-      name: "stateful_widget", options: 1, arguments: ["-h", "-f"], action: _makeStatefulWidget),
+      name: "stateful_widget",
+      options: 1,
+      arguments: ["-h", "-f"],
+      action: _makeStatefulWidget),
   NyCommand(
-      name: "stateless_widget", options: 1, arguments: ["-h", "-f"], action: _makeStatelessWidget),
+      name: "stateless_widget",
+      options: 1,
+      arguments: ["-h", "-f"],
+      action: _makeStatelessWidget),
 ];
 
 List<NyCommand> _allApiSpecCommands = [
@@ -242,7 +251,7 @@ _makeStatelessWidget(List<String> arguments) async {
   }
 
   String widgetName =
-  argResults.arguments.first.replaceAll(RegExp(r'(_?widget)'), "");
+      argResults.arguments.first.replaceAll(RegExp(r'(_?widget)'), "");
 
   String path = '$widgetFolder/${widgetName.toLowerCase()}_widget.dart';
 
@@ -342,9 +351,7 @@ _makeModel(List<String> arguments) async {
       help: 'Creates a new model even if it already exists.',
       negatable: false);
   parser.addFlag(storableFlag,
-      abbr: 's',
-      help: 'Create a new Storable model.',
-      negatable: false);
+      abbr: 's', help: 'Create a new Storable model.', negatable: false);
 
   final ArgResults argResults = parser.parse(arguments);
 
@@ -373,7 +380,8 @@ _makeModel(List<String> arguments) async {
   final File file = File(path);
 
   String modelName = _parseToPascal(firstArg);
-  String strModel = modelStub(modelName: modelName, isStorable: hasStorableFlag);
+  String strModel =
+      modelStub(modelName: modelName, isStorable: hasStorableFlag);
 
   await _makeDirectory(modelFolder);
 
