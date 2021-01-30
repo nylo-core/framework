@@ -6,7 +6,7 @@
 * Controller refactored to remove .of(BuildContext context)
 * New Storable method `save('key')` to store to secure storage
 * onPop parameter added to `routeTo` method
-* Small under hood improvements
+* Small improvements and tweaks
 
 ## [0.4.0] - 2020-12-21
 
