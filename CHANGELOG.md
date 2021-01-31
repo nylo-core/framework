@@ -1,3 +1,8 @@
+## [0.5.2] - 2021-01-31
+
+* Fix `onPop` called on null
+* Pass new "result" into `pop` method
+
 ## [0.5.1] - 2021-01-30
 
 * `flutter format`
