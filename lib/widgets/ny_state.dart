@@ -17,8 +17,8 @@ abstract class NyState<T extends StatefulWidget> extends State<T> {
 
   widgetDidLoad() async {}
 
-  pop() {
-    Navigator.of(context).pop();
+  pop({dynamic result}) {
+    Navigator.of(context).pop(result);
   }
 
   routeTo(String routeName,
@@ -31,7 +31,7 @@ abstract class NyState<T extends StatefulWidget> extends State<T> {
       Curve transitionCurve,
       Map<String, dynamic> params,
       CustomSailorTransition customTransition,
-      Function() onPop}) {
+      Function(dynamic value) onPop}) {
     NyArgument nyArgument = NyArgument(data);
     NyNavigator.instance.router
         .navigate(
@@ -46,6 +46,6 @@ abstract class NyState<T extends StatefulWidget> extends State<T> {
           params: params,
           customTransition: customTransition,
         )
-        .then((v) => onPop());
+        .then((v) => onPop != null ? onPop(v) : (v) {});
   }
 }
