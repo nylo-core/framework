@@ -4,8 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
 import 'package:nylo_framework/localization/app_localization.dart';
-import 'package:nylo_framework/router/router.dart';
-import 'package:sailor/sailor.dart';
+import 'package:nylo_framework/router/models/base_arguments.dart';
 
 /// Returns a value from the .env file
 /// the [key] must exist as a string value e.g. APP_NAME.
@@ -245,81 +244,6 @@ class NyArgument extends BaseArguments {
   NyArgument(this.data);
 }
 
-/// Helper class for navigation
-class NyNav {
-  NyNav.to({
-    @required String routeName,
-    dynamic data,
-    NavigationType navigationType = NavigationType.push,
-    dynamic result,
-    bool Function(Route<dynamic> route) removeUntilPredicate,
-    List<SailorTransition> transitions,
-    Duration transitionDuration,
-    Curve transitionCurve,
-    Map<String, dynamic> params,
-    CustomSailorTransition customTransition,
-  }) {
-    NyArgument nyArgument = NyArgument(data);
-    NyNavigator.instance.router.navigate(
-      routeName,
-      args: nyArgument,
-      navigationType: navigationType,
-      result: result,
-      removeUntilPredicate: removeUntilPredicate,
-      transitions: transitions,
-      transitionDuration: transitionDuration,
-      transitionCurve: transitionCurve,
-      params: params,
-      customTransition: customTransition,
-    );
-  }
-}
-
-NavigationType navigationType(NavType navType) {
-  if (navType == NavType.push) {
-    return NavigationType.push;
-  }
-  if (navType == NavType.pushReplace) {
-    return NavigationType.pushReplace;
-  }
-  if (navType == NavType.pushAndRemoveUntil) {
-    return NavigationType.pushAndRemoveUntil;
-  }
-  if (navType == NavType.popAndPushNamed) {
-    return NavigationType.popAndPushNamed;
-  }
-  return null;
-}
-
-enum NavType { push, pushReplace, pushAndRemoveUntil, popAndPushNamed }
-
-List<SailorTransition> routeTransitions(
-    void Function(List<RouteTransition> list) transition) {
-  List<RouteTransition> transitions = [];
-  transition(transitions);
-  List<SailorTransition> tmp = [];
-
-  if (transitions.contains(RouteTransition.fade_in)) {
-    tmp.add(SailorTransition.fade_in);
-  }
-  if (transitions.contains(RouteTransition.slide_from_right)) {
-    tmp.add(SailorTransition.slide_from_right);
-  }
-  if (transitions.contains(RouteTransition.slide_from_left)) {
-    tmp.add(SailorTransition.slide_from_left);
-  }
-  if (transitions.contains(RouteTransition.slide_from_top)) {
-    tmp.add(SailorTransition.slide_from_top);
-  }
-  if (transitions.contains(RouteTransition.slide_from_bottom)) {
-    tmp.add(SailorTransition.slide_from_bottom);
-  }
-  if (transitions.contains(RouteTransition.zoom_in)) {
-    tmp.add(SailorTransition.zoom_in);
-  }
-  return tmp;
-}
-
 /// Logger used for messages you want to print to the console.
 class NyLogger {
   Logger _logger = Logger(
@@ -353,4 +277,4 @@ String trans(BuildContext context, String key) =>
     AppLocalizations.of(context).trans(key);
 
 /// Nylo version
-const String nyloVersion = 'v0.5-beta.0';
+const String nyloVersion = 'v0.6-beta.0';

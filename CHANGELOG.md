@@ -1,3 +1,13 @@
+## [0.6.0] - 2021-02-18
+
+* Ability to create plugins for Nylo
+* Refactored NyRouter class
+* Add page transitions
+* `StatefulPageWidget` class now has `data()` method
+* Controller and model stub update
+* new `construct(context)` method for controllers
+* Version bump
+
 ## [0.5.2] - 2021-01-31
 
 * Fix `onPop` called on null
