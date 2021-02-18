@@ -4,7 +4,6 @@ import 'package:nylo_framework/router/models/nyrouter_route_guard.dart';
 import 'package:nylo_framework/router/router.dart';
 import 'package:nylo_framework/widgets/stateful_page_widget.dart';
 import 'package:flutter/widgets.dart';
-import 'package:meta/meta.dart';
 import 'package:page_transition/page_transition.dart';
 
 typedef NyRouterRouteBuilder = Widget Function(
