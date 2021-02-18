@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:nylo_framework/helpers/helper.dart';
 import 'package:nylo_framework/router/router.dart';
-import 'package:sailor/sailor.dart';
+import 'package:page_transition/page_transition.dart';
 
 abstract class NyState<T extends StatefulWidget> extends State<T> {
   @override
@@ -26,11 +26,8 @@ abstract class NyState<T extends StatefulWidget> extends State<T> {
       NavigationType navigationType = NavigationType.push,
       dynamic result,
       bool Function(Route<dynamic> route) removeUntilPredicate,
-      List<SailorTransition> transitions,
       Duration transitionDuration,
-      Curve transitionCurve,
-      Map<String, dynamic> params,
-      CustomSailorTransition customTransition,
+      PageTransitionType pageTransition,
       Function(dynamic value) onPop}) {
     NyArgument nyArgument = NyArgument(data);
     NyNavigator.instance.router
@@ -40,11 +37,7 @@ abstract class NyState<T extends StatefulWidget> extends State<T> {
           navigationType: navigationType,
           result: result,
           removeUntilPredicate: removeUntilPredicate,
-          transitions: transitions,
-          transitionDuration: transitionDuration,
-          transitionCurve: transitionCurve,
-          params: params,
-          customTransition: customTransition,
+          pageTransitionType: pageTransition,
         )
         .then((v) => onPop != null ? onPop(v) : (v) {});
   }

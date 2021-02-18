@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:nylo_framework/helpers/helper.dart';
 import 'package:queue/queue.dart';
-import 'package:sailor/sailor.dart';
 
 /// Class to handle queuing jobs
 class BusQueue {
@@ -38,16 +37,16 @@ abstract class BaseController {
   BaseController({this.context, this.request});
 
   dynamic data() => this.request.data();
+
+  construct(BuildContext context) async {}
 }
 
 /// Base class to handle requests
 class NyRequest {
   String currentRoute;
   NyArgument _args;
-  ParamMap _params;
-  NyRequest({this.currentRoute, NyArgument args, ParamMap params}) {
+  NyRequest({this.currentRoute, NyArgument args}) {
     _args = args;
-    _params = params;
   }
 
   /// Write [data] to controller
@@ -58,10 +57,5 @@ class NyRequest {
   /// Returns data passed as an argument to a route
   dynamic data() {
     return _args == null ? null : _args.data;
-  }
-
-  /// Returns a parameter used in the router.dart file for a route
-  dynamic param(String key) {
-    return _params.param(key);
   }
 }

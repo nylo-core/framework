@@ -5,13 +5,12 @@ ${isStorable == true ? "import 'package:nylo_framework/helpers/helper.dart';\n\n
 ${isStorable == true ? '''
     @override
     toStorage() => {
-      
+      // 'my_data_key': this.myVal
     };
 
     @override
     fromStorage(dynamic data) {
-      
+      // this.myVal = data['my_data_key'];
     }
-''' : ""}
-}
+''' : ""}}
 ''';
