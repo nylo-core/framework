@@ -1,3 +1,7 @@
+## [0.6.1] - 2021-02-18
+
+* Bug fixes
+
 ## [0.6.0] - 2021-02-18
 
 * Ability to create plugins for Nylo
