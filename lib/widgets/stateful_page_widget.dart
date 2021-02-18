@@ -13,4 +13,6 @@ abstract class StatefulPageWidget extends StatefulWidget {
   State<StatefulWidget> createState() {
     throw UnimplementedError();
   }
+
+  dynamic data() => this.controller.request.data();
 }

@@ -260,7 +260,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.5.0"
+    version: "0.6.0"
   package_config:
     dependency: transitive
     description:
@@ -268,6 +268,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.9.3"
+  page_transition:
+    dependency: transitive
+    description:
+      name: page_transition
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.7+6"
   path:
     dependency: transitive
     description:
@@ -338,13 +345,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.7+2"
-  sailor:
-    dependency: transitive
-    description:
-      name: sailor
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.7.1"
   shared_preferences:
     dependency: transitive
     description:
