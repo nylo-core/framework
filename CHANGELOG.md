@@ -1,3 +1,8 @@
+## [0.6.2] - 2021-03-07
+
+* Flutter 2.0.0+ support
+* Bug fixes
+
 ## [0.6.1] - 2021-02-18
 
 * Bug fixes
