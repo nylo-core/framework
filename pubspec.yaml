@@ -15,7 +15,7 @@ dependencies:
   flutter_launcher_icons: ^0.8.1
   page_transition: ^1.1.7+6
   queue: ^2.0.7+2
-  dynamic_theme: ^1.0.1
+  adaptive_theme: ^1.1.0
   flutter_secure_storage: ^3.3.5
   flutter_dotenv: ^2.1.0
   args: ^1.6.0
