@@ -55,7 +55,5 @@ class NyRequest {
   }
 
   /// Returns data passed as an argument to a route
-  dynamic data() {
-    return _args == null ? null : _args.data;
-  }
+  dynamic data() => (_args == null ? null : _args.data);
 }

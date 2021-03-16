@@ -30,7 +30,7 @@ class PageNotFound extends StatelessWidget {
                   fontSize: 16.0,
                 ),
               ),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: () => Navigator.pop(context),
                 child: Text("Go back"),
               ),
