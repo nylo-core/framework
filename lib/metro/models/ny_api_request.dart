@@ -19,7 +19,7 @@ class NyApiRequest {
     url = json['url'];
     method = json['method'];
     if (json['headers'] != null) {
-      headers = new List<Headers>();
+      headers = [];
       json['headers'].forEach((v) {
         headers.add(new Headers.fromJson(v));
       });

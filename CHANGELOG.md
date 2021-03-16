@@ -1,3 +1,7 @@
+## [0.7.0+1] - 2021-03-16
+
+* Changes as per dart analysis log
+
 ## [0.7.0] - 2021-03-16
 
 * Router bug fix
