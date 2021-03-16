@@ -346,7 +346,7 @@ class NyRouter {
         child: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
           Widget widget = route.builder(context, baseArgs ?? route.defaultArgs);
-          if (widget is StatefulPageWidget) {
+          if (widget is StatefulPageWidget && widget.controller != null) {
             widget.controller.context = context;
             widget.controller.construct(context);
           }

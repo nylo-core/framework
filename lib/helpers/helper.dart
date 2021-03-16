@@ -277,4 +277,4 @@ String trans(BuildContext context, String key) =>
     AppLocalizations.of(context).trans(key);
 
 /// Nylo version
-const String nyloVersion = 'v0.6-beta.0';
+const String nyloVersion = 'v0.7-beta.0';

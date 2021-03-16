@@ -1,3 +1,8 @@
+## [0.7.0] - 2021-03-14
+
+* Router bug fix
+* Small tweaks
+
 ## [0.6.2] - 2021-03-07
 
 * Flutter 2.0.0+ support
