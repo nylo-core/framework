@@ -188,10 +188,6 @@ class NyStorage {
         print(e.toString());
       }
     }
-    print(T);
-    if (T == null) {
-      return data;
-    }
 
     if (T.toString() == "String") {
       return data.toString();

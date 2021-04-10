@@ -1,3 +1,7 @@
+## [0.8.2] - 2021-04-10
+
+* Remove operand check
+
 ## [0.8.1] - 2021-04-10
 
 * Update adaptive_theme dependency
