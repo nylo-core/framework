@@ -1,3 +1,7 @@
+## [0.8.1] - 2021-04-10
+
+* Update adaptive_theme dependency
+
 ## [0.8.0] - 2021-04-10
 
 * Null safety support

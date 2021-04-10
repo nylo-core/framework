@@ -1,6 +1,6 @@
 name: nylo_framework
 description: Micro-framework for Flutter that's built to simplify app development for Flutter projects.
-version: 0.8.0
+version: 0.8.1
 homepage: https://nylo.dev
 repository: https://github.com/nylo-core/framework
 issue_tracker: https://github.com/nylo-core/framework/issues
@@ -13,7 +13,7 @@ dependencies:
   flutter_launcher_icons: ^0.9.0
   page_transition: ^2.0.1-nullsafety.0
   queue: ^3.1.0
-  adaptive_theme: ^2.0.1
+  adaptive_theme: ^2.1.1
   flutter_secure_storage: ^4.1.0
   flutter_dotenv: ^4.0.0-nullsafety.0
   args: ^2.0.0
