@@ -7,13 +7,13 @@ class CurrentTheme {
 
   static final CurrentTheme instance = CurrentTheme._privateConstructor();
 
-  ThemeData theme;
+  ThemeData? theme;
 }
 
 /// Class to help manage current theme in the app.
 class AppThemeHelper {
   /// Changes the current theme to the new [theme]
-  static set(BuildContext context, {@required ThemeData theme}) async {
+  static set(BuildContext context, {required ThemeData theme}) async {
     CurrentTheme.instance.theme = theme;
 
     if (theme.brightness == Brightness.light) {

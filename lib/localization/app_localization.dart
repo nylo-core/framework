@@ -10,14 +10,14 @@ class AppLocalizations {
 
   AppLocalizations(this.locale);
 
-  static AppLocalizations of(BuildContext context) {
+  static AppLocalizations? of(BuildContext context) {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
   static const LocalizationsDelegate<AppLocalizations> delegate =
       _AppLocalizationsDelegate();
 
-  Map<String, String> _localizedStrings;
+  late Map<String, String> _localizedStrings;
 
   /// loads the locale file from the /lang directory
   Future load() async {
@@ -32,7 +32,7 @@ class AppLocalizations {
   }
 
   /// Translate strings with the [key] used in the .json file.
-  String trans(String key) {
+  String? trans(String key) {
     return _localizedStrings[key];
   }
 }
@@ -241,8 +241,8 @@ class _AppLocalizationsDelegate
 
 /// Reloads the locale for the [AppLocalizations] class with a locale.
 reloadLocale(BuildContext context, Locale locale) async {
-  AppLocalizations.of(context).locale = locale;
-  await AppLocalizations.of(context).load();
+  AppLocalizations.of(context)!.locale = locale;
+  await AppLocalizations.of(context)!.load();
 }
 
 /// A locale class used to manage the current locale state.

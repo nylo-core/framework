@@ -2,15 +2,15 @@ import 'package:nylo_framework/router/models/base_arguments.dart';
 import 'package:page_transition/page_transition.dart';
 
 class ArgumentsWrapper {
-  BaseArguments baseArguments;
-  PageTransitionType pageTransitionType;
-  Duration transitionDuration;
+  BaseArguments? baseArguments;
+  PageTransitionType? pageTransitionType;
+  Duration? transitionDuration;
 
   ArgumentsWrapper(
       {this.baseArguments, this.transitionDuration, this.pageTransitionType});
 
   ArgumentsWrapper copyWith(
-      {BaseArguments baseArguments, PageTransitionType pageTransitionType}) {
+      {BaseArguments? baseArguments, PageTransitionType? pageTransitionType}) {
     return ArgumentsWrapper(
         baseArguments: baseArguments ?? this.baseArguments,
         transitionDuration: transitionDuration ?? this.transitionDuration,

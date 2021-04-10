@@ -1,4 +1,4 @@
-String controllerStub({String controllerName}) => '''
+String controllerStub({String? controllerName}) => '''
 import 'controller.dart';
 import 'package:flutter/widgets.dart';
 
