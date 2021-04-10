@@ -3,9 +3,9 @@ import 'package:page_transition/page_transition.dart';
 
 class RouteArgsPair {
   final String name;
-  final BaseArguments args;
-  final PageTransitionType pageTransition;
-  final Duration transitionDuration;
+  final BaseArguments? args;
+  final PageTransitionType? pageTransition;
+  final Duration? transitionDuration;
 
   RouteArgsPair(this.name,
       {this.args, this.pageTransition, this.transitionDuration});

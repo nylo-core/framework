@@ -21,11 +21,11 @@ import 'package:nylo_framework/helpers/helper.dart';
 /// the callback method like the example above.
 class ApiRender<T> extends FutureBuilder {
   ApiRender(
-      {Key key,
-      @required Future api,
-      @required Widget Function(T model) child,
-      Widget whenLoading,
-      Widget initialWidget})
+      {Key? key,
+      required Future api,
+      required Widget Function(T? model) child,
+      Widget? whenLoading,
+      Widget? initialWidget})
       : super(
           key: key,
           future: api,
@@ -41,7 +41,7 @@ class ApiRender<T> extends FutureBuilder {
                 return initialWidget;
               default:
                 if (snapshot.hasError) {
-                  NyLogger.debug(snapshot.error);
+                  NyLogger.debug(snapshot.error as String?);
                   if (initialWidget == null) {
                     return child(null);
                   }

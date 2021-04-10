@@ -1,5 +1,5 @@
 /// Helper used to capitalize a [String] value
-String capitalize(String input) {
+String capitalize(String? input) {
   if (input == null) {
     throw new ArgumentError("string: $input");
   }

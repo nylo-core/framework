@@ -1,10 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
 import 'package:nylo_framework/localization/app_localization.dart';
-import 'package:nylo_framework/router/models/base_arguments.dart';
 
 /// Returns a value from the .env file
 /// the [key] must exist as a string value e.g. APP_NAME.
@@ -12,11 +11,11 @@ import 'package:nylo_framework/router/models/base_arguments.dart';
 /// Returns a String|bool|null|dynamic
 /// depending on the value type.
 dynamic getEnv(String key, {dynamic defaultValue}) {
-  if (!DotEnv().env.containsKey(key) && defaultValue != null) {
+  if (!DotEnv.env.containsKey(key) && defaultValue != null) {
     return defaultValue;
   }
 
-  String value = DotEnv().env[key];
+  String? value = DotEnv.env[key];
 
   if (value == 'null' || value == null) {
     return null;
@@ -53,42 +52,20 @@ String getPublicAsset(String asset) {
 /// Returns a [TextTheme].
 TextTheme getAppTextTheme(TextStyle appThemeFont, TextTheme textTheme) {
   return TextTheme(
-    headline1: appThemeFont.merge(textTheme?.headline1),
-    headline2: appThemeFont.merge(textTheme?.headline2),
-    headline3: appThemeFont.merge(textTheme?.headline3),
-    headline4: appThemeFont.merge(textTheme?.headline4),
-    headline5: appThemeFont.merge(textTheme?.headline5),
-    headline6: appThemeFont.merge(textTheme?.headline6),
-    subtitle1: appThemeFont.merge(textTheme?.subtitle1),
-    subtitle2: appThemeFont.merge(textTheme?.subtitle2),
-    bodyText1: appThemeFont.merge(textTheme?.bodyText1),
-    bodyText2: appThemeFont.merge(textTheme?.bodyText2),
-    caption: appThemeFont.merge(textTheme?.caption),
-    button: appThemeFont.merge(textTheme?.button),
-    overline: appThemeFont.merge(textTheme?.overline),
+    headline1: appThemeFont.merge(textTheme.headline1),
+    headline2: appThemeFont.merge(textTheme.headline2),
+    headline3: appThemeFont.merge(textTheme.headline3),
+    headline4: appThemeFont.merge(textTheme.headline4),
+    headline5: appThemeFont.merge(textTheme.headline5),
+    headline6: appThemeFont.merge(textTheme.headline6),
+    subtitle1: appThemeFont.merge(textTheme.subtitle1),
+    subtitle2: appThemeFont.merge(textTheme.subtitle2),
+    bodyText1: appThemeFont.merge(textTheme.bodyText1),
+    bodyText2: appThemeFont.merge(textTheme.bodyText2),
+    caption: appThemeFont.merge(textTheme.caption),
+    button: appThemeFont.merge(textTheme.button),
+    overline: appThemeFont.merge(textTheme.overline),
   );
-}
-
-/// Useful helper to store a [String] auth token.
-/// Use case - After authenticating a user, adding their token.
-Future<void> authTokenStore(String token,
-    {String key = 'user_auth_token'}) async {
-  final storage = new FlutterSecureStorage();
-  await storage.write(key: key, value: token);
-}
-
-/// Helper method to return a auth token stored on the users device.
-/// Pass in the [key] if it's not stored in the default location.
-Future<String> authTokenGet({String key = 'user_auth_token'}) async {
-  final storage = new FlutterSecureStorage();
-  return await storage.read(key: key);
-}
-
-/// Helper method to delete a auth token stored on the users device.
-/// Use case - If a user signs out from your app.
-Future<void> authTokenDelete({String key = 'user_auth_token'}) async {
-  final storage = new FlutterSecureStorage();
-  await storage.delete(key: key);
 }
 
 /// Extensions for String
@@ -149,8 +126,8 @@ abstract class Storable {
   ///
   /// Get user
   /// User user = await NyStorage.read<User>('com.company.app.auth_user', model: new User());
-  save(String key) {
-    NyStorage.store(key, this);
+  Future save(String key) async {
+    await NyStorage.store(key, this);
   }
 
   /// Check if the object implements [Storable].
@@ -166,7 +143,7 @@ class StorageManager {
 /// Base class to help manage local storage
 class NyStorage {
   /// Saves an [object] to local storage.
-  static store(String key, object) async {
+  static Future store(String key, object) async {
     assert(object != null);
 
     if (object is String) {
@@ -190,10 +167,8 @@ class NyStorage {
   }
 
   /// Read a value from the local storage
-  static Future<dynamic> read<T>(String key, {Storable model}) async {
-    assert(key != null);
-
-    String data = await StorageManager.storage.read(key: key);
+  static Future<dynamic> read<T>(String key, {Storable? model}) async {
+    String? data = await StorageManager.storage.read(key: key);
     if (data == null) {
       return null;
     }
@@ -201,7 +176,7 @@ class NyStorage {
     if (model != null) {
       try {
         if (model.isStoreable() != null && model.isStoreable() == true) {
-          String data = await StorageManager.storage.read(key: key);
+          String? data = await StorageManager.storage.read(key: key);
           if (data == null) {
             return null;
           }
@@ -213,7 +188,7 @@ class NyStorage {
         print(e.toString());
       }
     }
-
+    print(T);
     if (T == null) {
       return data;
     }
@@ -234,14 +209,9 @@ class NyStorage {
   }
 
   /// Deletes associated value for the given [key].
-  static delete(String key) async {
+  static Future delete(String key) async {
     return await StorageManager.storage.delete(key: key);
   }
-}
-
-class NyArgument extends BaseArguments {
-  dynamic data;
-  NyArgument(this.data);
 }
 
 /// Logger used for messages you want to print to the console.
@@ -257,7 +227,7 @@ class NyLogger {
     ),
   );
 
-  NyLogger.debug(String message) {
+  NyLogger.debug(String? message) {
     _logger.d(message);
   }
 
@@ -273,8 +243,8 @@ class NyLogger {
 /// Returns the translation value from the [key] you provide.
 /// E.g. trans(context, "hello")
 /// lang translation will be returned for the app locale.
-String trans(BuildContext context, String key) =>
-    AppLocalizations.of(context).trans(key);
+String? trans(BuildContext context, String key) =>
+    AppLocalizations.of(context)!.trans(key);
 
 /// Nylo version
-const String nyloVersion = 'v0.7-beta.0';
+const String nyloVersion = 'v0.8-beta.0';

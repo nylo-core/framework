@@ -9,8 +9,10 @@ import 'package:nylo_framework/router/models/route_args_pair.dart';
 import 'package:nylo_framework/router/models/nyrouter_options.dart';
 import 'package:nylo_framework/router/models/nyrouter_route.dart';
 import 'package:nylo_framework/router/ui/page_not_found.dart';
-import 'package:nylo_framework/widgets/stateful_page_widget.dart';
+import 'package:nylo_framework/widgets/ny_stateful_widget.dart';
 import 'package:page_transition/page_transition.dart';
+
+import 'models/ny_argument.dart';
 
 class NyNavigator {
   NyRouter router = NyRouter();
@@ -40,8 +42,8 @@ enum NavigationType { push, pushReplace, pushAndRemoveUntil, popAndPushNamed }
 class NyRouter {
   NyRouter({
     this.options = const NyRouterOptions(),
-  }) : assert(options != null) {
-    if (options != null && options.navigatorKey != null) {
+  }) {
+    if (options.navigatorKey != null) {
       this._navigatorKey = options.navigatorKey;
     } else {
       this._navigatorKey = GlobalKey<NavigatorState>();
@@ -64,9 +66,9 @@ class NyRouter {
   /// This is the same [NavigatorState] that is returned by [Navigator.of(context)]
   /// (when there is only a single [Navigator] in Widget tree, i.e. from [MaterialApp]
   /// or [CupertinoApp]).
-  GlobalKey<NavigatorState> _navigatorKey;
+  GlobalKey<NavigatorState>? _navigatorKey;
 
-  GlobalKey<NavigatorState> get navigatorKey => _navigatorKey;
+  GlobalKey<NavigatorState>? get navigatorKey => _navigatorKey;
 
   /// Get the registered routes names as a list.
   List<String> getRegisteredRouteNames() {
@@ -81,13 +83,13 @@ class NyRouter {
   /// Make sure to provide the appropriate type, that is, provide the same type
   /// as the one passed while calling [navigate], else a cast error will be
   /// thrown.
-  static T args<T extends BaseArguments>(BuildContext context) {
-    return (ModalRoute.of(context).settings.arguments as ArgumentsWrapper)
-        .baseArguments as T;
+  static T? args<T extends BaseArguments?>(BuildContext context) {
+    return (ModalRoute.of(context)!.settings.arguments as ArgumentsWrapper)
+        .baseArguments as T?;
   }
 
   route(String name, NyRouteView view,
-      {PageTransitionType transition, List<RouteGuard> routeGuards}) {
+      {PageTransitionType? transition, List<RouteGuard>? routeGuards}) {
     this._addRoute(NyRouterRoute(
         name: name,
         view: view,
@@ -102,33 +104,28 @@ class NyRouter {
   /// If a route is provided with a name that was previously added, it will
   /// override the old one.
   void _addRoute(NyRouterRoute route) {
-    assert(route != null, "'route' argument cannot be null.");
-
     if (_routeNameMappings.containsKey(route.name)) {
       NyLogger.info(
           "'${route.name}' has already been registered before. Overriding it!");
     }
-
     _routeNameMappings[route.name] = route;
   }
 
   /// Add a list of routes at once.
   void addRoutes(List<NyRouterRoute> routes) {
-    if (routes != null && routes.isNotEmpty) {
+    if (routes.isNotEmpty) {
       routes.forEach((route) => this._addRoute(route));
     }
   }
 
   /// Makes this a callable class. Delegates to [navigate].
   Future<T> call<T>(String name,
-      {BaseArguments args,
+      {BaseArguments? args,
       NavigationType navigationType = NavigationType.push,
       dynamic result,
-      bool Function(Route<dynamic> route) removeUntilPredicate,
-      Map<String, dynamic> params,
-      PageTransitionType pageTransitionType}) {
-    assert(name != null);
-    assert(navigationType != null);
+      bool Function(Route<dynamic> route)? removeUntilPredicate,
+      Map<String, dynamic>? params,
+      PageTransitionType? pageTransitionType}) {
     assert(navigationType != NavigationType.pushAndRemoveUntil ||
         removeUntilPredicate != null);
 
@@ -156,14 +153,12 @@ class NyRouter {
   /// [removeUntilPredicate] should be provided if using
   /// [NavigationType.pushAndRemoveUntil] strategy.
   Future<T> navigate<T>(String name,
-      {BaseArguments args,
+      {BaseArguments? args,
       NavigationType navigationType = NavigationType.push,
       dynamic result,
-      bool Function(Route<dynamic> route) removeUntilPredicate,
-      PageTransitionType pageTransitionType,
+      bool Function(Route<dynamic> route)? removeUntilPredicate,
+      PageTransitionType? pageTransitionType,
       Duration transitionDuration = const Duration(milliseconds: 300)}) {
-    assert(name != null);
-    assert(navigationType != null);
     assert(navigationType != NavigationType.pushAndRemoveUntil ||
         removeUntilPredicate != null);
 
@@ -181,7 +176,6 @@ class NyRouter {
   Future<List> navigateMultiple(
     List<RouteArgsPair> routeArgsPairs,
   ) {
-    assert(routeArgsPairs != null);
     assert(routeArgsPairs.isNotEmpty);
 
     final pageResponses = <Future>[];
@@ -225,12 +219,12 @@ class NyRouter {
   /// [NavigationType.pushAndRemoveUntil] strategy.
   Future<dynamic> _navigate(
       String name,
-      BaseArguments args,
+      BaseArguments? args,
       NavigationType navigationType,
       dynamic result,
-      bool Function(Route<dynamic> route) removeUntilPredicate,
-      PageTransitionType pageTransitionType,
-      Duration transitionDuration) async {
+      bool Function(Route<dynamic> route)? removeUntilPredicate,
+      PageTransitionType? pageTransitionType,
+      Duration? transitionDuration) async {
     final argsWrapper = ArgumentsWrapper(
       baseArguments: args,
       pageTransitionType: pageTransitionType,
@@ -242,11 +236,11 @@ class NyRouter {
 
     if (route != null &&
         route.routeGuards != null &&
-        route.routeGuards.isNotEmpty) {
+        route.routeGuards!.isNotEmpty) {
       bool canOpen = true;
-      for (RouteGuard routeGuard in route.routeGuards) {
+      for (RouteGuard routeGuard in route.routeGuards!) {
         final result = await routeGuard.canOpen(
-          navigatorKey.currentContext,
+          navigatorKey!.currentContext,
           argsWrapper.baseArguments,
         );
         if (result != true) {
@@ -263,43 +257,39 @@ class NyRouter {
     switch (navigationType) {
       case NavigationType.push:
         return this
-            .navigatorKey
-            .currentState
+            .navigatorKey!
+            .currentState!
             .pushNamed(name, arguments: argsWrapper);
       case NavigationType.pushReplace:
         return this
-            .navigatorKey
-            .currentState
+            .navigatorKey!
+            .currentState!
             .pushReplacementNamed(name, result: result, arguments: argsWrapper);
       case NavigationType.pushAndRemoveUntil:
-        return this.navigatorKey.currentState.pushNamedAndRemoveUntil(
-            name, removeUntilPredicate,
+        return this.navigatorKey!.currentState!.pushNamedAndRemoveUntil(
+            name, removeUntilPredicate!,
             arguments: argsWrapper);
       case NavigationType.popAndPushNamed:
         return this
-            .navigatorKey
-            .currentState
+            .navigatorKey!
+            .currentState!
             .popAndPushNamed(name, result: result, arguments: argsWrapper);
     }
-
-    return null;
   }
 
   /// If the route is not registered throw an error
   /// Make sure to use the correct name while calling navigate.
   void _checkAndThrowRouteNotFound(
     String name,
-    BaseArguments args,
+    BaseArguments? args,
     NavigationType navigationType,
   ) {
-    assert(name != null);
-
     if (!_routeNameMappings.containsKey(name)) {
       if (this.options.handleNameNotFoundUI) {
         NyLogger.error("Page not found\n"
             "[Route Name] $name\n"
             "[ARGS] ${args.toString()}");
-        this.navigatorKey.currentState.push(
+        this.navigatorKey!.currentState!.push(
           MaterialPageRoute(builder: (BuildContext context) {
             return PageNotFound();
           }),
@@ -311,12 +301,15 @@ class NyRouter {
 
   /// Delegation for [Navigator.pop].
   void pop([dynamic result]) {
-    this.navigatorKey.currentState.pop(result);
+    this.navigatorKey!.currentState!.pop(result);
   }
 
   /// Delegation for [Navigator.popUntil].
   void popUntil(void Function(Route<dynamic>) predicate) {
-    this.navigatorKey.currentState.popUntil(predicate);
+    this
+        .navigatorKey!
+        .currentState!
+        .popUntil(predicate as bool Function(Route<dynamic>));
   }
 
   /// Generates the [RouteFactory] which builds a [Route] on request.
@@ -324,13 +317,13 @@ class NyRouter {
   /// These routes are built using the [NyRouterRoute]s [addRoute] method.
   RouteFactory generator() {
     return (settings) {
-      final NyRouterRoute route = _routeNameMappings[settings.name];
+      final NyRouterRoute? route = _routeNameMappings[settings.name!];
 
       if (route == null) return null;
 
-      ArgumentsWrapper argsWrapper;
+      ArgumentsWrapper? argsWrapper;
       if (settings.arguments is ArgumentsWrapper) {
-        argsWrapper = settings.arguments as ArgumentsWrapper;
+        argsWrapper = settings.arguments as ArgumentsWrapper?;
       } else {
         argsWrapper = ArgumentsWrapper();
         argsWrapper.baseArguments = NyArgument(settings.arguments);
@@ -340,15 +333,15 @@ class NyRouter {
         argsWrapper = ArgumentsWrapper();
       }
 
-      final BaseArguments baseArgs = argsWrapper.baseArguments;
+      final BaseArguments? baseArgs = argsWrapper.baseArguments;
 
       return PageTransition(
         child: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
           Widget widget = route.builder(context, baseArgs ?? route.defaultArgs);
-          if (widget is StatefulPageWidget && widget.controller != null) {
-            widget.controller.context = context;
-            widget.controller.construct(context);
+          if (widget is NyStatefulWidget && widget.controller != null) {
+            widget.controller!.context = context;
+            widget.controller!.construct(context);
           }
           return widget;
         }),
