@@ -1,3 +1,17 @@
+## [0.8.2] - 2021-04-10
+
+* Remove operand check
+
+## [0.8.1] - 2021-04-10
+
+* Update adaptive_theme dependency
+
+## [0.8.0] - 2021-04-10
+
+* Null safety support
+* Rename StatefulPageWidget to NyStatefulWidget
+* Pubspec.yaml dependency updates
+
 ## [0.7.0+1] - 2021-03-16
 
 * Changes as per dart analysis log

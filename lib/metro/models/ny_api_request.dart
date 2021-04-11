@@ -1,10 +1,10 @@
 /// Base class used to represent an API request object used in [Metro] cli.
 class NyApiRequest {
-  String url;
-  String method;
-  List<Headers> headers;
-  String modelName;
-  String modelType;
+  String? url;
+  String? method;
+  List<Headers>? headers;
+  String? modelName;
+  String? modelType;
   dynamic data;
 
   NyApiRequest(
@@ -21,7 +21,7 @@ class NyApiRequest {
     if (json['headers'] != null) {
       headers = [];
       json['headers'].forEach((v) {
-        headers.add(new Headers.fromJson(v));
+        headers!.add(new Headers.fromJson(v));
       });
     }
     modelName = json['model_name'];
@@ -34,7 +34,7 @@ class NyApiRequest {
     data['url'] = this.url;
     data['method'] = this.method;
     if (this.headers != null) {
-      data['headers'] = this.headers.map((v) => v.toJson()).toList();
+      data['headers'] = this.headers!.map((v) => v.toJson()).toList();
     }
     data['model_name'] = this.modelName;
     data['model_type'] = this.modelType;
@@ -47,8 +47,8 @@ class NyApiRequest {
   Map<String, String> headerMap() {
     Map<String, String> headers = {};
 
-    if (this.headers.length > 0) {
-      this.headers.forEach((header) {
+    if (this.headers!.length > 0) {
+      this.headers!.forEach((header) {
         headers.addAll({header.key.toString(): header.value.toString()});
       });
     }
@@ -59,8 +59,8 @@ class NyApiRequest {
   String headerString() {
     String headers = "";
 
-    if (this.headers.length > 0) {
-      this.headers.forEach((header) {
+    if (this.headers!.length > 0) {
+      this.headers!.forEach((header) {
         headers +=
             "\"${header.key.toString()}\": \"${header.value.toString()}\",";
       });
@@ -73,7 +73,7 @@ class NyApiRequest {
   }
 
   Map<String, String> urlQueryMap() {
-    var uri = Uri.dataFromString(this.url);
+    var uri = Uri.dataFromString(this.url!);
     Map<String, String> params = uri.queryParameters;
 
     return params;
@@ -95,7 +95,7 @@ class NyApiRequest {
   }
 
   Uri urlUri() {
-    return Uri.dataFromString(this.url);
+    return Uri.dataFromString(this.url!);
   }
 
   String mapQueryParams() {
@@ -109,26 +109,26 @@ class NyApiRequest {
     return str;
   }
 
-  String getBaseUrl() {
+  String? getBaseUrl() {
     RegExp regExp = new RegExp(
       r"(http[s]?:\/\/)?([^\/\s]+)(.*)",
       caseSensitive: false,
       multiLine: false,
     );
 
-    return regExp.firstMatch(this.url).group(2);
+    return regExp.firstMatch(this.url!)!.group(2);
   }
 
-  String getUrlPath({bool withQuery = false}) {
+  String? getUrlPath({bool withQuery = false}) {
     RegExp regExp = new RegExp(
       r"(http[s]?:\/\/)?([^\/\s]+\/)(.*)",
       caseSensitive: false,
       multiLine: false,
     );
 
-    String strWithQuery = regExp.firstMatch(this.url).group(3);
+    String? strWithQuery = regExp.firstMatch(this.url!)!.group(3);
 
-    if (withQuery == false && strWithQuery.contains("?")) {
+    if (withQuery == false && strWithQuery!.contains("?")) {
       return strWithQuery.split("?")[0];
     }
 
@@ -142,13 +142,13 @@ class NyApiRequest {
       multiLine: false,
     );
 
-    return regExp.stringMatch(this.url).toString();
+    return regExp.stringMatch(this.url!).toString();
   }
 }
 
 class Headers {
-  String key;
-  String value;
+  String? key;
+  String? value;
 
   Headers({this.key, this.value});
 

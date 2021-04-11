@@ -20,7 +20,7 @@ class NyRouterOptions {
   /// This is the same [NavigatorState] that is returned by [Navigator.of(context)]
   /// (when there is only a single [Navigator] in Widget tree, i.e. from [MaterialApp]
   /// or [CupertinoApp]).
-  final GlobalKey<NavigatorState> navigatorKey;
+  final GlobalKey<NavigatorState>? navigatorKey;
 
   const NyRouterOptions({
     this.notFoundPage = const PageNotFound(),
@@ -28,5 +28,5 @@ class NyRouterOptions {
     this.isLoggingEnabled = false,
     this.transitionDuration = const Duration(milliseconds: 300),
     this.navigatorKey,
-  }) : assert(handleNameNotFoundUI != null);
+  });
 }

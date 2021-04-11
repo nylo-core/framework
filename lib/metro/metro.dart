@@ -1,15 +1,9 @@
 library metro;
 
-import 'dart:convert';
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter_launcher_icons/main.dart' as launcherIcons;
-import 'package:http/http.dart' as http show Response;
 import 'package:args/args.dart';
-import 'package:json_to_dart/json_to_dart.dart';
 import 'package:nylo_framework/metro/constants/strings.dart';
-import 'package:nylo_framework/metro/models/ny_api_request.dart';
-import 'package:nylo_framework/metro/networking/api_request_networking.dart';
-import 'package:nylo_framework/metro/stubs/api_request_stub.dart';
-import 'package:nylo_framework/metro/stubs/api_service_stub.dart';
 import 'package:nylo_framework/metro/stubs/controller_stub.dart';
 import 'package:nylo_framework/metro/stubs/model_stub.dart';
 import 'package:nylo_framework/metro/stubs/page_stub.dart';
@@ -48,11 +42,6 @@ List<NyCommand> _allMakeCommands = [
       action: _makeStatelessWidget),
 ];
 
-List<NyCommand> _allApiSpecCommands = [
-  NyCommand(
-      name: "build", options: 1, arguments: ["-h"], action: _apiSpecBuild),
-];
-
 List<NyCommand> _allAppIconsCommands = [
   NyCommand(
       name: "build", options: 1, arguments: ["-h"], action: _makeAppIcons),
@@ -74,34 +63,24 @@ Future<void> commands(List<String> arguments) async {
   String type = argumentSplit[0];
   String action = argumentSplit[1];
 
-  NyCommand nyCommand;
+  NyCommand? nyCommand;
   switch (type) {
     case "project":
       {
-        nyCommand = _allProjectCommands.firstWhere(
-            (command) => command.name == action,
-            orElse: () => null);
+        nyCommand = _allProjectCommands
+            .firstWhereOrNull((command) => command.name == action);
         break;
       }
     case "make":
       {
-        nyCommand = _allMakeCommands.firstWhere(
-            (command) => command.name == action,
-            orElse: () => null);
-        break;
-      }
-    case "apispec":
-      {
-        nyCommand = _allApiSpecCommands.firstWhere(
-            (command) => command.name == action,
-            orElse: () => null);
+        nyCommand = _allMakeCommands
+            .firstWhereOrNull((command) => command.name == action);
         break;
       }
     case "appicons":
       {
-        nyCommand = _allAppIconsCommands.firstWhere(
-            (command) => command.name == action,
-            orElse: () => null);
+        nyCommand = _allAppIconsCommands
+            .firstWhereOrNull((command) => command.name == action);
         break;
       }
     default:
@@ -114,7 +93,7 @@ Future<void> commands(List<String> arguments) async {
   }
 
   arguments.removeAt(0);
-  nyCommand.action(arguments);
+  nyCommand.action!(arguments);
 }
 
 _handleMenu() {
@@ -137,28 +116,21 @@ _handleMenu() {
 
   _writeInGreen(' project');
   _allProjectCommands.forEach((command) {
-    writeInBlack('  project:' + command.name);
+    writeInBlack('  project:' + command.name!);
   });
 
   writeInBlack('');
 
   _writeInGreen(' make');
   _allMakeCommands.forEach((command) {
-    writeInBlack('  make:' + command.name);
+    writeInBlack('  make:' + command.name!);
   });
 
   writeInBlack('');
 
   _writeInGreen(' appicons');
-  _allApiSpecCommands.forEach((command) {
-    writeInBlack('  appicons:' + command.name);
-  });
-
-  writeInBlack('');
-
-  _writeInGreen(' apispec');
-  _allApiSpecCommands.forEach((command) {
-    writeInBlack('  apispec:' + command.name);
+  _allAppIconsCommands.forEach((command) {
+    writeInBlack('  appicons:' + command.name!);
   });
 }
 
@@ -199,7 +171,7 @@ _makeStatefulWidget(List<String> arguments) async {
 
   final ArgResults argResults = parser.parse(arguments);
 
-  bool hasForceFlag = argResults[forceFlag];
+  bool? hasForceFlag = argResults[forceFlag];
   bool hasHelpFlag = argResults[helpFlag];
 
   if (hasHelpFlag) {
@@ -242,7 +214,7 @@ _makeStatelessWidget(List<String> arguments) async {
 
   final ArgResults argResults = parser.parse(arguments);
 
-  bool hasForceFlag = argResults[forceFlag];
+  bool? hasForceFlag = argResults[forceFlag];
   bool hasHelpFlag = argResults[helpFlag];
 
   if (hasHelpFlag) {
@@ -312,7 +284,7 @@ _makeController(List<String> arguments) async {
     exit(0);
   }
 
-  bool hasForceFlag = argResults[forceFlag];
+  bool? hasForceFlag = argResults[forceFlag];
   bool hasHelpFlag = argResults[helpFlag];
 
   if (hasHelpFlag) {
@@ -360,9 +332,9 @@ _makeModel(List<String> arguments) async {
     exit(0);
   }
 
-  bool hasForceFlag = argResults[forceFlag];
+  bool? hasForceFlag = argResults[forceFlag];
   bool hasHelpFlag = argResults[helpFlag];
-  bool hasStorableFlag = argResults[storableFlag];
+  bool? hasStorableFlag = argResults[storableFlag];
 
   if (hasHelpFlag) {
     writeInBlack(parser.usage);
@@ -474,97 +446,12 @@ _makePage(List<String> arguments) async {
   exit(0);
 }
 
-_apiSpecBuild(List<String> arguments) async {
-  writeInBlack("Building API Spec\n");
-
-  File file;
-  Iterable json;
-
-  try {
-    file = File("apispec.json");
-    json = jsonDecode(await file.readAsString());
-  } on Exception catch (e) {
-    _writeInRed("Error");
-    writeInBlack("Please check your apispec.yaml");
-    writeInBlack(e.toString());
-    exit(2);
-  }
-
-  List<NyApiRequest> nyApiRequests =
-      List.of(json).map((e) => NyApiRequest.fromJson(e)).toList();
-
-  String apiRequests = "";
-  String importApiRequests = "";
-
-  final ArgParser parser = ArgParser(allowTrailingOptions: true);
-
-  parser.addFlag(helpFlag,
-      abbr: 'h',
-      help: 'Used to auto build models from your apispec.yaml',
-      negatable: false);
-  parser.addFlag('payload',
-      abbr: 'p',
-      help: 'Add a representation of the JSON used to create the model',
-      negatable: false);
-
-  final ArgResults argResults = parser.parse(arguments);
-
-  bool hasIncludePayloadFlag = argResults['payload'];
-  bool hasHelpFlag = argResults[helpFlag];
-
-  if (hasHelpFlag) {
-    writeInBlack(parser.usage);
-    exit(0);
-  }
-
-  for (int i = 0; i < nyApiRequests.length; i++) {
-    String modelPath =
-        '$modelFolder/${nyApiRequests[i].modelName.toLowerCase()}.dart';
-
-    http.Response json = await metroApiRequest(nyApiRequests[i]);
-    final classGenerator = new ModelGenerator(nyApiRequests[i].modelName);
-    DartCode dartCode = classGenerator.generateDartClasses(json.body);
-
-    final File file = File(modelPath);
-    await file.writeAsString(dartCode.code +
-        (hasIncludePayloadFlag == true
-            ? '''
-    
-/* PAYLOAD USED IN CREATION
-  ${json.body}
-*/
-    '''
-            : ''));
-    _writeInBlue(nyApiRequests[i].modelName + " model created");
-    apiRequests = apiRequestStub(nyApiRequests[i]) + "\n" + apiRequests;
-
-    importApiRequests =
-        "import \"../models/${nyApiRequests[i].modelName.toLowerCase()}.dart\";\n" +
-            importApiRequests;
-  }
-
-  String networkingServicePath = '$networkServicesFolder/api_service.dart';
-  final File networkingServiceFile = File(networkingServicePath);
-
-  await _makeDirectory(networkServicesFolder);
-
-  await networkingServiceFile.writeAsString(
-      apiServiceStub(imports: importApiRequests, apiRequests: apiRequests));
-
-  _writeInGreen("Api Spec Built 🚨");
-  exit(0);
-}
-
 _writeInGreen(String message) {
   stdout.writeln('\x1B[92m' + message + '\x1B[0m');
 }
 
 _writeInRed(String message) {
   stdout.writeln('\x1B[91m' + message + '\x1B[0m');
-}
-
-_writeInBlue(String message) {
-  stdout.writeln('\x1B[94m' + message + '\x1B[0m');
 }
 
 writeInBlack(String message) {
@@ -591,9 +478,6 @@ _makeDirectory(String path) async {
 }
 
 String capitalize(String input) {
-  if (input == null) {
-    throw new ArgumentError("string: $input");
-  }
   if (input.length == 0) {
     return input;
   }

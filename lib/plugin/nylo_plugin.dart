@@ -1,7 +1,7 @@
 import 'package:nylo_framework/nylo.dart';
 
 class NyPlugin {
-  Nylo nyloApp;
+  Nylo? nyloApp;
   initPackage(Nylo nylo) {
     nyloApp = nylo;
     this.construct();
