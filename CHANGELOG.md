@@ -1,3 +1,7 @@
+## [0.8.3] - 2021-04-28
+
+* Fix stub using NyStatefulWidget
+
 ## [0.8.2] - 2021-04-10
 
 * Remove operand check
