@@ -8,7 +8,7 @@ import 'package:nylo_framework/widgets/ny_stateful_widget.dart';
 import '../../app/controllers/${importName.toLowerCase()}_controller.dart';
 import 'package:nylo_framework/widgets/ny_state.dart';
 
-class ${capitalize(className)}Page extends StatefulPageWidget {
+class ${capitalize(className)}Page extends NyStatefulWidget {
   final ${capitalize(className)}Controller controller = ${capitalize(className)}Controller();
   
   ${capitalize(className)}Page({Key key}) : super(key: key);
