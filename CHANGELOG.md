@@ -1,3 +1,12 @@
+## [0.8.5] - 2021-04-30
+
+* Use pascal format for metro cli
+* Fix metro make:page command
+
+## [0.8.4] - 2021-04-29
+
+* Fix stub using NyStatefulWidget
+
 ## [0.8.3] - 2021-04-28
 
 * Fix stub using NyStatefulWidget
