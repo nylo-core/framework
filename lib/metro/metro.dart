@@ -370,13 +370,15 @@ _makePage(List<String> arguments) async {
   parser.addFlag(helpFlag,
       abbr: 'h',
       help: 'Creates a new page widget for your project.',
-      negatable: false);
+      negatable: false,
+  );
 
   bool shouldCreateController = false;
   parser.addFlag(controllerFlag,
       abbr: 'c',
       help: 'Creates a new page with a controller',
-      negatable: false);
+      negatable: false,
+  );
 
   final ArgResults argResults = parser.parse(arguments);
 
@@ -439,7 +441,7 @@ _makePage(List<String> arguments) async {
 
   await _makeDirectory(pageFolder);
 
-  await file.writeAsString(pageStub(pageName: className));
+  await file.writeAsString(pageStub(pageName: _parseToPascal(className)));
 
   _writeInGreen('${className}_page created 🎉');
 
