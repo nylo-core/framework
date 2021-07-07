@@ -1,16 +1,20 @@
 String modelStub({String? modelName, bool? isStorable}) => '''
-${isStorable == true ? "import 'package:nylo_framework/helpers/helper.dart';\n\n" : ""}class $modelName ${isStorable == true ? "extends Storable " : ""}{
+${isStorable == true ? "import 'package:nylo_support/helpers/helper.dart';\n\n" : ""}class $modelName ${isStorable == true ? "extends Storable " : ""}{
   $modelName();
 
 ${isStorable == true ? '''
+    /// Example [foo] below. 
+    /// New to Storable? Learn more https://nylo.dev/docs/1.x/storage#introduction-to-storable-models
+    String foo; 
+
     @override
     toStorage() => {
-      // 'my_data_key': this.myVal
+      // "foo": this.foo
     };
 
     @override
     fromStorage(dynamic data) {
-      // this.myVal = data['my_data_key'];
+      // this.foo = data['foo'];
     }
 ''' : ""}}
 ''';
