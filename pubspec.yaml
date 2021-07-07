@@ -10,6 +10,7 @@ environment:
   sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
+  flutter_dotenv: ^5.0.0
   flutter_launcher_icons: ^0.9.0
   nylo_support: ^1.0.0
   adaptive_theme: ^2.2.0
