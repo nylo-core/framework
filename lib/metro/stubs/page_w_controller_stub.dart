@@ -4,9 +4,9 @@ String pageWithControllerStub(
         {String? className, required String importName}) =>
     '''
 import 'package:flutter/material.dart';
-import 'package:nylo_framework/widgets/ny_stateful_widget.dart';
+import 'package:nylo_support/widgets/ny_stateful_widget.dart';
 import '../../app/controllers/${importName.toLowerCase()}_controller.dart';
-import 'package:nylo_framework/widgets/ny_state.dart';
+import 'package:nylo_support/widgets/ny_state.dart';
 
 class ${capitalize(className)}Page extends NyStatefulWidget {
   final ${capitalize(className)}Controller controller = ${capitalize(className)}Controller();
