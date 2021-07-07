@@ -1,2 +1,2 @@
 /// Nylo version
-const String nyloVersion = 'v1.0.0';
+const String nyloVersion = 'v1.0.1';
