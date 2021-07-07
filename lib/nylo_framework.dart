@@ -1,23 +1,16 @@
 library nylo_framework;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
-import 'package:nylo_framework/controllers/controller.dart';
-import 'package:nylo_framework/helpers/helper.dart';
-import 'package:nylo_framework/nylo.dart';
-import 'package:nylo_framework/router/router.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:nylo_support/nylo.dart';
 import 'package:nylo_framework/theme/helper/theme_helper.dart';
-import 'package:queue/queue.dart';
+import 'package:nylo_support/router/router.dart';
 
 /// Run to init classes used in Nylo
 Future initNylo({required ThemeData theme, required NyRouter router}) async {
-  await DotEnv.load(fileName: ".env");
+  await dotenv.load(fileName: ".env");
 
   CurrentTheme.instance.theme = theme;
 
-  BusQueue.instance.queue = Queue(
-    delay: Duration(milliseconds: getEnv("QUEUE_DELAY", defaultValue: 10)),
-    parallel: getEnv("QUEUE_PARALLEL", defaultValue: 1),
-  );
   return Nylo(router: router, themeData: theme);
 }

@@ -4,13 +4,13 @@ import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter_launcher_icons/main.dart' as launcherIcons;
 import 'package:args/args.dart';
 import 'package:nylo_framework/metro/constants/strings.dart';
+import 'package:nylo_framework/metro/models/ny_command.dart';
 import 'package:nylo_framework/metro/stubs/controller_stub.dart';
 import 'package:nylo_framework/metro/stubs/model_stub.dart';
 import 'package:nylo_framework/metro/stubs/page_stub.dart';
 import 'package:nylo_framework/metro/stubs/page_w_controller_stub.dart';
 import 'package:nylo_framework/metro/stubs/widget_stateful_stub.dart';
 import 'package:nylo_framework/metro/stubs/widget_stateless_stub.dart';
-import 'models/ny_command.dart';
 import 'dart:io';
 
 List<NyCommand> _allProjectCommands = [
@@ -78,6 +78,12 @@ Future<void> commands(List<String> arguments) async {
         break;
       }
     case "appicons":
+      {
+        nyCommand = _allAppIconsCommands
+            .firstWhereOrNull((command) => command.name == action);
+        break;
+      }
+    case "plugin":
       {
         nyCommand = _allAppIconsCommands
             .firstWhereOrNull((command) => command.name == action);
