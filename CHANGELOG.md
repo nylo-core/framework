@@ -1,3 +1,7 @@
+## [1.0.1] - 2021-07-07
+
+* README changes
+
 ## [1.0.0] - 2021-07-07
 
 * New method to create pages in router 'router.page(NyStatefulWidget widget)'
