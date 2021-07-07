@@ -98,7 +98,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_dotenv:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_dotenv
       url: "https://pub.dartlang.org"
