@@ -1,6 +1,5 @@
-import 'dart:developer';
-
-String capitalize(String input) {
+/// Helper used to capitalize a [String] value
+String capitalize(String? input) {
   if (input == null) {
     throw new ArgumentError("string: $input");
   }
@@ -8,12 +7,4 @@ String capitalize(String input) {
     return input;
   }
   return input[0].toUpperCase() + input.substring(1);
-}
-
-class NyLogger {
-
-  NyLogger addLn(String str) {
-    log(str);
-    return this;
-  }
 }

@@ -1,12 +1,12 @@
-![Nylo Banner](https://woosignal.com/images/nylo.png)
+![Nylo Banner](https://nylo.dev/images/nylo_logo_header.png)
 
 <p align="center">
-  <a href="/"><img src="https://img.shields.io/github/v/release/nylo-core/framework?style=plastic" alt="Latest Release Version"></a>
-  <a href="/"><img src="https://img.shields.io/github/license/nylo-core/framework?style=plastic" alt="Latest Stable Version"></a>
-  <a href="/"><img alt="GitHub stars" src="https://img.shields.io/github/stars/nylo-core/framework?style=plastic"></a>
+  <a href="https://github.com/nylo-core/framework/releases/tag/v0.3.1"><img src="https://img.shields.io/github/v/release/nylo-core/framework?style=plastic" alt="Latest Release Version"></a>
+  <a href="https://github.com/nylo-core/framework/releases/tag/v0.3.1"><img src="https://img.shields.io/github/license/nylo-core/framework?style=plastic" alt="Latest Stable Version"></a>
+  <a href="https://github.com/nylo-core/framework"><img alt="GitHub stars" src="https://img.shields.io/github/stars/nylo-core/framework?style=plastic"></a>
 </p>
 
-## Nylo Framework (Beta v0.1.0)
+## Nylo Framework (v1.0.1)
 
 Nylo is a micro-framework for Flutter which is designed to help simplify app development. Every project provides a simple boilerplate and MVC pattern to help you build apps easier. 
 
@@ -17,11 +17,12 @@ This project is open source and MIT-licenced, we welcome any contributions. You 
 ---
 
 ## Features
-Some core features available 
-* Auto generate models from API urls
+Some core features available
 * Cli for generating new files 
-* Router file to manage routes 
-* Project stucture for widgets, assets, controllers + more
+* Router file to manage routes
+* Light and dark themes preset for customization
+* Localization ready
+* Project structure for widgets, assets, controllers + more
 
 ## Documentation
 

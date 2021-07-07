@@ -1,28 +1,23 @@
 name: nylo_framework
-description: Nylo, a micro-framework for Flutter that's built to simplify app development for Flutter projects.
-version: 0.1.0
-author: Anthony Gordon
+description: Micro-framework for Flutter that's built to simplify app development for Flutter projects.
+version: 1.0.1
 homepage: https://nylo.dev
 repository: https://github.com/nylo-core/framework
 issue_tracker: https://github.com/nylo-core/framework/issues
 documentation: https://github.com/nylo-core/framework
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
-  http: ^0.12.2
-  json_to_dart: ^1.0.4
-  flutter_launcher_icons: ^0.7.5
-  dynamic_theme: ^1.0.0
-  intl: ^0.16.1
-  sailor: ^0.7.1
-  flutter_secure_storage: ^3.3.3
-  flutter_dotenv: ^2.1.0
+  flutter_dotenv: ^5.0.0
+  flutter_launcher_icons: ^0.9.0
+  nylo_support: ^1.0.0
+  adaptive_theme: ^2.2.0
+  args: ^2.0.0
   flutter:
     sdk: flutter
-  flutter_localizations:
-    sdk: flutter
+  collection: ^1.15.0
 
 dev_dependencies:
   flutter_test:

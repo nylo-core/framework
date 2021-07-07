@@ -1,5 +1,4 @@
-
-String widgetStub(String widgetName) => '''
+String widgetStatefulStub(String widgetName) => '''
 import 'package:flutter/material.dart';
 
 class ${widgetName}Widget extends StatefulWidget {

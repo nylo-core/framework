@@ -1,17 +1,27 @@
-import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 
+/// Class to get the apps present theme
 class CurrentTheme {
   CurrentTheme._privateConstructor();
 
   static final CurrentTheme instance = CurrentTheme._privateConstructor();
 
-  ThemeData theme;
+  ThemeData? theme;
 }
 
+/// Class to help manage current theme in the app.
 class AppThemeHelper {
-  static set(BuildContext context, {@required ThemeData theme}) async {
+  /// Changes the current theme to the new [theme]
+  static set(BuildContext context, {required ThemeData theme}) async {
     CurrentTheme.instance.theme = theme;
-    await DynamicTheme.of(context).setBrightness(theme.brightness);
+
+    if (theme.brightness == Brightness.light) {
+      AdaptiveTheme.of(context).setLight();
+    } else if (theme.brightness == Brightness.dark) {
+      AdaptiveTheme.of(context).setDark();
+    } else {
+      AdaptiveTheme.of(context).setSystem();
+    }
   }
 }
