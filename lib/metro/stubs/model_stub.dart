@@ -5,7 +5,7 @@ ${isStorable == true ? "import 'package:nylo_support/helpers/helper.dart';\n\n" 
 ${isStorable == true ? '''
     /// Example [foo] below. 
     /// New to Storable? Learn more https://nylo.dev/docs/1.x/storage#introduction-to-storable-models
-    String foo; 
+    late String foo; 
 
     @override
     toStorage() => {
