@@ -4,7 +4,7 @@ import 'package:nylo_support/widgets/ny_state.dart';
 
 class ${pageName}Page extends StatefulWidget {
   
-  ${pageName}Page({Key key}) : super(key: key);
+  ${pageName}Page({Key? key}) : super(key: key);
   
   @override
   _${pageName}PageState createState() => _${pageName}PageState();

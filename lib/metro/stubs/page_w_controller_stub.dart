@@ -11,7 +11,7 @@ import 'package:nylo_support/widgets/ny_state.dart';
 class ${capitalize(className)}Page extends NyStatefulWidget {
   final ${capitalize(className)}Controller controller = ${capitalize(className)}Controller();
   
-  ${capitalize(className)}Page({Key key}) : super(key: key);
+  ${capitalize(className)}Page({Key? key}) : super(key: key);
   
   @override
   _${capitalize(className)}PageState createState() => _${capitalize(className)}PageState();
