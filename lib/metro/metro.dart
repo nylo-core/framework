@@ -4,6 +4,9 @@ import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter_launcher_icons/main.dart' as launcherIcons;
 import 'package:args/args.dart';
 import 'package:nylo_framework/metro/menu.dart';
+import 'package:nylo_support/metro/constants/strings.dart';
+import 'package:nylo_support/metro/metro_console.dart';
+import 'package:nylo_support/metro/metro_service.dart';
 import 'package:nylo_framework/metro/models/ny_command.dart';
 import 'package:nylo_framework/metro/stubs/controller_stub.dart';
 import 'package:nylo_framework/metro/stubs/model_stub.dart';
@@ -11,10 +14,7 @@ import 'package:nylo_framework/metro/stubs/page_stub.dart';
 import 'package:nylo_framework/metro/stubs/page_w_controller_stub.dart';
 import 'package:nylo_framework/metro/stubs/widget_stateful_stub.dart';
 import 'package:nylo_framework/metro/stubs/widget_stateless_stub.dart';
-import 'package:nylo_support/metro/constants/strings.dart';
-import 'package:nylo_support/metro/metro_console.dart';
 import 'dart:io';
-import 'package:nylo_support/metro/metro_service.dart';
 
 List<NyCommand> _allCommands = [
   NyCommand(
@@ -36,7 +36,11 @@ List<NyCommand> _allCommands = [
       category: "make",
       action: _makeModel),
   NyCommand(
-      name: "page", options: 1, arguments: ["-h", "-f"], action: _makePage),
+      name: "page",
+      options: 1,
+      category: "make",
+      arguments: ["-h", "-f"],
+      action: _makePage),
   NyCommand(
       name: "stateful_widget",
       options: 1,
@@ -82,7 +86,7 @@ Future<void> commands(List<String> arguments) async {
   }
 
   arguments.removeAt(0);
-  nyCommand.action!(arguments);
+  await nyCommand.action!(arguments);
 }
 
 _projectInit(List<String> arguments) async {
@@ -95,10 +99,12 @@ _projectInit(List<String> arguments) async {
 
   _checkHelpFlag(argResults[helpFlag], parser.usage);
 
-  final File envExample = File('.env-example');
-  final File env = File('.env');
-  await _checkIfFileExists(".env", arguments);
-  await env.writeAsString(await envExample.readAsString());
+  if (await MetroService.hasFile(".env") == false) {
+    final File envExample = File('.env-example');
+    final File env = File('.env');
+    await env.writeAsString(await envExample.readAsString());
+    MetroConsole.writeInGreen('.env file add from .env-example 🎉');
+  }
 
   MetroConsole.writeInGreen('Project initialized, create something great 🎉');
 }
@@ -149,7 +155,7 @@ _makeStatelessWidget(List<String> arguments) async {
 
   _checkHelpFlag(argResults[helpFlag], parser.usage);
 
-  await _checkArguments(arguments,
+  _checkArguments(arguments,
       'You are missing the \'name\' of the widget that you want to create.\ne.g. make:stateless_widget my_new_widget');
 
   String widgetName =
@@ -192,8 +198,7 @@ _makeController(List<String> arguments) async {
       negatable: false);
 
   final ArgResults argResults = parser.parse(arguments);
-
-  await _checkArguments(arguments, parser.usage);
+  _checkArguments(arguments, parser.usage);
 
   bool? hasForceFlag = argResults[forceFlag];
   _checkHelpFlag(argResults[helpFlag], parser.usage);
@@ -203,6 +208,7 @@ _makeController(List<String> arguments) async {
 
   String stubController =
       controllerStub(controllerName: _parseToPascal(className));
+
   await MetroService.makeController(className, stubController,
       forceCreate: hasForceFlag ?? false);
 
@@ -225,7 +231,7 @@ _makeModel(List<String> arguments) async {
 
   final ArgResults argResults = parser.parse(arguments);
 
-  await _checkArguments(argResults.arguments, parser.usage);
+  _checkArguments(argResults.arguments, parser.usage);
 
   bool? hasForceFlag = argResults[forceFlag];
   bool? hasStorableFlag = argResults[storableFlag];
@@ -267,7 +273,7 @@ _makePage(List<String> arguments) async {
     shouldCreateController = true;
   }
 
-  if (argResults.arguments.first == " ") {
+  if (argResults.arguments.first.trim() == "") {
     MetroConsole.writeInRed('You cannot create a page with an empty string');
     exit(1);
   }
@@ -305,14 +311,6 @@ _checkArguments(List<String> arguments, String usage) {
     MetroConsole.writeInBlack(usage);
     exit(1);
   }
-}
-
-_checkIfFileExists(path, List<String> arguments) async {
-  if (await File(path).exists()) {
-    MetroConsole.writeInRed(arguments.first + ' already exists');
-    return true;
-  }
-  return false;
 }
 
 _checkHelpFlag(bool hasHelpFlag, String usage) {
