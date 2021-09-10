@@ -1,16 +1,13 @@
 library nylo_framework;
+export 'package:nylo_support/router/router.dart';
+export 'package:nylo_support/widgets/ny_stateful_widget.dart';
+export 'package:nylo_support/widgets/ny_state.dart';
+export 'package:nylo_support/helpers/helper.dart';
+export 'package:nylo_support/controllers/controller.dart';
+export 'package:nylo_support/localization/app_localization.dart';
+export 'package:theme_provider/theme_provider.dart';
+export 'package:nylo_support/nylo.dart';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:nylo_support/nylo.dart';
-import 'package:nylo_framework/theme/helper/theme_helper.dart';
-import 'package:nylo_support/router/router.dart';
 
-/// Run to init classes used in Nylo
-Future initNylo({required ThemeData theme, required NyRouter router}) async {
-  await dotenv.load(fileName: ".env");
-
-  CurrentTheme.instance.theme = theme;
-
-  return Nylo(router: router, themeData: theme);
-}
+/// Nylo version
+const String nyloVersion = 'v2.0.0';
