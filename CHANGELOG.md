@@ -1,3 +1,8 @@
+## [1.2.0] - 2021-09-09
+
+* Null safety stubs
+* Pubspec.yaml dependency updates
+
 ## [1.1.0] - 2021-07-13
 
 * Null safety stubs
