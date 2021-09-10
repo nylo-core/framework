@@ -1,5 +1,8 @@
-## [1.2.0] - 2021-09-09
+## [2.0.0] - 2021-09-10
 
+* Refactor nylo_framework.dart
+* Metro cli stability improvements
+* New NyTheme class for setting the Flutter theme
 * Null safety stubs
 * Pubspec.yaml dependency updates
 
