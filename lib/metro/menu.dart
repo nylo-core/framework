@@ -1,8 +1,6 @@
 const String metroMenu = """
 Metro - Nylo\'s Companion to Build Flutter apps by Anthony Gordon
 
-Version: 1.1.0
-
 Usage: 
     command [options] [arguments]
     
