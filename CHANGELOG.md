@@ -1,3 +1,7 @@
+## [2.0.1] - 2021-09-11
+
+* Remove NyBaseColors class
+
 ## [2.0.0] - 2021-09-10
 
 * Refactor nylo_framework.dart

@@ -6,14 +6,7 @@ class NyTheme {
   /// Changes the current theme to the new [theme]
   /// standard light [themeName] (id is default_light_theme)
   /// standard dark [themeName] (id is default_dark_theme)
-  static set(BuildContext context, {required String themeName}) async {
-    ThemeProvider.controllerOf(context).setTheme(themeName);
+  static set(BuildContext context, {required String id}) {
+    ThemeProvider.controllerOf(context).setTheme(id);
   }
-}
-
-/// Default base colors in the app.
-abstract class NyBaseColors {
-  Color get background;
-  Color get primaryContent;
-  Color get primaryAccent;
 }
