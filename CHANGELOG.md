@@ -1,3 +1,8 @@
+## [2.0.2] - 2021-09-18
+
+* Upgrade Dart (v2.14.0)
+* Pubspec.yaml dependency updates
+
 ## [2.0.1] - 2021-09-11
 
 * Remove NyBaseColors class
