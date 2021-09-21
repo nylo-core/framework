@@ -1,3 +1,7 @@
+## [2.0.3] - 2021-09-21
+
+* Pubspec.yaml dependency updates
+
 ## [2.0.2] - 2021-09-18
 
 * Upgrade Dart (v2.14.0)
