@@ -1,3 +1,7 @@
+## [2.0.4] - 2021-09-21
+
+* Update Nylo version
+
 ## [2.0.3] - 2021-09-21
 
 * Pubspec.yaml dependency updates
