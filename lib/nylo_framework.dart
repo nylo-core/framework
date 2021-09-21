@@ -10,4 +10,4 @@ export 'package:theme_provider/theme_provider.dart';
 export 'package:nylo_support/nylo.dart';
 
 /// Nylo version
-const String nyloVersion = 'v2.0.2';
+const String nyloVersion = 'v2.0.4';
