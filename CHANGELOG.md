@@ -1,3 +1,9 @@
+## [2.1.0] - 2021-12-08
+
+* Update Nylo version
+* Ability to create themes and theme colors from Metro Cli
+* Pubspec.yaml dependency updates
+
 ## [2.0.4] - 2021-09-21
 
 * Update Nylo version

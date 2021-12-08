@@ -4,6 +4,8 @@ import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter_launcher_icons/main.dart' as launcherIcons;
 import 'package:args/args.dart';
 import 'package:nylo_framework/metro/menu.dart';
+import 'package:nylo_framework/metro/stubs/theme_colors_stub.dart';
+import 'package:nylo_framework/metro/stubs/theme_stub.dart';
 import 'package:nylo_support/metro/constants/strings.dart';
 import 'package:nylo_support/metro/metro_console.dart';
 import 'package:nylo_support/metro/metro_service.dart';
@@ -15,6 +17,8 @@ import 'package:nylo_framework/metro/stubs/page_w_controller_stub.dart';
 import 'package:nylo_framework/metro/stubs/widget_stateful_stub.dart';
 import 'package:nylo_framework/metro/stubs/widget_stateless_stub.dart';
 import 'dart:io';
+
+import 'package:recase/recase.dart';
 
 List<NyCommand> _allCommands = [
   NyCommand(
@@ -53,6 +57,12 @@ List<NyCommand> _allCommands = [
       arguments: ["-h", "-f"],
       category: "make",
       action: _makeStatelessWidget),
+  NyCommand(
+      name: "theme",
+      options: 1,
+      arguments: ["-h", "-f"],
+      category: "make",
+      action: _makeTheme),
   NyCommand(
       name: "build",
       options: 1,
@@ -166,6 +176,43 @@ _makeStatelessWidget(List<String> arguments) async {
       forceCreate: hasForceFlag ?? false);
 
   MetroConsole.writeInGreen(widgetName + '_widget created 🎉');
+}
+
+_makeTheme(List<String> arguments) async {
+  final ArgParser parser = ArgParser(allowTrailingOptions: true);
+
+  parser.addFlag(helpFlag,
+      abbr: 'h', help: 'e.g. make:theme bright_theme', negatable: false);
+  parser.addFlag(forceFlag,
+      abbr: 'f',
+      help: 'Creates a new theme even if it already exists.',
+      negatable: false);
+  parser.addFlag(themeDarkFlag,
+      abbr: 'd', help: 'Creates a new dark theme.', negatable: false);
+
+  final ArgResults argResults = parser.parse(arguments);
+
+  bool? hasForceFlag = argResults[forceFlag];
+  bool? hasThemeDarkFlag = argResults[themeDarkFlag];
+
+  _checkHelpFlag(argResults[helpFlag], parser.usage);
+
+  _checkArguments(arguments,
+      'You are missing the \'name\' of the theme that you want to create.\ne.g. make:theme bright_theme');
+
+  String themeName =
+      argResults.arguments.first.replaceAll(RegExp(r'(_?theme)'), "");
+  ReCase rc = new ReCase(themeName);
+
+  String stubTheme = themeStub(rc, isDark: hasThemeDarkFlag ?? false);
+  await MetroService.makeTheme(themeName, stubTheme,
+      forceCreate: hasForceFlag ?? false);
+
+  String stubThemeColors = themeColorsStub(rc);
+  await MetroService.makeThemeColors(themeName, stubThemeColors,
+      forceCreate: hasForceFlag ?? false);
+
+  MetroConsole.writeInGreen(themeName + '_theme created 🎉');
 }
 
 _makeAppIcons(List<String> arguments) async {
