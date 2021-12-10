@@ -1,3 +1,9 @@
+## [2.1.1] - 2021-12-10
+
+* Upgrade to Dart 2.15
+* Add toast notifications
+* Pubspec.yaml dependency updates
+
 ## [2.1.0] - 2021-12-08
 
 * Update Nylo version
