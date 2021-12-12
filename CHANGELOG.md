@@ -1,3 +1,8 @@
+## [2.1.2] - 2021-12-12
+
+* Update Controller stub
+* Pubspec.yaml dependency updates
+
 ## [2.1.1] - 2021-12-10
 
 * Upgrade to Dart 2.15
