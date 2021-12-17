@@ -19,7 +19,7 @@ import 'package:nylo_framework/metro/stubs/widget_stateless_stub.dart';
 import 'dart:io';
 
 import 'package:recase/recase.dart';
-
+final ArgParser parser = ArgParser(allowTrailingOptions: true);
 List<NyCommand> _allCommands = [
   NyCommand(
       name: "init",
@@ -100,8 +100,6 @@ Future<void> commands(List<String> arguments) async {
 }
 
 _projectInit(List<String> arguments) async {
-  final ArgParser parser = ArgParser(allowTrailingOptions: true);
-
   parser.addFlag(helpFlag,
       abbr: 'h', help: 'Initializes the Nylo project', negatable: false);
 
@@ -120,8 +118,6 @@ _projectInit(List<String> arguments) async {
 }
 
 _makeStatefulWidget(List<String> arguments) async {
-  final ArgParser parser = ArgParser(allowTrailingOptions: true);
-
   parser.addFlag(helpFlag,
       abbr: 'h',
       help: 'e.g. make:widget video_player_widget',
@@ -140,7 +136,7 @@ _makeStatefulWidget(List<String> arguments) async {
   String widgetName =
       argResults.arguments.first.replaceAll(RegExp(r'(_?widget)'), "");
 
-  String stubStatefulWidget = widgetStatefulStub(_parseToPascal(widgetName));
+  String stubStatefulWidget = widgetStatefulStub(ReCase(widgetName));
   await MetroService.makeStatefulWidget(widgetName, stubStatefulWidget,
       forceCreate: hasForceFlag ?? false);
 
@@ -148,8 +144,6 @@ _makeStatefulWidget(List<String> arguments) async {
 }
 
 _makeStatelessWidget(List<String> arguments) async {
-  final ArgParser parser = ArgParser(allowTrailingOptions: true);
-
   parser.addFlag(helpFlag,
       abbr: 'h',
       help: 'e.g. make:widget video_player_widget',
@@ -171,7 +165,7 @@ _makeStatelessWidget(List<String> arguments) async {
   String widgetName =
       argResults.arguments.first.replaceAll(RegExp(r'(_?widget)'), "");
 
-  String stubStatelessWidget = widgetStatelessStub(_parseToPascal(widgetName));
+  String stubStatelessWidget = widgetStatelessStub(ReCase(widgetName));
   await MetroService.makeStatelessWidget(widgetName, stubStatelessWidget,
       forceCreate: hasForceFlag ?? false);
 
@@ -179,8 +173,6 @@ _makeStatelessWidget(List<String> arguments) async {
 }
 
 _makeTheme(List<String> arguments) async {
-  final ArgParser parser = ArgParser(allowTrailingOptions: true);
-
   parser.addFlag(helpFlag,
       abbr: 'h', help: 'e.g. make:theme bright_theme', negatable: false);
   parser.addFlag(forceFlag,
@@ -216,8 +208,6 @@ _makeTheme(List<String> arguments) async {
 }
 
 _makeAppIcons(List<String> arguments) async {
-  final ArgParser parser = ArgParser(allowTrailingOptions: true);
-
   parser.addFlag(helpFlag,
       abbr: 'h',
       help: 'Generates your app icons in the project.',
@@ -233,8 +223,6 @@ _makeAppIcons(List<String> arguments) async {
 }
 
 _makeController(List<String> arguments) async {
-  final ArgParser parser = ArgParser(allowTrailingOptions: true);
-
   parser.addFlag(helpFlag,
       abbr: 'h',
       help: 'Used to make new controllers e.g. home_controller',
@@ -254,7 +242,7 @@ _makeController(List<String> arguments) async {
       argResults.arguments.first.replaceAll(RegExp(r'(_?controller)'), "");
 
   String stubController =
-      controllerStub(controllerName: _parseToPascal(className));
+      controllerStub(controllerName: ReCase(className));
 
   await MetroService.makeController(className, stubController,
       forceCreate: hasForceFlag ?? false);
@@ -263,8 +251,6 @@ _makeController(List<String> arguments) async {
 }
 
 _makeModel(List<String> arguments) async {
-  final ArgParser parser = ArgParser(allowTrailingOptions: true);
-
   parser.addFlag(helpFlag,
       abbr: 'h',
       help: 'Creates a new model in your project.',
@@ -286,7 +272,8 @@ _makeModel(List<String> arguments) async {
   _checkHelpFlag(argResults[helpFlag], parser.usage);
 
   String className = argResults.arguments.first;
-  String modelName = _parseToPascal(className);
+  ReCase rc = ReCase(className);
+  String modelName = rc.pascalCase;
   String stubModel =
       modelStub(modelName: modelName, isStorable: hasStorableFlag);
   await MetroService.makeModel(className, stubModel,
@@ -296,8 +283,6 @@ _makeModel(List<String> arguments) async {
 }
 
 _makePage(List<String> arguments) async {
-  final ArgParser parser = ArgParser(allowTrailingOptions: true);
-
   parser.addFlag(
     helpFlag,
     abbr: 'h',
@@ -327,30 +312,24 @@ _makePage(List<String> arguments) async {
 
   String className =
       argResults.arguments.first.replaceAll(RegExp(r'(_?page)'), "");
-
+  ReCase rc = ReCase(className);
   if (shouldCreateController) {
     String stubPageAndController = pageWithControllerStub(
-        className: _parseToPascal(className),
+        className: rc,
         importName: arguments.first.replaceAll("_page", ""));
     await MetroService.makePage(className, stubPageAndController);
 
     String stubController =
-        controllerStub(controllerName: _parseToPascal(className));
+        controllerStub(controllerName: rc);
     await MetroService.makeController(className, stubController);
 
     MetroConsole.writeInGreen(
         '${className}_page & ${className}_controller created 🎉');
   } else {
-    String stubPage = pageStub(pageName: _parseToPascal(className));
+    String stubPage = pageStub(pageName: rc);
     await MetroService.makePage(className, stubPage);
     MetroConsole.writeInGreen('${className}_page created 🎉');
   }
-}
-
-String _parseToPascal(name) {
-  List<String> split = name.split("_");
-  List<String> map = split.map((e) => capitalize(e)).toList();
-  return map.join("");
 }
 
 _checkArguments(List<String> arguments, String usage) {

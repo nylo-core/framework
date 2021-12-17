@@ -12,4 +12,4 @@ export 'package:nylo_support/alerts/toast_notification.dart';
 export 'package:nylo_support/nylo.dart';
 
 /// Nylo version
-const String nyloVersion = 'v2.1.2';
+const String nyloVersion = 'v2.1.3';

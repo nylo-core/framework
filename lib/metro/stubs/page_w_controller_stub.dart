@@ -1,23 +1,23 @@
-import 'package:nylo_framework/metro/helpers/tools.dart';
+import 'package:recase/recase.dart';
 
 String pageWithControllerStub(
-        {String? className, required String importName}) =>
+        {required ReCase className, required String importName}) =>
     '''
 import 'package:flutter/material.dart';
 import 'package:nylo_support/widgets/ny_stateful_widget.dart';
 import '../../app/controllers/${importName.toLowerCase()}_controller.dart';
 import 'package:nylo_support/widgets/ny_state.dart';
 
-class ${capitalize(className)}Page extends NyStatefulWidget {
-  final ${capitalize(className)}Controller controller = ${capitalize(className)}Controller();
+class ${className.pascalCase}Page extends NyStatefulWidget {
+  final ${className.pascalCase}Controller controller = ${className.pascalCase}Controller();
   
-  ${capitalize(className)}Page({Key? key}) : super(key: key);
+  ${className.pascalCase}Page({Key? key}) : super(key: key);
   
   @override
-  _${capitalize(className)}PageState createState() => _${capitalize(className)}PageState();
+  _${className.pascalCase}PageState createState() => _${className.pascalCase}PageState();
 }
 
-class _${capitalize(className)}PageState extends NyState<${capitalize(className)}Page> {
+class _${className.pascalCase}PageState extends NyState<${className.pascalCase}Page> {
 
   @override
   widgetDidLoad() async {

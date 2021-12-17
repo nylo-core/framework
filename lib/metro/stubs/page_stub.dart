@@ -1,20 +1,21 @@
-String pageStub({String? pageName}) => '''
-import 'package:flutter/material.dart';
-import 'package:nylo_support/widgets/ny_state.dart';
+import 'package:recase/recase.dart';
 
-class ${pageName}Page extends StatefulWidget {
-  
-  ${pageName}Page({Key? key}) : super(key: key);
+String pageStub({required ReCase pageName}) => '''
+import 'package:flutter/material.dart';
+
+class ${pageName.pascalCase}Page extends StatefulWidget {
+  ${pageName.pascalCase}Page({Key? key}) : super(key: key);
   
   @override
-  _${pageName}PageState createState() => _${pageName}PageState();
+  _${pageName.pascalCase}PageState createState() => _${pageName.pascalCase}PageState();
 }
 
-class _${pageName}PageState extends NyState<${pageName}Page> {
+class _${pageName.pascalCase}PageState extends State<${pageName.pascalCase}Page> {
 
   @override
-  widgetDidLoad() async {
-  
+  void initState() {
+    super.initState();
+    
   }
   
   @override

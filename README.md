@@ -1,12 +1,12 @@
 ![Nylo Banner](https://nylo.dev/images/nylo_logo_header.png)
 
 <p align="center">
-  <a href="https://github.com/nylo-core/framework/releases/tag/v0.3.1"><img src="https://img.shields.io/github/v/release/nylo-core/framework?style=plastic" alt="Latest Release Version"></a>
-  <a href="https://github.com/nylo-core/framework/releases/tag/v0.3.1"><img src="https://img.shields.io/github/license/nylo-core/framework?style=plastic" alt="Latest Stable Version"></a>
+  <a href="https://github.com/nylo-core/framework/releases/tag/v2.1.3"><img src="https://img.shields.io/github/v/release/nylo-core/framework?style=plastic" alt="Latest Release Version"></a>
+  <a href="https://github.com/nylo-core/framework/releases/tag/v2.1.3"><img src="https://img.shields.io/github/license/nylo-core/framework?style=plastic" alt="Latest Stable Version"></a>
   <a href="https://github.com/nylo-core/framework"><img alt="GitHub stars" src="https://img.shields.io/github/stars/nylo-core/framework?style=plastic"></a>
 </p>
 
-## Nylo Framework (v2.1.2)
+## Nylo Framework (v2.1.3)
 
 Nylo is a micro-framework for Flutter which is designed to help simplify app development. Every project provides a simple boilerplate and MVC pattern to help you build apps easier. 
 

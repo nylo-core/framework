@@ -1,8 +1,10 @@
-String widgetStatelessStub(String widgetName) => '''
+import 'package:recase/recase.dart';
+
+String widgetStatelessStub(ReCase rc) => '''
 import 'package:flutter/material.dart';
 
-class ${widgetName}Widget extends StatelessWidget {
-  const ${widgetName}Widget({Key? key}) : super(key: key);
+class ${rc.pascalCase}Widget extends StatelessWidget {
+  const ${rc.pascalCase}Widget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

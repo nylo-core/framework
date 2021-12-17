@@ -1,12 +1,14 @@
-String widgetStatefulStub(String widgetName) => '''
+import 'package:recase/recase.dart';
+
+String widgetStatefulStub(ReCase rc) => '''
 import 'package:flutter/material.dart';
 
-class ${widgetName}Widget extends StatefulWidget {
+class ${rc.pascalCase}Widget extends StatefulWidget {
   @override
-  _${widgetName}WidgetState createState() => _${widgetName}WidgetState();
+  _${rc.pascalCase}WidgetState createState() => _${rc.pascalCase}WidgetState();
 }
 
-class _${widgetName}WidgetState extends State<${widgetName}Widget> {
+class _${rc.pascalCase}WidgetState extends State<${rc.pascalCase}Widget> {
 
   @override
   Widget build(BuildContext context) {
