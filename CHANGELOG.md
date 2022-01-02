@@ -1,3 +1,8 @@
+## [2.1.4] - 2022-01-02
+
+* Merge PR #27 - Example moved to null safety
+* Remove build appicons command from Metro cli
+
 ## [2.1.3] - 2021-12-17
 
 * Small refactor to Metro Cli

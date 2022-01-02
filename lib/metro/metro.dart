@@ -1,7 +1,6 @@
 library metro;
 
 import 'package:collection/collection.dart' show IterableExtension;
-import 'package:flutter_launcher_icons/main.dart' as launcherIcons;
 import 'package:args/args.dart';
 import 'package:nylo_framework/metro/menu.dart';
 import 'package:nylo_framework/metro/stubs/theme_colors_stub.dart';
@@ -43,7 +42,7 @@ List<NyCommand> _allCommands = [
       name: "page",
       options: 1,
       category: "make",
-      arguments: ["-h", "-f"],
+      arguments: ["-h", "-f", "-c"],
       action: _makePage),
   NyCommand(
       name: "stateful_widget",
@@ -63,12 +62,6 @@ List<NyCommand> _allCommands = [
       arguments: ["-h", "-f"],
       category: "make",
       action: _makeTheme),
-  NyCommand(
-      name: "build",
-      options: 1,
-      arguments: ["-h"],
-      category: "appicons",
-      action: _makeAppIcons),
 ];
 
 Future<void> commands(List<String> arguments) async {
@@ -205,21 +198,6 @@ _makeTheme(List<String> arguments) async {
       forceCreate: hasForceFlag ?? false);
 
   MetroConsole.writeInGreen(themeName + '_theme created 🎉');
-}
-
-_makeAppIcons(List<String> arguments) async {
-  parser.addFlag(helpFlag,
-      abbr: 'h',
-      help: 'Generates your app icons in the project.',
-      negatable: false);
-
-  final ArgResults argResults = parser.parse(arguments);
-
-  _checkHelpFlag(argResults[helpFlag], parser.usage);
-
-  launcherIcons.createIconsFromArguments(arguments);
-
-  MetroConsole.writeInGreen('App icons created 🎉');
 }
 
 _makeController(List<String> arguments) async {

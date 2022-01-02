@@ -18,7 +18,4 @@ All commands:
   make:stateful_widget
   make:stateless_widget
   make:theme
-  
- appicons
-  appicons:build
 """;
