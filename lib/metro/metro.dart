@@ -18,6 +18,7 @@ import 'package:nylo_framework/metro/stubs/widget_stateless_stub.dart';
 import 'dart:io';
 
 import 'package:recase/recase.dart';
+
 final ArgParser parser = ArgParser(allowTrailingOptions: true);
 List<NyCommand> _allCommands = [
   NyCommand(
@@ -219,8 +220,7 @@ _makeController(List<String> arguments) async {
   String className =
       argResults.arguments.first.replaceAll(RegExp(r'(_?controller)'), "");
 
-  String stubController =
-      controllerStub(controllerName: ReCase(className));
+  String stubController = controllerStub(controllerName: ReCase(className));
 
   await MetroService.makeController(className, stubController,
       forceCreate: hasForceFlag ?? false);
@@ -293,12 +293,10 @@ _makePage(List<String> arguments) async {
   ReCase rc = ReCase(className);
   if (shouldCreateController) {
     String stubPageAndController = pageWithControllerStub(
-        className: rc,
-        importName: arguments.first.replaceAll("_page", ""));
+        className: rc, importName: arguments.first.replaceAll("_page", ""));
     await MetroService.makePage(className, stubPageAndController);
 
-    String stubController =
-        controllerStub(controllerName: rc);
+    String stubController = controllerStub(controllerName: rc);
     await MetroService.makeController(className, stubController);
 
     MetroConsole.writeInGreen(
