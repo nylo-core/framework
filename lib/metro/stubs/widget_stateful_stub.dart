@@ -3,12 +3,12 @@ import 'package:recase/recase.dart';
 String widgetStatefulStub(ReCase rc) => '''
 import 'package:flutter/material.dart';
 
-class ${rc.pascalCase}Widget extends StatefulWidget {
+class ${rc.pascalCase} extends StatefulWidget {
   @override
-  _${rc.pascalCase}WidgetState createState() => _${rc.pascalCase}WidgetState();
+  _${rc.pascalCase}State createState() => _${rc.pascalCase}State();
 }
 
-class _${rc.pascalCase}WidgetState extends State<${rc.pascalCase}Widget> {
+class _${rc.pascalCase}State extends State<${rc.pascalCase}> {
 
   @override
   Widget build(BuildContext context) {

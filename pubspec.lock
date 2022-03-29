@@ -7,7 +7,7 @@ packages:
       name: animate_do
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.1.0"
   args:
     dependency: "direct main"
     description:
@@ -182,6 +182,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.11"
+  material_color_utilities:
+    dependency: transitive
+    description:
+      name: material_color_utilities
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.3"
   meta:
     dependency: transitive
     description:
@@ -195,14 +202,14 @@ packages:
       name: nylo_support
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.1"
+    version: "2.4.0"
   page_transition:
     dependency: transitive
     description:
       name: page_transition
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.4"
+    version: "2.0.5"
   path:
     dependency: transitive
     description:
@@ -347,7 +354,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.3"
+    version: "0.4.8"
   theme_provider:
     dependency: "direct main"
     description:

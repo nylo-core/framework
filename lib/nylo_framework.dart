@@ -9,7 +9,8 @@ export 'package:nylo_support/localization/app_localization.dart';
 export 'package:theme_provider/theme_provider.dart';
 export 'package:nylo_support/alerts/toast_enums.dart';
 export 'package:nylo_support/alerts/toast_notification.dart';
+export 'package:nylo_support/networking/default_response.dart';
 export 'package:nylo_support/nylo.dart';
 
 /// Nylo version
-const String nyloVersion = 'v2.1.4';
+const String nyloVersion = 'v2.2.0';

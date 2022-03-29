@@ -133,7 +133,7 @@ _makeStatefulWidget(List<String> arguments) async {
   await MetroService.makeStatefulWidget(widgetName, stubStatefulWidget,
       forceCreate: hasForceFlag ?? false);
 
-  MetroConsole.writeInGreen(widgetName + '_widget created 🎉');
+  MetroConsole.writeInGreen(widgetName + ' created 🎉');
 }
 
 _makeStatelessWidget(List<String> arguments) async {
@@ -162,7 +162,7 @@ _makeStatelessWidget(List<String> arguments) async {
   await MetroService.makeStatelessWidget(widgetName, stubStatelessWidget,
       forceCreate: hasForceFlag ?? false);
 
-  MetroConsole.writeInGreen(widgetName + '_widget created 🎉');
+  MetroConsole.writeInGreen(widgetName + ' created 🎉');
 }
 
 _makeTheme(List<String> arguments) async {
