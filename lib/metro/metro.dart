@@ -3,6 +3,9 @@ library metro;
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:args/args.dart';
 import 'package:nylo_framework/metro/menu.dart';
+import 'package:nylo_framework/metro/stubs/api_service_stub.dart';
+import 'package:nylo_framework/metro/stubs/event_stub.dart';
+import 'package:nylo_framework/metro/stubs/provider_stub.dart';
 import 'package:nylo_framework/metro/stubs/theme_colors_stub.dart';
 import 'package:nylo_framework/metro/stubs/theme_stub.dart';
 import 'package:nylo_support/metro/constants/strings.dart';
@@ -21,12 +24,6 @@ import 'package:recase/recase.dart';
 
 final ArgParser parser = ArgParser(allowTrailingOptions: true);
 List<NyCommand> _allCommands = [
-  NyCommand(
-      name: "init",
-      options: 1,
-      arguments: ["-h"],
-      category: "project",
-      action: _projectInit),
   NyCommand(
       name: "controller",
       options: 1,
@@ -57,6 +54,24 @@ List<NyCommand> _allCommands = [
       arguments: ["-h", "-f"],
       category: "make",
       action: _makeStatelessWidget),
+  NyCommand(
+      name: "provider",
+      options: 1,
+      arguments: ["-h", "-f"],
+      category: "make",
+      action: _makeProvider),
+  NyCommand(
+      name: "event",
+      options: 1,
+      arguments: ["-h", "-f"],
+      category: "make",
+      action: _makeEvent),
+  NyCommand(
+      name: "api_service",
+      options: 1,
+      arguments: ["-h", "-f", "-model", "-resource"],
+      category: "make",
+      action: _makeApiService),
   NyCommand(
       name: "theme",
       options: 1,
@@ -93,32 +108,14 @@ Future<void> commands(List<String> arguments) async {
   await nyCommand.action!(arguments);
 }
 
-_projectInit(List<String> arguments) async {
-  parser.addFlag(helpFlag,
-      abbr: 'h', help: 'Initializes the Nylo project', negatable: false);
-
-  final ArgResults argResults = parser.parse(arguments);
-
-  _checkHelpFlag(argResults[helpFlag], parser.usage);
-
-  if (await MetroService.hasFile(".env") == false) {
-    final File envExample = File('.env-example');
-    final File env = File('.env');
-    await env.writeAsString(await envExample.readAsString());
-    MetroConsole.writeInGreen('.env file add from .env-example 🎉');
-  }
-
-  MetroConsole.writeInGreen('Project initialized, create something great 🎉');
-}
-
 _makeStatefulWidget(List<String> arguments) async {
   parser.addFlag(helpFlag,
       abbr: 'h',
-      help: 'e.g. make:widget video_player_widget',
+      help: 'e.g. make:stateful_widget video_player_widget',
       negatable: false);
   parser.addFlag(forceFlag,
       abbr: 'f',
-      help: 'Creates a new widget even if it already exists.',
+      help: 'Creates a new stateful widget even if it already exists.',
       negatable: false);
 
   final ArgResults argResults = parser.parse(arguments);
@@ -126,6 +123,9 @@ _makeStatefulWidget(List<String> arguments) async {
   bool? hasForceFlag = argResults[forceFlag];
 
   _checkHelpFlag(argResults[helpFlag], parser.usage);
+
+  _checkArguments(arguments,
+      'You are missing the \'name\' of the stateful widget that you want to create.\ne.g. make:stateful_widget my_new_widget');
 
   String widgetName =
       argResults.arguments.first.replaceAll(RegExp(r'(_?widget)'), "");
@@ -140,11 +140,11 @@ _makeStatefulWidget(List<String> arguments) async {
 _makeStatelessWidget(List<String> arguments) async {
   parser.addFlag(helpFlag,
       abbr: 'h',
-      help: 'e.g. make:widget video_player_widget',
+      help: 'e.g. make:stateless_widget video_player_widget',
       negatable: false);
   parser.addFlag(forceFlag,
       abbr: 'f',
-      help: 'Creates a new widget even if it already exists.',
+      help: 'Creates a new stateless widget even if it already exists.',
       negatable: false);
 
   final ArgResults argResults = parser.parse(arguments);
@@ -164,6 +164,114 @@ _makeStatelessWidget(List<String> arguments) async {
       forceCreate: hasForceFlag ?? false);
 
   MetroConsole.writeInGreen(widgetName + ' created 🎉');
+}
+
+_makeProvider(List<String> arguments) async {
+  parser.addFlag(helpFlag,
+      abbr: 'h', help: 'e.g. make:provider storage_provider', negatable: false);
+  parser.addFlag(forceFlag,
+      abbr: 'f',
+      help: 'Creates a new provider even if it already exists.',
+      negatable: false);
+
+  final ArgResults argResults = parser.parse(arguments);
+
+  bool? hasForceFlag = argResults[forceFlag];
+
+  _checkHelpFlag(argResults[helpFlag], parser.usage);
+
+  _checkArguments(arguments,
+      'You are missing the \'name\' of the provider that you want to create.\ne.g. make:provider cache_provider');
+
+  String providerName =
+      argResults.arguments.first.replaceAll(RegExp(r'(_?provider)'), "");
+
+  String stubProvider = providerStub(ReCase(providerName));
+  await MetroService.makeProvider(providerName, stubProvider,
+      forceCreate: hasForceFlag ?? false);
+
+  MetroConsole.writeInGreen(providerName + '_provider created 🎉');
+}
+
+_makeEvent(List<String> arguments) async {
+  parser.addFlag(helpFlag,
+      abbr: 'h', help: 'e.g. make:event login_event', negatable: false);
+  parser.addFlag(forceFlag,
+      abbr: 'f',
+      help: 'Creates a new event even if it already exists.',
+      negatable: false);
+
+  final ArgResults argResults = parser.parse(arguments);
+
+  bool? hasForceFlag = argResults[forceFlag];
+
+  _checkHelpFlag(argResults[helpFlag], parser.usage);
+
+  _checkArguments(arguments,
+      'You are missing the \'name\' of the event that you want to create.\ne.g. make:event login_event');
+
+  String eventName =
+      argResults.arguments.first.replaceAll(RegExp(r'(_?event)'), "");
+
+  String stubEvent = eventStub(eventName: ReCase(eventName));
+  await MetroService.makeEvent(eventName, stubEvent,
+      forceCreate: hasForceFlag ?? false);
+
+  MetroConsole.writeInGreen(eventName + '_event created 🎉');
+}
+
+_makeApiService(List<String> arguments) async {
+  parser.addFlag(helpFlag,
+      abbr: 'h',
+      help: 'e.g. make:api_service user_api_service',
+      negatable: false);
+  parser.addFlag(forceFlag,
+      abbr: 'f',
+      help: 'Creates a new API service even if it already exists.',
+      negatable: false);
+  parser.addOption(
+    modelFlag,
+    abbr: 'm',
+    help: 'Provide the Model that should be used in the API service.',
+  );
+  parser.addOption(
+    urlFlag,
+    abbr: 'u',
+    help: 'Provide the Base Url that should be used in the API service.',
+  );
+  parser.addFlag(isResourceFlag,
+      abbr: 'r',
+      help: 'Creates a API service with crud methods',
+      negatable: false);
+
+  final ArgResults argResults = parser.parse(arguments);
+
+  bool? hasForceFlag = argResults[forceFlag];
+  bool hasResourceFlag = argResults[isResourceFlag] ?? false;
+  String modelFlagValue = argResults[modelFlag] ?? "Model";
+  String? baseUrlFlagValue = argResults[urlFlag];
+  if (baseUrlFlagValue == null) {
+    baseUrlFlagValue = "getEnv('API_BASE_URL')";
+  } else {
+    baseUrlFlagValue = "\"$baseUrlFlagValue\"";
+  }
+
+  _checkHelpFlag(argResults[helpFlag], parser.usage);
+
+  _checkArguments(arguments,
+      'You are missing the \'name\' of the API service that you want to create.\ne.g. make:api_service user_api_service');
+
+  String apiServiceName =
+      argResults.arguments.first.replaceAll(RegExp(r'(_?api_service)'), "");
+
+  String stubApiService = apiServiceStub(ReCase(apiServiceName),
+      model: ReCase(modelFlagValue),
+      isResource: hasResourceFlag,
+      baseUrl: baseUrlFlagValue);
+  await MetroService.makeApiService(apiServiceName, stubApiService,
+      forceCreate: hasForceFlag ?? false);
+
+  MetroConsole.writeInGreen(apiServiceName + '_api_service created 🎉');
 }
 
 _makeTheme(List<String> arguments) async {
@@ -231,7 +339,8 @@ _makeController(List<String> arguments) async {
 _makeModel(List<String> arguments) async {
   parser.addFlag(helpFlag,
       abbr: 'h',
-      help: 'Creates a new model in your project.',
+      help:
+          'To create a new model, use e.g. "flutter pub run nylo_framework:main make:model user"',
       negatable: false);
   parser.addFlag(forceFlag,
       abbr: 'f',

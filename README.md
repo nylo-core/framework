@@ -1,14 +1,14 @@
 ![Nylo Banner](https://nylo.dev/images/nylo_logo_header.png)
 
 <p align="center">
-  <a href="https://github.com/nylo-core/framework/releases/tag/v2.2.0"><img src="https://img.shields.io/github/v/release/nylo-core/framework?style=plastic" alt="Latest Release Version"></a>
-  <a href="https://github.com/nylo-core/framework/releases/tag/v2.2.0"><img src="https://img.shields.io/github/license/nylo-core/framework?style=plastic" alt="Latest Stable Version"></a>
+  <a href="https://github.com/nylo-core/framework/releases/latest"><img src="https://img.shields.io/github/v/release/nylo-core/framework?style=plastic" alt="Latest Release Version"></a>
+  <a href="https://github.com/nylo-core/framework/releases/latest"><img src="https://img.shields.io/github/license/nylo-core/framework?style=plastic" alt="Latest Stable Version"></a>
   <a href="https://github.com/nylo-core/framework"><img alt="GitHub stars" src="https://img.shields.io/github/stars/nylo-core/framework?style=plastic"></a>
 </p>
 
-## Nylo Framework (v2.2.0)
+## Nylo Framework (v3.0.0)
 
-Nylo is a micro-framework for Flutter which is designed to help simplify app development. Every project provides a simple boilerplate and MVC pattern to help you build apps easier. 
+Nylo is a micro-framework for Flutter which is designed to help simplify app development. Every project provides a simple boilerplate and MVC pattern to help you build apps easier.
 
 This project is open source and MIT-licenced, we welcome any contributions. You can join as a backer/sponsor to fund future development for this project [here](https://nylo.dev/contributions)
 
@@ -18,10 +18,12 @@ This project is open source and MIT-licenced, we welcome any contributions. You 
 
 ## Features
 Some core features available
-* Cli for generating new files 
+* CLI for generating new files
 * Router file to manage routes
 * Light and dark themes preset for customization
 * Localization ready
+* Elegant API Services for Networking
+* Dispatch Events
 * Project structure for widgets, assets, controllers + more
 
 ## Documentation

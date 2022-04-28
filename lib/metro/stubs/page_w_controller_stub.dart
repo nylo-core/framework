@@ -4,9 +4,8 @@ String pageWithControllerStub(
         {required ReCase className, required String importName}) =>
     '''
 import 'package:flutter/material.dart';
-import 'package:nylo_support/widgets/ny_stateful_widget.dart';
+import 'package:nylo_framework/nylo_framework.dart';
 import '../../app/controllers/${importName.toLowerCase()}_controller.dart';
-import 'package:nylo_support/widgets/ny_state.dart';
 
 class ${className.pascalCase}Page extends NyStatefulWidget {
   final ${className.pascalCase}Controller controller = ${className.pascalCase}Controller();
@@ -20,7 +19,7 @@ class ${className.pascalCase}Page extends NyStatefulWidget {
 class _${className.pascalCase}PageState extends NyState<${className.pascalCase}Page> {
 
   @override
-  widgetDidLoad() async {
+  init() async {
   
   }
   

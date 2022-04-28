@@ -1,3 +1,12 @@
+## [3.0.0] - 2022-04-29
+
+* New command to create: Events, Providers and API Services
+* Remove command: project:init
+* Docs link updated in Model stub
+* Update README info
+* Remove nylo_support ref from stubs
+* Pubspec.yaml dependency updates
+
 ## [2.2.0] - 2022-03-29
 
 * Remove appended 'Widget' from Metro:make command for stateless and stateful widgets

@@ -1,5 +1,5 @@
 String modelStub({String? modelName, bool? isStorable}) => '''
-${isStorable == true ? "import 'package:nylo_support/helpers/helper.dart';\n\n" : ""}class $modelName ${isStorable == true ? "extends Storable " : ""}{
+${isStorable == true ? "import 'package:nylo_framework/nylo_framework.dart';\n\n" : ""}class $modelName ${isStorable == true ? "extends Storable " : ""}{
   $modelName();
 
 ${isStorable == true ? '''

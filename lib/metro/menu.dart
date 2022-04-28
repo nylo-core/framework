@@ -8,8 +8,6 @@ Options
     -h
     
 All commands:
- project
-  project:init
  
  make
   make:controller
@@ -17,5 +15,8 @@ All commands:
   make:page
   make:stateful_widget
   make:stateless_widget
+  make:provider
+  make:event
+  make:api_service
   make:theme
 """;
