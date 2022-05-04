@@ -31,7 +31,7 @@ Some core features available
 Visit the docs on [Nylo](https://nylo.dev/docs) to view our extensive and thorough documentation. 
 
 ## Changelog
-Please see [CHANGELOG](https://github.com/nylo-core/framework/blob/master/CHANGELOG.md) for more information what has changed recently.
+Please see [CHANGELOG](https://github.com/nylo-core/framework/blob/3.x/CHANGELOG.md) for more information what has changed recently.
 
 ## Social
 * [Twitter](https://twitter.com/nylo_dev)
@@ -44,4 +44,4 @@ If you discover any security related issues, please email support@nylo.dev inste
 
 ## Licence
 
-The MIT License (MIT). Please view the [License](https://github.com/nylo-core/nylo/blob/master/licence) File for more information.
+The MIT License (MIT). Please view the [License](https://github.com/nylo-core/nylo/blob/3.x/LICENSE) File for more information.
