@@ -1,3 +1,9 @@
+## [3.1.0] - 2022-05-04
+
+* Add new `NyBaseApiService` class to the networking folder
+* Add dio as a dependency
+* Pubspec.yaml dependency updates
+
 ## [3.0.0] - 2022-04-29
 
 * New command to create: Events, Providers and API Services

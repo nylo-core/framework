@@ -239,15 +239,10 @@ _makeApiService(List<String> arguments) async {
     abbr: 'u',
     help: 'Provide the Base Url that should be used in the API service.',
   );
-  parser.addFlag(isResourceFlag,
-      abbr: 'r',
-      help: 'Creates a API service with crud methods',
-      negatable: false);
 
   final ArgResults argResults = parser.parse(arguments);
 
   bool? hasForceFlag = argResults[forceFlag];
-  bool hasResourceFlag = argResults[isResourceFlag] ?? false;
   String modelFlagValue = argResults[modelFlag] ?? "Model";
   String? baseUrlFlagValue = argResults[urlFlag];
   if (baseUrlFlagValue == null) {
@@ -266,7 +261,6 @@ _makeApiService(List<String> arguments) async {
 
   String stubApiService = apiServiceStub(ReCase(apiServiceName),
       model: ReCase(modelFlagValue),
-      isResource: hasResourceFlag,
       baseUrl: baseUrlFlagValue);
   await MetroService.makeApiService(apiServiceName, stubApiService,
       forceCreate: hasForceFlag ?? false);

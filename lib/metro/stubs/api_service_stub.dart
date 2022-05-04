@@ -2,7 +2,6 @@ import 'package:recase/recase.dart';
 
 String apiServiceStub(ReCase rc,
         {required ReCase model,
-        bool isResource = false,
         required String baseUrl}) =>
     '''
 import 'package:flutter/material.dart';
@@ -16,7 +15,7 @@ class ${rc.pascalCase}ApiService extends BaseApiService {
   @override
   String get baseUrl => $baseUrl;
 
-${isResource ? ''' 
+${model.originalText != "Model" ? ''' 
   /// Return a list of users
   Future<List<${model.pascalCase}>?> fetchAll({dynamic query}) async {
     return await network<List<${model.pascalCase}>>(
