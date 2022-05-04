@@ -16,4 +16,4 @@ export 'package:nylo_support/nylo.dart';
 export 'package:dio/dio.dart';
 
 /// Nylo version
-const String nyloVersion = 'v3.1.0';
+const String nyloVersion = 'v3.1.2';

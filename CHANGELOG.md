@@ -1,3 +1,7 @@
+## [3.1.2] - 2022-05-04
+
+* Add version to nylo_framework
+
 ## [3.1.1] - 2022-05-04
 
 * Remove import from ny_base_networking.dart
