@@ -260,8 +260,7 @@ _makeApiService(List<String> arguments) async {
       argResults.arguments.first.replaceAll(RegExp(r'(_?api_service)'), "");
 
   String stubApiService = apiServiceStub(ReCase(apiServiceName),
-      model: ReCase(modelFlagValue),
-      baseUrl: baseUrlFlagValue);
+      model: ReCase(modelFlagValue), baseUrl: baseUrlFlagValue);
   await MetroService.makeApiService(apiServiceName, stubApiService,
       forceCreate: hasForceFlag ?? false);
 

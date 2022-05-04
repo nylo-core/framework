@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 
@@ -51,8 +50,8 @@ class NyBaseApiService {
   ///   }
   Future<T?> network<T>(
       {required Function(Dio api) request,
-        Function(Response response)? handleSuccess,
-        Function(Response response)? handleFailure}) async {
+      Function(Response response)? handleSuccess,
+      Function(Response response)? handleFailure}) async {
     try {
       Response response = await request(_api);
 
@@ -88,10 +87,10 @@ class NyBaseApiService {
   /// [handleFailure] is called then the response status is not 200.
   /// You can return a different value using this callback.
   handleResponse<T>(
-      Response response, {
-        Function(Response response)? handleSuccess,
-        Function(Response response)? handleFailure,
-      }) {
+    Response response, {
+    Function(Response response)? handleSuccess,
+    Function(Response response)? handleFailure,
+  }) {
     bool wasSuccessful = response.statusCode == 200;
 
     if (wasSuccessful == true && handleSuccess != null) {
@@ -112,7 +111,7 @@ class NyBaseApiService {
   /// Morphs json into Object using the 'config/api_decoders'.
   _morphJsonResponse<T>(dynamic json) {
     DefaultResponse defaultResponse =
-    DefaultResponse<T>.fromJson(json, decoders, type: T);
+        DefaultResponse<T>.fromJson(json, decoders, type: T);
     return defaultResponse.data;
   }
 

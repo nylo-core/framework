@@ -1,8 +1,7 @@
 import 'package:recase/recase.dart';
 
 String apiServiceStub(ReCase rc,
-        {required ReCase model,
-        required String baseUrl}) =>
+        {required ReCase model, required String baseUrl}) =>
     '''
 import 'package:flutter/material.dart';
 import 'package:flutter_app/app/networking/dio/base_api_service.dart';

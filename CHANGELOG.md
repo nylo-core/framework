@@ -1,3 +1,8 @@
+## [3.1.1] - 2022-05-04
+
+* Remove import from ny_base_networking.dart
+* Flutter format
+
 ## [3.1.0] - 2022-05-04
 
 * Add new `NyBaseApiService` class to the networking folder
