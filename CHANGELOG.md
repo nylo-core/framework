@@ -1,3 +1,8 @@
+## [3.1.3] - 2022-05-19
+
+* Add @override to event stubs
+* Pubspec.yaml dependency updates
+
 ## [3.1.2] - 2022-05-04
 
 * Add version to nylo_framework

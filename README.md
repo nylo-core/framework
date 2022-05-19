@@ -6,7 +6,7 @@
   <a href="https://github.com/nylo-core/framework"><img alt="GitHub stars" src="https://img.shields.io/github/stars/nylo-core/framework?style=plastic"></a>
 </p>
 
-## Nylo Framework (v3.1.2)
+## Nylo Framework (v3.1.3)
 
 Nylo is a micro-framework for Flutter which is designed to help simplify app development. Every project provides a simple boilerplate and MVC pattern to help you build apps easier.
 
@@ -18,13 +18,14 @@ This project is open source and MIT-licenced, we welcome any contributions. You 
 
 ## Features
 Some core features available
-* CLI for generating new files
-* Router file to manage routes
-* Light and dark themes preset for customization
-* Localization ready
-* Elegant API Services for Networking
-* Dispatch Events
-* Project structure for widgets, assets, controllers + more
+* [Routing](https://nylo.dev/docs/3.x/router).
+* [Light and dark themes](https://nylo.dev/docs/3.x/themes).
+* [Localization](https://nylo.dev/docs/3.x/localization).
+* [CLI for generating project files](https://nylo.dev/docs/3.x/metro).
+* [Elegant API Services for Networking](https://nylo.dev/docs/3.x/networking).
+* [Creating App Icons](https://nylo.dev/docs/3.x/app-icons).
+* [Project Configuration](https://nylo.dev/docs/3.x/configuration).
+* [Streamlined Project Structure](https://nylo.dev/docs/3.x/directory-structure).
 
 ## Documentation
 
