@@ -1,3 +1,7 @@
+## [3.1.4] - 2022-06-28
+
+* Pubspec.yaml dependency updates
+
 ## [3.1.3] - 2022-05-19
 
 * Add @override to event stubs

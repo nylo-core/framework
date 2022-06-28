@@ -51,25 +51,30 @@ class NyBaseApiService {
   Future<T?> network<T>(
       {required Function(Dio api) request,
       Function(Response response)? handleSuccess,
-      Function(Response response)? handleFailure}) async {
+      Function(DioError error)? handleFailure}) async {
     try {
       Response response = await request(_api);
 
-      return handleResponse<T>(response,
-          handleSuccess: handleSuccess, handleFailure: handleFailure);
-    } on DioError catch (e) {
+      return handleResponse<T>(response, handleSuccess: handleSuccess);
+    } on DioError catch (dioError) {
       if (getEnv('APP_DEBUG') == true) {
-        NyLogger.error(e.toString());
+        NyLogger.error(dioError.toString());
       }
-      onError(e);
+      onError(dioError);
       if (_context != null) {
-        displayError(e, _context!);
+        displayError(dioError, _context!);
       }
+
+      if (handleFailure != null) {
+        return handleFailure(dioError);
+      }
+
       return null;
     } on Exception catch (e) {
       if (getEnv('APP_DEBUG') == true) {
         NyLogger.error(e.toString());
       }
+
       return null;
     }
   }
@@ -86,19 +91,12 @@ class NyBaseApiService {
   /// [handleSuccess] overrides the return value
   /// [handleFailure] is called then the response status is not 200.
   /// You can return a different value using this callback.
-  handleResponse<T>(
-    Response response, {
-    Function(Response response)? handleSuccess,
-    Function(Response response)? handleFailure,
-  }) {
+  handleResponse<T>(Response response,
+      {Function(Response response)? handleSuccess}) {
     bool wasSuccessful = response.statusCode == 200;
 
     if (wasSuccessful == true && handleSuccess != null) {
       return handleSuccess(response);
-    }
-
-    if (wasSuccessful == false && handleFailure != null) {
-      return handleFailure(response);
     }
 
     if (T.toString() != 'dynamic') {
