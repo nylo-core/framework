@@ -3,8 +3,10 @@ import 'package:recase/recase.dart';
 String pageStub({required ReCase pageName}) => '''
 import 'package:flutter/material.dart';
 import 'package:nylo_framework/nylo_framework.dart';
+import '../../app/controllers/controller.dart';
 
-class ${pageName.pascalCase}Page extends StatefulWidget {
+class ${pageName.pascalCase}Page extends NyStatefulWidget {
+  final Controller controller = Controller();
   ${pageName.pascalCase}Page({Key? key}) : super(key: key);
   
   @override

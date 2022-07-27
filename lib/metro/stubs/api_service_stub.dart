@@ -4,9 +4,9 @@ String apiServiceStub(ReCase rc,
         {required ReCase model, required String baseUrl}) =>
     '''
 import 'package:flutter/material.dart';
-import 'package:flutter_app/app/networking/dio/base_api_service.dart';
+import '../../app/networking/dio/base_api_service.dart';
 ${baseUrl == "getEnv('API_BASE_URL')" ? "import 'package:nylo_framework/nylo_framework.dart';" : ""}
-${model.originalText != 'Model' ? "import 'package:flutter_app/app/models/${model.snakeCase}.dart';" : ""}
+${model.originalText != 'Model' ? "import '../../app/models/${model.snakeCase}.dart';" : ""}
 
 class ${rc.pascalCase}ApiService extends BaseApiService {
   ${rc.pascalCase}ApiService({BuildContext? buildContext}) : super(buildContext);

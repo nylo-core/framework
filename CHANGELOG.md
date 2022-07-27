@@ -1,3 +1,9 @@
+## [3.2.0] - 2022-07-27
+
+* Update page stub to include default base Controller on creation
+* Refactor stubs using 'package:flutter_app' to use project path
+* Pubspec.yaml dependency updates
+
 ## [3.1.4] - 2022-06-28
 
 * Pubspec.yaml dependency updates
