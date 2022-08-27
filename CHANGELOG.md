@@ -1,3 +1,8 @@
+## [3.3.0] - 2022-08-27
+
+* Update theme stubs
+* Pubspec.yaml dependency updates
+
 ## [3.2.0] - 2022-07-27
 
 * Update page stub to include default base Controller on creation

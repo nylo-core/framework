@@ -4,7 +4,7 @@ String themeStub(ReCase rc, {bool isDark = false}) => '''
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../config/font.dart';
-import '../../resources/themes/styles/base_styles.dart';
+import '../../resources/themes/styles/color_styles.dart';
 import '../../resources/themes/text_theme/default_text_theme.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 
@@ -16,7 +16,7 @@ import 'package:nylo_framework/nylo_framework.dart';
 |--------------------------------------------------------------------------
 */
 
-ThemeData ${rc.camelCase}Theme(BaseColorStyles ${rc.camelCase}Colors) {
+ThemeData ${rc.camelCase}Theme(ColorStyles ${rc.camelCase}Colors) {
   TextTheme ${rc.camelCase}TextTheme =
   getAppTextTheme(appFont, defaultTextTheme.merge(_${rc.camelCase}TextTheme(${rc.camelCase}Colors)));
 
@@ -70,7 +70,7 @@ ThemeData ${rc.camelCase}Theme(BaseColorStyles ${rc.camelCase}Colors) {
 |--------------------------------------------------------------------------
 */
 
-TextTheme _${rc.camelCase}TextTheme(BaseColorStyles ${rc.camelCase}Colors) {
+TextTheme _${rc.camelCase}TextTheme(ColorStyles ${rc.camelCase}Colors) {
   return TextTheme(
     headline6: TextStyle(
       color: ${rc.camelCase}Colors.primaryContent,

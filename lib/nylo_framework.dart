@@ -6,6 +6,8 @@ export 'package:nylo_support/widgets/ny_state.dart';
 export 'package:nylo_support/helpers/helper.dart';
 export 'package:nylo_support/controllers/controller.dart';
 export 'package:nylo_support/localization/app_localization.dart';
+export 'package:nylo_support/themes/base_color_styles.dart';
+export 'package:nylo_support/themes/base_theme_config.dart';
 export 'package:theme_provider/theme_provider.dart';
 export 'package:nylo_support/alerts/toast_enums.dart';
 export 'package:nylo_support/alerts/toast_notification.dart';
@@ -16,4 +18,4 @@ export 'package:nylo_support/nylo.dart';
 export 'package:dio/dio.dart';
 
 /// Nylo version
-const String nyloVersion = 'v3.2.0';
+const String nyloVersion = 'v3.3.0';

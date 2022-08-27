@@ -2,7 +2,7 @@ import 'package:recase/recase.dart';
 
 String themeColorsStub(ReCase rc) => '''
 import 'package:flutter/material.dart';
-import 'base_styles.dart';
+import 'color_styles.dart';
 
 /*
 |--------------------------------------------------------------------------
@@ -10,7 +10,7 @@ import 'base_styles.dart';
 |--------------------------------------------------------------------------
 */
 
-class ${rc.pascalCase}ThemeColors implements BaseColorStyles {
+class ${rc.pascalCase}ThemeColors implements ColorStyles {
   // general
   Color get background => const Color(0xFFFFFFFF);
 
