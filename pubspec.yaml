@@ -13,6 +13,7 @@ dependencies:
   dio: ^4.0.6
   flutter_dotenv: ^5.0.2
   nylo_support: ^3.4.0
+  theme_provider: ^0.5.0
   args: ^2.3.1
   recase: ^4.0.0
   flutter:

@@ -370,7 +370,7 @@ packages:
     source: hosted
     version: "0.4.9"
   theme_provider:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: theme_provider
       url: "https://pub.dartlang.org"
