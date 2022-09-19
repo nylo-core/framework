@@ -1,3 +1,8 @@
+## [3.4.0] - 2022-09-19
+
+* Add page_transition to dependencies
+* Pubspec.yaml dependency updates
+
 ## [3.3.0] - 2022-08-27
 
 * Update theme stubs

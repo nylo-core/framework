@@ -6,7 +6,7 @@
   <a href="https://github.com/nylo-core/framework"><img alt="GitHub stars" src="https://img.shields.io/github/stars/nylo-core/framework?style=plastic"></a>
 </p>
 
-## Nylo Framework (v3.3.0)
+## Nylo Framework (v3.4.0)
 
 Nylo is a micro-framework for Flutter which is designed to help simplify app development. Every project provides a simple boilerplate and MVC pattern to help you build apps easier.
 
@@ -39,9 +39,6 @@ Please see [CHANGELOG](https://github.com/nylo-core/framework/blob/3.x/CHANGELOG
 
 ## Security
 If you discover any security related issues, please email support@nylo.dev instead of using the issue tracker.
-
-## Credits
-* [Anthony Gordon](https://github.com/agordn52)
 
 ## Licence
 
