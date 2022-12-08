@@ -1,7 +1,16 @@
 String modelStub({String? modelName, bool? isStorable}) => '''
-${isStorable == true ? "import 'package:nylo_framework/nylo_framework.dart';\n\n" : ""}class $modelName ${isStorable == true ? "extends Storable " : ""}{
+import 'package:nylo_framework/nylo_framework.dart';\n\nclass $modelName implements JsonOperations ${isStorable == true ? "extends Storable " : ""}{
   $modelName();
+  
+  @override
+  $modelName.fromJson(data) {
 
+  }
+
+  @override
+  toJson() {
+
+  }
 ${isStorable == true ? '''
     /// Example [foo] below. 
     /// New to Storable? Learn more https://nylo.dev/docs/storage#introduction-to-storable-models

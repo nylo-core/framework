@@ -1,3 +1,8 @@
+## [4.0.0] - 2022-12-15
+
+* TBC...
+* Pubspec.yaml dependency updates
+
 ## [3.4.0] - 2022-09-19
 
 * Add page_transition to dependencies
