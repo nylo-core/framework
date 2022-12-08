@@ -1,19 +1,24 @@
-import 'dart:io';
-
 String networkMethodStub({required String methodName, Map<String, dynamic> queryParams = const {}, Map<String, dynamic> headerParams = const {}, Map<String, dynamic> dataParams = const {}, String? model, bool isList = false, String path = "", required String method, String? urlFullPath,}) => '''
   //$method\n${urlFullPath != null ? '  /// $urlFullPath' : ''}
-  Future<${_getType(model, isOptional: true)}> $methodName(${_mapParams(queryParams, dataParams)}) async => await network${_getType(model, returnDynamic:false, addBrackets: true)}(
+  Future<${_getType(model, isList: isList, isOptional: true)}> $methodName(${_mapParams(queryParams, dataParams)}) async => await network${_getType(model, isList: isList, returnDynamic:false, addBrackets: true)}(
     ${_callBackType(headers: headerParams, method: method, path: path, queryParams: queryParams, dataParams: dataParams)}
   );
 ''';
 
-String _getType(String? model, {bool returnDynamic = true, bool isOptional = false, bool addBrackets = false}) {
+String _getType(String? model, {bool returnDynamic = true, bool isOptional = false, bool isList = false, bool addBrackets = false}) {
   if (model != null) {
-    String type = '$model${isOptional ? '?' : ''}';
+    String type = '$model';
+    String optional = isOptional ? '?' : '';
     if (addBrackets) {
-      return '<$type>';
+      if (isList) {
+        return "<List<$type>$optional>";
+      }
+      return '<$type$optional>';
     }
-    return type;
+    if (isList) {
+      return "List<$type>$optional";
+    }
+    return type + optional;
   }
   if (returnDynamic) {
     return 'dynamic';

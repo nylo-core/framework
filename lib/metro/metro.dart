@@ -448,6 +448,7 @@ _makePostmanApiService(
       // search for body
       String? responseBody;
       String? modelName;
+      bool? isList;
       if (postmanItem.containsKey('response') && postmanItem['response'].length != 0) {
         String? name = postmanItem['name'];
         if (name != null) {
@@ -460,6 +461,8 @@ _makePostmanApiService(
       }
 
       if (responseBody != null && modelName != null) {
+        dynamic jsonResponseBody = jsonDecode(responseBody);
+
         // create a model in the users directory
         var generator = DartCodeGenerator(
           rootClassName: modelName,
@@ -468,8 +471,16 @@ _makePostmanApiService(
           classSuffix: '',
         );
 
+        String code = "";
+
         // call generate to generate code
-        String code = generator.generate(responseBody);
+        if (jsonResponseBody is List && jsonResponseBody.length > 0) {
+          code = generator.generate(jsonEncode(jsonResponseBody[0]));
+          isList = true;
+        } else {
+          isList = false;
+          code = generator.generate(responseBody);
+        }
 
         // create model
         await _createNyloModel(ReCase(modelName), stubModel: code, hasForceFlag: hasForceFlag);
@@ -491,7 +502,7 @@ _makePostmanApiService(
           path: "/$cleanPath",
           urlFullPath: cleanUrlRaw,
           model: (modelName != null ? ReCase(modelName).pascalCase : null),
-          isList: false,
+          isList: (isList ?? false),
           queryParams: queryParams,
           dataParams: dataParams,
           headerParams: headerParams
