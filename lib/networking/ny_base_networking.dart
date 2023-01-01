@@ -23,6 +23,16 @@ class NyBaseApiService {
     _context = context;
   }
 
+  /// Set new [headers] to the baseOptions variable.
+  setHeaders(Map<String, dynamic> headers) {
+    _api.options.headers.addAll(headers);
+  }
+
+  /// Set a bearer token [headers] to the baseOptions variable.
+  setBearerToken(String bearerToken) {
+    _api.options.headers.addAll({"Authorization": "Bearer $bearerToken"});
+  }
+
   /// Initialize class
   void init() {
     baseOptions = BaseOptions(baseUrl: baseUrl, headers: {
@@ -51,9 +61,25 @@ class NyBaseApiService {
   Future<T?> network<T>(
       {required Function(Dio api) request,
       Function(Response response)? handleSuccess,
-      Function(DioError error)? handleFailure}) async {
+      Function(DioError error)? handleFailure,
+      String? bearerToken,
+      Map<String, dynamic> headers = const {}}) async {
     try {
+      Map<String, dynamic> oldHeader = _api.options.headers;
+      Map<String, dynamic> newValuesToAddToHeader = {};
+      if (headers.isNotEmpty) {
+        for (var header in headers.entries) {
+          if (!oldHeader.containsKey(header.key)) {
+            newValuesToAddToHeader.addAll({header.key: header.value});
+          }
+        }
+      }
+      if (bearerToken != null && !oldHeader.containsKey('Authorization')) {
+        newValuesToAddToHeader.addAll({"Authorization": "Bearer $bearerToken"});
+      }
+      _api.options.headers.addAll(newValuesToAddToHeader);
       Response response = await request(_api);
+      _api.options.headers = oldHeader; // reset headers
 
       return handleResponse<T>(response, handleSuccess: handleSuccess);
     } on DioError catch (dioError) {

@@ -1,6 +1,13 @@
-## [4.0.0] - 2022-12-15
+## [4.0.0] - 2023-01-01
 
-* TBC...
+* Metro will automatically add Routes to the router.dart file
+* Metro will automatically add Events to the config/events.dart file
+* Metro will automatically add ApiServices and Models to the config/decoders.dart file
+* Metro will automatically add Providers to the config/providers.dart file
+* Create Api Services from Postman collections using Metro, read more [here](http://nylo.dev/docs/4.x/metro#make-api-service-using-postman)
+* `NyBaseApiService` class has new parameters to add a `bearerToken` or `headers` on each request
+* Update stubs
+* Copyright year updated
 * Pubspec.yaml dependency updates
 
 ## [3.4.0] - 2022-09-19

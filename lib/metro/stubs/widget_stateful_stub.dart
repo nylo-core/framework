@@ -12,6 +12,11 @@ class ${rc.pascalCase} extends StatefulWidget {
 class _${rc.pascalCase}State extends NyState<${rc.pascalCase}> {
 
   @override
+  init() async {
+    super.init();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       

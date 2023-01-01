@@ -1,11 +1,28 @@
-String networkMethodStub({required String methodName, Map<String, dynamic> queryParams = const {}, Map<String, dynamic> headerParams = const {}, Map<String, dynamic> dataParams = const {}, String? model, bool isList = false, String path = "", required String method, String? urlFullPath,}) => '''
+import 'package:recase/recase.dart';
+
+String networkMethodStub({
+  required String methodName,
+  Map<String, dynamic> queryParams = const {},
+  Map<String, dynamic> headerParams = const {},
+  Map<String, dynamic> dataParams = const {},
+  String? model,
+  bool isList = false,
+  String path = "",
+  required String method,
+  String? urlFullPath,
+}) =>
+    '''
   //$method\n${urlFullPath != null ? '  /// $urlFullPath' : ''}
-  Future<${_getType(model, isList: isList, isOptional: true)}> $methodName(${_mapParams(queryParams, dataParams)}) async => await network${_getType(model, isList: isList, returnDynamic:false, addBrackets: true)}(
+  Future<${_getType(model, isList: isList, isOptional: true)}> $methodName(${_mapParams(queryParams, dataParams)}) async => await network${_getType(model, isList: isList, returnDynamic: false, addBrackets: true)}(
     ${_callBackType(headers: headerParams, method: method, path: path, queryParams: queryParams, dataParams: dataParams)}
   );
 ''';
 
-String _getType(String? model, {bool returnDynamic = true, bool isOptional = false, bool isList = false, bool addBrackets = false}) {
+String _getType(String? model,
+    {bool returnDynamic = true,
+    bool isOptional = false,
+    bool isList = false,
+    bool addBrackets = false}) {
   if (model != null) {
     String type = '$model';
     String optional = isOptional ? '?' : '';
@@ -26,12 +43,19 @@ String _getType(String? model, {bool returnDynamic = true, bool isOptional = fal
   return '';
 }
 
-String _mapDataParams(Map<String, dynamic> dataParams, {bool isOptional = false}) => dataParams.entries.map((e) => '"${e.key}${isOptional ? '?' : ''}": ${e.key}').toList().join(", ");
+String _mapDataParams(Map<String, dynamic> dataParams,
+        {bool isOptional = false}) =>
+    dataParams.entries
+        .map((e) =>
+            '"${e.key}${isOptional ? '?' : ''}": ${ReCase(e.key).camelCase}')
+        .toList()
+        .join(", ");
 
-String _mapParams(Map<String, dynamic> queryParams, Map<String, dynamic> dataParams) {
+String _mapParams(
+    Map<String, dynamic> queryParams, Map<String, dynamic> dataParams) {
   Map<String, dynamic> params = {};
   if (queryParams.isNotEmpty) {
-   params.addAll(queryParams);
+    params.addAll(queryParams);
   }
   if (dataParams.isNotEmpty) {
     params.addAll(dataParams);
@@ -39,17 +63,26 @@ String _mapParams(Map<String, dynamic> queryParams, Map<String, dynamic> dataPar
   if (params.entries.isEmpty) {
     return '';
   }
-  return "{" + params.entries.map((e) {
-    String type = e.value.runtimeType.toString();
-    if (type == '_InternalLinkedHashMap<String, dynamic>') {
-      type = 'Map<String, dynamic>';
-    }
-    return "$type? ${e.key}";
-  }).toList().join(", ") + "}";
+  return "{" +
+      params.entries
+          .map((e) {
+            String type = e.value.runtimeType.toString();
+            if (type == '_InternalLinkedHashMap<String, dynamic>') {
+              type = 'Map<String, dynamic>';
+            }
+            return "$type? ${ReCase(e.key).camelCase}";
+          })
+          .toList()
+          .join(", ") +
+      "}";
 }
 
 String _callBackType(
-    {required Map<String, dynamic> headers, required String method, required String path, required Map<String, dynamic> queryParams, required Map<String, dynamic> dataParams}) {
+    {required Map<String, dynamic> headers,
+    required String method,
+    required String path,
+    required Map<String, dynamic> queryParams,
+    required Map<String, dynamic> dataParams}) {
   if (headers.isEmpty) {
     return "request: (request) => ${_requestType(method, path, queryParams, dataParams)}";
   }
@@ -61,7 +94,8 @@ String _callBackType(
   }''';
 }
 
-String _requestType(String method, String path, Map<String, dynamic> queryParams, Map<String, dynamic> dataParams) {
+String _requestType(String method, String path,
+    Map<String, dynamic> queryParams, Map<String, dynamic> dataParams) {
   if (method.toLowerCase() == 'get') {
     queryParams.addAll(dataParams);
   }

@@ -1,31 +1,29 @@
 library metro;
 
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:collection/collection.dart' show IterableExtension;
 import 'package:args/args.dart';
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:json_dart_generator/json_dart_generator.dart';
 import 'package:nylo_framework/metro/menu.dart';
+import 'package:nylo_framework/metro/models/ny_command.dart';
 import 'package:nylo_framework/metro/stubs/api_service_stub.dart';
+import 'package:nylo_framework/metro/stubs/controller_stub.dart';
 import 'package:nylo_framework/metro/stubs/event_stub.dart';
+import 'package:nylo_framework/metro/stubs/model_stub.dart';
 import 'package:nylo_framework/metro/stubs/network_method_stub.dart';
+import 'package:nylo_framework/metro/stubs/page_stub.dart';
+import 'package:nylo_framework/metro/stubs/page_w_controller_stub.dart';
 import 'package:nylo_framework/metro/stubs/postman_api_service_stub.dart';
 import 'package:nylo_framework/metro/stubs/provider_stub.dart';
 import 'package:nylo_framework/metro/stubs/theme_colors_stub.dart';
 import 'package:nylo_framework/metro/stubs/theme_stub.dart';
+import 'package:nylo_framework/metro/stubs/widget_stateful_stub.dart';
+import 'package:nylo_framework/metro/stubs/widget_stateless_stub.dart';
 import 'package:nylo_support/metro/constants/strings.dart';
 import 'package:nylo_support/metro/metro_console.dart';
 import 'package:nylo_support/metro/metro_service.dart';
-import 'package:nylo_framework/metro/models/ny_command.dart';
-import 'package:nylo_framework/metro/stubs/controller_stub.dart';
-import 'package:nylo_framework/metro/stubs/model_stub.dart';
-import 'package:nylo_framework/metro/stubs/page_stub.dart';
-import 'package:nylo_framework/metro/stubs/page_w_controller_stub.dart';
-import 'package:nylo_framework/metro/stubs/widget_stateful_stub.dart';
-import 'package:nylo_framework/metro/stubs/widget_stateless_stub.dart';
-// import 'package:flutter/services.dart' show rootBundle;
-import 'dart:io';
-
 import 'package:recase/recase.dart';
 
 final ArgParser parser = ArgParser(allowTrailingOptions: true);
@@ -139,7 +137,8 @@ _makeStatefulWidget(List<String> arguments) async {
   ReCase classReCase = ReCase(widgetName);
 
   String stubStatefulWidget = widgetStatefulStub(classReCase);
-  await MetroService.makeStatefulWidget(classReCase.snakeCase, stubStatefulWidget,
+  await MetroService.makeStatefulWidget(
+      classReCase.snakeCase, stubStatefulWidget,
       forceCreate: hasForceFlag ?? false);
 
   MetroConsole.writeInGreen(classReCase.snakeCase + ' created 🎉');
@@ -169,7 +168,8 @@ _makeStatelessWidget(List<String> arguments) async {
   ReCase classReCase = ReCase(widgetName);
 
   String stubStatelessWidget = widgetStatelessStub(classReCase);
-  await MetroService.makeStatelessWidget(classReCase.snakeCase, stubStatelessWidget,
+  await MetroService.makeStatelessWidget(
+      classReCase.snakeCase, stubStatelessWidget,
       forceCreate: hasForceFlag ?? false);
 
   MetroConsole.writeInGreen(classReCase.snakeCase + ' created 🎉');
@@ -201,21 +201,28 @@ _makeProvider(List<String> arguments) async {
       forceCreate: hasForceFlag ?? false);
 
   String classImport = makeImportPathProviders(classReCase.snakeCase);
-  await MetroService.addToConfig(configName: "providers", classImport: classImport, createTemplate: (file) {
-    String providerName = "${classReCase.pascalCase}Provider";
-    if (file.contains(providerName)) {
-      return "";
-    }
+  await MetroService.addToConfig(
+      configName: "providers",
+      classImport: classImport,
+      createTemplate: (file) {
+        String providerName = "${classReCase.pascalCase}Provider";
+        if (file.contains(providerName)) {
+          return "";
+        }
 
-    RegExp reg = RegExp(r'final Map<Type, NyProvider> providers = {([\w\W\n\r\s:(),\/\/]+)};');
-    String template = """
+        RegExp reg = RegExp(
+            r'final Map<Type, NyProvider> providers = {([\w\W\n\r\s:(),\/\/]+)};');
+        String template = """
 final Map<Type, NyProvider> providers = {${reg.allMatches(file).map((e) => e.group(1)).toList()[0]}
   $providerName: $providerName(),
 };
   """;
 
-    return file.replaceFirst(RegExp(r'final Map<Type, NyProvider> providers = {[\w\W\n\r\s:(),\/\/]+(};)'), template);
-  });
+        return file.replaceFirst(
+            RegExp(
+                r'final Map<Type, NyProvider> providers = {[\w\W\n\r\s:(),\/\/]+(};)'),
+            template);
+      });
 
   MetroConsole.writeInGreen(classReCase.snakeCase + '_provider created 🎉');
 }
@@ -247,21 +254,28 @@ _makeEvent(List<String> arguments) async {
       forceCreate: hasForceFlag ?? false);
 
   String classImport = makeImportPathEvent(classReCase.snakeCase);
-  await MetroService.addToConfig(configName: "events", classImport: classImport, createTemplate: (file) {
-    String eventName = "${classReCase.pascalCase}Event";
-    if (file.contains(eventName)) {
-      return "";
-    }
+  await MetroService.addToConfig(
+      configName: "events",
+      classImport: classImport,
+      createTemplate: (file) {
+        String eventName = "${classReCase.pascalCase}Event";
+        if (file.contains(eventName)) {
+          return "";
+        }
 
-    RegExp reg = RegExp(r'final Map<Type, NyEvent> events = {([\w\W\n\r\s:(),\/\/]+)};');
-    String template = """
+        RegExp reg = RegExp(
+            r'final Map<Type, NyEvent> events = {([\w\W\n\r\s:(),\/\/]+)};');
+        String template = """
 final Map<Type, NyEvent> events = {${reg.allMatches(file).map((e) => e.group(1)).toList()[0]}
   $eventName: $eventName(),
 };
   """;
 
-    return file.replaceFirst(RegExp(r'final Map<Type, NyEvent> events = {[\w\W\n\r\s:(),\/\/]+(};)'), template);
-  });
+        return file.replaceFirst(
+            RegExp(
+                r'final Map<Type, NyEvent> events = {[\w\W\n\r\s:(),\/\/]+(};)'),
+            template);
+      });
 
   MetroConsole.writeInGreen(classReCase.snakeCase + '_event created 🎉');
 }
@@ -288,7 +302,8 @@ _makeApiService(List<String> arguments) async {
   parser.addOption(
     postmanCollectionOption,
     abbr: 'p',
-    help: 'Provide a Postman collection json file (v2.1) to create the API service.',
+    help:
+        'Provide a Postman collection json file (v2.1) to create the API service.',
   );
 
   final ArgResults argResults = parser.parse(arguments);
@@ -299,7 +314,7 @@ _makeApiService(List<String> arguments) async {
   String? baseUrlFlagValue = argResults[urlFlag];
   _checkHelpFlag(argResults[helpFlag], parser.usage);
   String apiServiceName =
-  argResults.arguments.first.replaceAll(RegExp(r'(_?api_service)'), "");
+      argResults.arguments.first.replaceAll(RegExp(r'(_?api_service)'), "");
   ReCase classReCase = ReCase(apiServiceName);
 
   _checkArguments(arguments,
@@ -316,7 +331,8 @@ _makeApiService(List<String> arguments) async {
     File file = File("public/assets/postman/$assetName");
     if ((await file.exists()) == false) {
       MetroConsole.writeInRed("Cannot locate \"$assetName\"");
-      MetroConsole.writeInBlack("Add \"$assetName\" to your \"/public/assets/postman/\" directory.");
+      MetroConsole.writeInBlack(
+          "Add \"$assetName\" to your \"/public/assets/postman/\" directory.");
       exit(0);
     }
     String fileJson = await file.readAsString();
@@ -325,40 +341,51 @@ _makeApiService(List<String> arguments) async {
     // get root postman contents
     File filePostman = File("postman.json");
     if ((await filePostman.exists()) == false) {
-      MetroConsole.writeInBlack("Your project is missing a 'postman.json' file. E.g.\n" +
-'''
+      MetroConsole.writeInBlack(
+          "Your project is missing a 'postman.json' file. E.g.\n" +
+              '''
   {
     "global": {
       "BASE_URL": "https://nylo.dev",
       "API_VERSION": "v2",
     }
   }
-  '''
-          + "Create the file at the root of the project.");
-      exit(0);
+  ''' +
+              "Create the file at the root of the project.");
+      exit(1);
     }
     String jsonFilePostman = await filePostman.readAsString();
 
-    Map<String, dynamic> postmanFileContents = Map<String, dynamic>.from(jsonDecode(jsonFilePostman));
+    Map<String, dynamic> postmanFileContents =
+        Map<String, dynamic>.from(jsonDecode(jsonFilePostman));
     Map<String, dynamic> postmanGlobalVars = postmanFileContents['global'];
 
     await _makePostmanApiService(
-        json: json, postmanGlobalVars: postmanGlobalVars, classReCase: classReCase, hasForceFlag: hasForceFlag, baseUrlFlagValue: baseUrlFlagValue);
+        json: json,
+        postmanGlobalVars: postmanGlobalVars,
+        classReCase: classReCase,
+        hasForceFlag: hasForceFlag,
+        baseUrlFlagValue: baseUrlFlagValue);
     exit(0);
   }
 
-  await _createApiService(classReCase, argResults: argResults, modelFlagValue: modelFlagValue, baseUrlFlagValue: baseUrlFlagValue, hasForceFlag: hasForceFlag);
+  await _createApiService(classReCase,
+      argResults: argResults,
+      modelFlagValue: modelFlagValue,
+      baseUrlFlagValue: baseUrlFlagValue,
+      hasForceFlag: hasForceFlag);
 }
 
 _makePostmanApiService(
     {required dynamic json,
-      required Map<String, dynamic> postmanGlobalVars,
-      required ReCase classReCase,
-      required bool? hasForceFlag,
-      required String baseUrlFlagValue,
+    required Map<String, dynamic> postmanGlobalVars,
+    required ReCase classReCase,
+    required bool? hasForceFlag,
+    required String baseUrlFlagValue,
     String? exportPath}) async {
   List<String>? stubNetworkValue = [];
-  List<Map<String, dynamic>> postmanItems = List<Map<String, dynamic>>.from(json['item']);
+  List<Map<String, dynamic>> postmanItems =
+      List<Map<String, dynamic>>.from(json['item']);
   List<String> imports = [];
   for (var postmanItem in postmanItems) {
     // handle folders
@@ -373,7 +400,13 @@ _makePostmanApiService(
       await MetroService.makeDirectory(directory);
 
       // add back to loop
-      await _makePostmanApiService(json: postmanItem, postmanGlobalVars: postmanGlobalVars, exportPath: pathName, classReCase: classReCase, hasForceFlag: hasForceFlag, baseUrlFlagValue: baseUrlFlagValue);
+      await _makePostmanApiService(
+          json: postmanItem,
+          postmanGlobalVars: postmanGlobalVars,
+          exportPath: pathName,
+          classReCase: classReCase,
+          hasForceFlag: hasForceFlag,
+          baseUrlFlagValue: baseUrlFlagValue);
       continue;
     }
 
@@ -385,9 +418,12 @@ _makePostmanApiService(
       Map<String, dynamic> queryParams = {}, dataParams = {}, headerParams = {};
 
       // find header params
-      if (postmanItem["request"] != null && Map<String, dynamic>.from(postmanItem["request"]).containsKey('header')) {
+      if (postmanItem["request"] != null &&
+          Map<String, dynamic>.from(postmanItem["request"])
+              .containsKey('header')) {
         if (postmanItem['request']['header'] != null) {
-          List<Map<String, dynamic>> headerList = List<Map<String, dynamic>>.from(postmanItem['request']['header']);
+          List<Map<String, dynamic>> headerList =
+              List<Map<String, dynamic>>.from(postmanItem['request']['header']);
           for (var header in headerList) {
             if (!header.containsKey('key')) {
               continue;
@@ -406,41 +442,50 @@ _makePostmanApiService(
       }
 
       // find query params
-      if (postmanItem["request"] != null && Map<String, dynamic>.from(postmanItem["request"]).containsKey('url')) {
+      if (postmanItem["request"] != null &&
+          Map<String, dynamic>.from(postmanItem["request"])
+              .containsKey('url')) {
         if (postmanItem['request']['url'] != null) {
           Map<String, dynamic> urlData = postmanItem['request']['url'];
           if (urlData.containsKey('query')) {
-            List<Map<String, dynamic>>? queryData = List<Map<String, dynamic>>.from(urlData['query']);
-              queryData.forEach((element) {
-                queryParams[element['key']] = element['value'];
-              });
+            List<Map<String, dynamic>>? queryData =
+                List<Map<String, dynamic>>.from(urlData['query']);
+            queryData.forEach((element) {
+              queryParams[element['key']] = element['value'];
+            });
           }
         }
       }
 
       // find data params
-      if (postmanItem["request"] != null && Map<String, dynamic>.from(postmanItem["request"]).containsKey('body')) {
+      if (postmanItem["request"] != null &&
+          Map<String, dynamic>.from(postmanItem["request"])
+              .containsKey('body')) {
         Map<String, dynamic> body = postmanItem['request']['body'];
         if (body.containsKey('mode')) {
-          switch(body["mode"]) {
-            case "formdata" : {
-              // tbc
-              break;
-            }
-            case "raw" : {
-              if (body["raw"] is String) {
-                dynamic jsonRaw = jsonDecode(_replacePostmanStringVars(postmanGlobalVars, body["raw"]));
-                if (jsonRaw is Map<String, dynamic>) {
-                  Map<String, dynamic>.from(jsonRaw).entries.forEach((element) {
-                    dataParams[element.key] = element.value;
-                  });
-                }
+          switch (body["mode"]) {
+            case "formdata":
+              {
+                // tbc
+                break;
               }
-              break;
-            }
-            default: {
-
-            }
+            case "raw":
+              {
+                if (body["raw"] is String) {
+                  dynamic jsonRaw = jsonDecode(_replacePostmanStringVars(
+                      postmanGlobalVars, body["raw"]));
+                  if (jsonRaw is Map<String, dynamic>) {
+                    Map<String, dynamic>.from(jsonRaw)
+                        .entries
+                        .forEach((element) {
+                      dataParams[element.key] = element.value;
+                    });
+                  }
+                }
+                break;
+              }
+            default:
+              {}
           }
         }
       }
@@ -449,14 +494,17 @@ _makePostmanApiService(
       String? responseBody;
       String? modelName;
       bool? isList;
-      if (postmanItem.containsKey('response') && postmanItem['response'].length != 0) {
+      if (postmanItem.containsKey('response') &&
+          postmanItem['response'].length != 0) {
         String? name = postmanItem['name'];
         if (name != null) {
           modelName = ReCase(name).pascalCase;
         }
-        Map<String, dynamic> responseData = Map<String, dynamic>.from(postmanItem['response'][0]);
+        Map<String, dynamic> responseData =
+            Map<String, dynamic>.from(postmanItem['response'][0]);
         if (responseData.containsKey('body')) {
-          responseBody = _replacePostmanStringVars(postmanGlobalVars, responseData['body']);
+          responseBody = _replacePostmanStringVars(
+              postmanGlobalVars, responseData['body']);
         }
       }
 
@@ -473,24 +521,28 @@ _makePostmanApiService(
 
         String code = "";
 
-        // call generate to generate code
-        if (jsonResponseBody is List && jsonResponseBody.length > 0) {
-          code = generator.generate(jsonEncode(jsonResponseBody[0]));
-          isList = true;
-        } else {
-          isList = false;
-          code = generator.generate(responseBody);
+        dynamic rsp = _NyJson.tryDecode(responseBody);
+        if (rsp != null) {
+          // call generate to generate code
+          if (jsonResponseBody is List && jsonResponseBody.length > 0) {
+            code = generator.generate(jsonEncode(jsonResponseBody[0]));
+            isList = true;
+          } else {
+            isList = false;
+            code = generator.generate(responseBody);
+          }
         }
-
         // create model
-        await _createNyloModel(ReCase(modelName), stubModel: code, hasForceFlag: hasForceFlag);
+        await _createNyloModel(ReCase(modelName),
+            stubModel: code, hasForceFlag: hasForceFlag);
         imports.add(makeImportPathModel(ReCase(modelName).snakeCase));
       }
 
       String urlRaw = postmanItem["request"]["url"]['raw'];
       String cleanUrlRaw = _replacePostmanStringVars(postmanGlobalVars, urlRaw);
 
-      String path = List<String>.from(postmanItem["request"]["url"]["path"]).join("/");
+      String path =
+          List<String>.from(postmanItem["request"]["url"]["path"]).join("/");
       String cleanPath = _replacePostmanStringVars(postmanGlobalVars, path);
 
       ReCase fullUrlPath = ReCase(postmanItem['name']);
@@ -505,8 +557,7 @@ _makePostmanApiService(
           isList: (isList ?? false),
           queryParams: queryParams,
           dataParams: dataParams,
-          headerParams: headerParams
-      );
+          headerParams: headerParams);
       stubNetworkValue.add(createdNetworkMethodStub);
     }
   }
@@ -515,45 +566,65 @@ _makePostmanApiService(
     return;
   }
 
-  if (baseUrlFlagValue == "getEnv('API_BASE_URL')" && postmanGlobalVars.containsKey('BASE_URL')) {
-    baseUrlFlagValue =  '"${postmanGlobalVars['BASE_URL']}"';
+  if (baseUrlFlagValue == "getEnv('API_BASE_URL')" &&
+      postmanGlobalVars.containsKey('BASE_URL')) {
+    baseUrlFlagValue = '"${postmanGlobalVars['BASE_URL']}"';
   }
 
   ReCase className;
   String stubPostmanApiService = "";
   if (exportPath != null) {
     ReCase reCase = ReCase("${classReCase.pathCase}/$exportPath");
-    stubPostmanApiService = postmanApiServiceStub(reCase, imports: imports.join("\n"), networkMethods: (stubNetworkValue.join("\n")), baseUrl: baseUrlFlagValue);
+    stubPostmanApiService = postmanApiServiceStub(reCase,
+        imports: imports.join("\n"),
+        networkMethods: (stubNetworkValue.join("\n")),
+        baseUrl: baseUrlFlagValue);
     className = reCase;
   } else {
-    stubPostmanApiService = postmanApiServiceStub(classReCase, imports: imports.join("\n"), networkMethods: (stubNetworkValue.join("\n")), baseUrl: baseUrlFlagValue);
+    stubPostmanApiService = postmanApiServiceStub(classReCase,
+        imports: imports.join("\n"),
+        networkMethods: (stubNetworkValue.join("\n")),
+        baseUrl: baseUrlFlagValue);
     className = classReCase;
   }
 
   await MetroService.makeApiService(className.snakeCase, stubPostmanApiService,
-      forceCreate: hasForceFlag ?? false, folderPath: exportPath != null ? "$networkingFolder/$exportPath" : networkingFolder);
+      forceCreate: hasForceFlag ?? false,
+      folderPath: exportPath != null
+          ? "$networkingFolder/$exportPath"
+          : networkingFolder);
 
-  String classImport = makeImportPathApiService(exportPath != null ? "$exportPath/${className.snakeCase}" : className.snakeCase);
-  await MetroService.addToConfig(configName: "decoders", classImport: classImport, createTemplate: (file) {
-    String apiServiceName = "${className.pascalCase}ApiService";
-    if (file.contains(apiServiceName)) {
-      return "";
-    }
-    RegExp reg = RegExp(r'final Map<Type, BaseApiService> apiDecoders = {([\w\W\n\r\s:(),\/\/]+)};');
-    String temp = """
+  String classImport = makeImportPathApiService(exportPath != null
+      ? "$exportPath/${className.snakeCase}"
+      : className.snakeCase);
+  await MetroService.addToConfig(
+      configName: "decoders",
+      classImport: classImport,
+      createTemplate: (file) {
+        String apiServiceName = "${className.pascalCase}ApiService";
+        if (file.contains(apiServiceName)) {
+          return "";
+        }
+        RegExp reg = RegExp(
+            r'final Map<Type, BaseApiService> apiDecoders = {([\w\W\n\r\s:(),\/\/]+)};');
+        String temp = """
 final Map<Type, BaseApiService> apiDecoders = {${reg.allMatches(file).map((e) => e.group(1)).toList()[0]}
   $apiServiceName: $apiServiceName(),
 };
   """;
 
-    return file.replaceFirst(RegExp(r'final Map<Type, BaseApiService> apiDecoders = {[\w\W\n\r\s:(),\/\/]+(};)'), temp,);
-  });
+        return file.replaceFirst(
+          RegExp(
+              r'final Map<Type, BaseApiService> apiDecoders = {[\w\W\n\r\s:(),\/\/]+(};)'),
+          temp,
+        );
+      });
 
   MetroConsole.writeInGreen(className.snakeCase + '_api_service created 🎉');
 }
 
-_replacePostmanStringVars(Map<String, dynamic> postmanGlobal, String string) => string.replaceAllMapped(
-    RegExp(r'\{\{[A-z_]+\}\}', caseSensitive: false),
+_replacePostmanStringVars(Map<String, dynamic> postmanGlobal, String string) =>
+    string.replaceAllMapped(RegExp(r'\{\{[A-z_]+\}\}', caseSensitive: false),
         (Match m) {
       if (m.group(0) == null) {
         return "";
@@ -564,28 +635,40 @@ _replacePostmanStringVars(Map<String, dynamic> postmanGlobal, String string) => 
       return postmanGlobal[group0].toString();
     });
 
-_createApiService(ReCase classReCase, {required argResults, required modelFlagValue, required baseUrlFlagValue, required hasForceFlag}) async {
+_createApiService(ReCase classReCase,
+    {required argResults,
+    required modelFlagValue,
+    required baseUrlFlagValue,
+    required hasForceFlag}) async {
   String stubApiService = apiServiceStub(classReCase,
       model: ReCase(modelFlagValue), baseUrl: baseUrlFlagValue);
   await MetroService.makeApiService(classReCase.snakeCase, stubApiService,
       forceCreate: hasForceFlag ?? false);
 
   String classImport = makeImportPathApiService(classReCase.snakeCase);
-  await MetroService.addToConfig(configName: "decoders", classImport: classImport, createTemplate: (file) {
-    String apiServiceName = "${classReCase.pascalCase}ApiService";
-    if (file.contains(apiServiceName)) {
-      return "";
-    }
+  await MetroService.addToConfig(
+      configName: "decoders",
+      classImport: classImport,
+      createTemplate: (file) {
+        String apiServiceName = "${classReCase.pascalCase}ApiService";
+        if (file.contains(apiServiceName)) {
+          return "";
+        }
 
-    RegExp reg = RegExp(r'final Map<Type, BaseApiService> apiDecoders = {([\w\W\n\r\s:(),\/\/]+)};');
-    String temp = """
+        RegExp reg = RegExp(
+            r'final Map<Type, BaseApiService> apiDecoders = {([\w\W\n\r\s:(),\/\/]+)};');
+        String temp = """
 final Map<Type, BaseApiService> apiDecoders = {${reg.allMatches(file).map((e) => e.group(1)).toList()[0]}
   $apiServiceName: $apiServiceName(),
 };
   """;
 
-    return file.replaceFirst(RegExp(r'final Map<Type, BaseApiService> apiDecoders = {[\w\W\n\r\s:(),\/\/]+(};)'), temp,);
-  });
+        return file.replaceFirst(
+          RegExp(
+              r'final Map<Type, BaseApiService> apiDecoders = {[\w\W\n\r\s:(),\/\/]+(};)'),
+          temp,
+        );
+      });
 
   MetroConsole.writeInGreen(classReCase.snakeCase + '_api_service created 🎉');
 }
@@ -682,30 +765,38 @@ _makeModel(List<String> arguments) async {
   String stubModel =
       modelStub(modelName: modelName, isStorable: hasStorableFlag);
 
-  await _createNyloModel(classReCase, stubModel: stubModel, hasForceFlag: hasForceFlag);
+  await _createNyloModel(classReCase,
+      stubModel: stubModel, hasForceFlag: hasForceFlag);
 }
 
-_createNyloModel(ReCase classReCase, {required String stubModel, bool? hasForceFlag}) async {
+_createNyloModel(ReCase classReCase,
+    {required String stubModel, bool? hasForceFlag}) async {
   await MetroService.makeModel(classReCase.snakeCase, stubModel,
       forceCreate: hasForceFlag ?? false);
 
   String classImport = makeImportPathModel(classReCase.snakeCase);
-  await MetroService.addToConfig(configName: "decoders", classImport: classImport, createTemplate: (file) {
-    String modelName = classReCase.pascalCase;
-    if (file.contains(modelName)) {
-      return "";
-    }
+  await MetroService.addToConfig(
+      configName: "decoders",
+      classImport: classImport,
+      createTemplate: (file) {
+        String modelName = classReCase.pascalCase;
+        if (file.contains(modelName)) {
+          return "";
+        }
 
-    RegExp reg = RegExp(r'final Map<Type, dynamic> modelDecoders = {([^};]*)};');
-    String template = """
+        RegExp reg =
+            RegExp(r'final Map<Type, dynamic> modelDecoders = {([^};]*)};');
+        String template = """
 final Map<Type, dynamic> modelDecoders = {${reg.allMatches(file).map((e) => e.group(1)).toList()[0]}
   List<$modelName>: (data) => List.from(data).map((json) => $modelName.fromJson(json)).toList(),
 
   $modelName: (data) => $modelName.fromJson(data),
 };""";
 
-    return file.replaceFirst(RegExp(r'final Map<Type, dynamic> modelDecoders = {([^};]*)};'), template);
-  });
+        return file.replaceFirst(
+            RegExp(r'final Map<Type, dynamic> modelDecoders = {([^};]*)};'),
+            template);
+      });
 
   MetroConsole.writeInGreen(classReCase.snakeCase + ' created 🎉');
 }
@@ -740,24 +831,69 @@ _makePage(List<String> arguments) async {
 
   String className =
       argResults.arguments.first.replaceAll(RegExp(r'(_?page)'), "");
-  ReCase classReCase = ReCase(className);
 
+  String? creationPath;
+  if (className.contains("/")) {
+    List<String> pathSegments = Uri.parse(className).pathSegments.toList();
+    className = pathSegments.removeLast();
+    String folder = pagesFolder;
+
+    for (var segment in pathSegments) {
+      await MetroService.makeDirectory("$folder/$segment");
+      folder += '/$segment';
+    }
+    creationPath = pathSegments.join("/");
+  }
+
+  ReCase classReCase = ReCase(className);
+  String printMessage = "";
   if (shouldCreateController) {
-    String stubPageAndController = pageWithControllerStub(
-        className: classReCase, importName: arguments.first.replaceAll("_page", ""));
-    await MetroService.makePage(className.snakeCase, stubPageAndController);
+    String stubPageAndController =
+        pageWithControllerStub(className: classReCase);
+    await MetroService.makePage(className.snakeCase, stubPageAndController,
+        pathWithinFolder: creationPath);
 
     String stubController = controllerStub(controllerName: classReCase);
     await MetroService.makeController(className.snakeCase, stubController);
 
-    MetroConsole.writeInGreen(
-        '${className.snakeCase}_page & ${className.snakeCase}_controller created 🎉');
+    printMessage =
+        '${className.snakeCase}_page & ${className.snakeCase}_controller created 🎉';
   } else {
     String stubPage = pageStub(pageName: classReCase);
-    await MetroService.makePage(className.snakeCase, stubPage);
-
-    MetroConsole.writeInGreen('${classReCase.snakeCase}_page created 🎉');
+    await MetroService.makePage(className.snakeCase, stubPage,
+        pathWithinFolder: creationPath);
+    printMessage = '${classReCase.snakeCase}_page created 🎉';
   }
+
+  // Add to router
+  String classImport =
+      "import '../../resources/pages/${creationPath != null ? '$creationPath/' : ''}${className.toLowerCase()}_page.dart';";
+  await MetroService.addToRouter(
+      classImport: classImport,
+      createTemplate: (file) {
+        String routeName =
+            'router.route("/${classReCase.pathCase}", (context) => ${classReCase.pascalCase}Page());';
+        if (file.contains(routeName)) {
+          return "";
+        }
+        RegExp reg =
+            RegExp(r'appRouter\(\) => nyRoutes\(\(router\) {([^}]*)}\);');
+        if (reg.allMatches(file).map((e) => e.group(1)).toList().isEmpty) {
+          return "";
+        }
+        String temp = """
+appRouter() => nyRoutes((router) {${reg.allMatches(file).map((e) => e.group(1)).toList()[0]}
+  router.route("/${classReCase.paramCase}", (context) => ${classReCase.pascalCase}Page());
+});
+  """;
+
+        return file.replaceFirst(
+          RegExp(r'appRouter\(\) => nyRoutes\(\(router\) {([^}]*)\n}\);'),
+          temp,
+        );
+      });
+
+  MetroConsole.writeInGreen(printMessage);
 }
 
 _checkArguments(List<String> arguments, String usage) {
@@ -771,5 +907,16 @@ _checkHelpFlag(bool hasHelpFlag, String usage) {
   if (hasHelpFlag) {
     MetroConsole.writeInBlack(usage);
     exit(0);
+  }
+}
+
+/// helper to encode and decode data
+class _NyJson {
+  static dynamic tryDecode(data) {
+    try {
+      return jsonDecode(data);
+    } catch (e) {
+      return null;
+    }
   }
 }

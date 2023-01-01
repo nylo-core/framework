@@ -51,7 +51,7 @@ ${model.originalText != "Model" ? '''
   }''' : '''
   /// Example API Request
   Future<dynamic> fetchData() async {
-    return await network<dynamic>(
+    return await network(
         request: (request) => request.get("/endpoint-path"),
     );
   }'''}

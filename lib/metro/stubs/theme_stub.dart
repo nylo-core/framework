@@ -4,7 +4,7 @@ String themeStub(ReCase rc, {bool isDark = false}) => '''
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../config/font.dart';
-import '../../resources/themes/styles/color_styles.dart';
+import '../../resources/themes/styles/base_styles.dart';
 import '../../resources/themes/text_theme/default_text_theme.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 
@@ -41,11 +41,11 @@ ThemeData ${rc.camelCase}Theme(ColorStyles ${rc.camelCase}Colors) {
       colorScheme: ColorScheme.light(primary: ${rc.camelCase}Colors.buttonBackground),
     ),
     textButtonTheme: TextButtonThemeData(
-      style: TextButton.styleFrom(primary: ${rc.camelCase}Colors.primaryContent),
+      style: TextButton.styleFrom(foregroundColor: ${rc.camelCase}Colors.primaryContent),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: TextButton.styleFrom(
-          primary: ${rc.camelCase}Colors.buttonPrimaryContent,
+          foregroundColor: ${rc.camelCase}Colors.buttonPrimaryContent,
           backgroundColor: ${rc.camelCase}Colors.buttonBackground),
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
