@@ -7,7 +7,7 @@ import 'package:args/args.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:json_dart_generator/json_dart_generator.dart';
 import 'package:nylo_framework/metro/menu.dart';
-import 'package:nylo_framework/metro/models/ny_command.dart';
+import 'package:nylo_support/metro/models/ny_command.dart';
 import 'package:nylo_framework/metro/stubs/api_service_stub.dart';
 import 'package:nylo_framework/metro/stubs/controller_stub.dart';
 import 'package:nylo_framework/metro/stubs/event_stub.dart';
@@ -126,9 +126,9 @@ _makeStatefulWidget(List<String> arguments) async {
 
   bool? hasForceFlag = argResults[forceFlag];
 
-  _checkHelpFlag(argResults[helpFlag], parser.usage);
+  MetroService.hasHelpFlag(argResults[helpFlag], parser.usage);
 
-  _checkArguments(arguments,
+  MetroService.checkArguments(arguments,
       'You are missing the \'name\' of the stateful widget that you want to create.\ne.g. make:stateful_widget my_new_widget');
 
   String widgetName =
@@ -158,9 +158,9 @@ _makeStatelessWidget(List<String> arguments) async {
 
   bool? hasForceFlag = argResults[forceFlag];
 
-  _checkHelpFlag(argResults[helpFlag], parser.usage);
+  MetroService.hasHelpFlag(argResults[helpFlag], parser.usage);
 
-  _checkArguments(arguments,
+  MetroService.checkArguments(arguments,
       'You are missing the \'name\' of the widget that you want to create.\ne.g. make:stateless_widget my_new_widget');
 
   String widgetName =
@@ -187,9 +187,9 @@ _makeProvider(List<String> arguments) async {
 
   bool? hasForceFlag = argResults[forceFlag];
 
-  _checkHelpFlag(argResults[helpFlag], parser.usage);
+  MetroService.hasHelpFlag(argResults[helpFlag], parser.usage);
 
-  _checkArguments(arguments,
+  MetroService.checkArguments(arguments,
       'You are missing the \'name\' of the provider that you want to create.\ne.g. make:provider cache_provider');
 
   String providerName =
@@ -239,9 +239,9 @@ _makeEvent(List<String> arguments) async {
 
   bool? hasForceFlag = argResults[forceFlag];
 
-  _checkHelpFlag(argResults[helpFlag], parser.usage);
+  MetroService.hasHelpFlag(argResults[helpFlag], parser.usage);
 
-  _checkArguments(arguments,
+  MetroService.checkArguments(arguments,
       'You are missing the \'name\' of the event that you want to create.\ne.g. make:event login_event');
 
   String eventName =
@@ -312,12 +312,12 @@ _makeApiService(List<String> arguments) async {
   bool? hasForceFlag = argResults[forceFlag];
   String modelFlagValue = argResults[modelFlag] ?? "Model";
   String? baseUrlFlagValue = argResults[urlFlag];
-  _checkHelpFlag(argResults[helpFlag], parser.usage);
+  MetroService.hasHelpFlag(argResults[helpFlag], parser.usage);
   String apiServiceName =
       argResults.arguments.first.replaceAll(RegExp(r'(_?api_service)'), "");
   ReCase classReCase = ReCase(apiServiceName);
 
-  _checkArguments(arguments,
+  MetroService.checkArguments(arguments,
       'You are missing the \'name\' of the API service that you want to create.\ne.g. make:api_service user_api_service');
   if (baseUrlFlagValue == null) {
     baseUrlFlagValue = "getEnv('API_BASE_URL')";
@@ -688,9 +688,9 @@ _makeTheme(List<String> arguments) async {
   bool? hasForceFlag = argResults[forceFlag];
   bool? hasThemeDarkFlag = argResults[themeDarkFlag];
 
-  _checkHelpFlag(argResults[helpFlag], parser.usage);
+  MetroService.hasHelpFlag(argResults[helpFlag], parser.usage);
 
-  _checkArguments(arguments,
+  MetroService.checkArguments(arguments,
       'You are missing the \'name\' of the theme that you want to create.\ne.g. make:theme bright_theme');
 
   String themeName =
@@ -719,10 +719,10 @@ _makeController(List<String> arguments) async {
       negatable: false);
 
   final ArgResults argResults = parser.parse(arguments);
-  _checkArguments(arguments, parser.usage);
+  MetroService.checkArguments(arguments, parser.usage);
 
   bool? hasForceFlag = argResults[forceFlag];
-  _checkHelpFlag(argResults[helpFlag], parser.usage);
+  MetroService.hasHelpFlag(argResults[helpFlag], parser.usage);
 
   String className =
       argResults.arguments.first.replaceAll(RegExp(r'(_?controller)'), "");
@@ -751,12 +751,12 @@ _makeModel(List<String> arguments) async {
 
   final ArgResults argResults = parser.parse(arguments);
 
-  _checkArguments(argResults.arguments, parser.usage);
+  MetroService.checkArguments(argResults.arguments, parser.usage);
 
   bool? hasForceFlag = argResults[forceFlag];
   bool? hasStorableFlag = argResults[storableFlag];
 
-  _checkHelpFlag(argResults[helpFlag], parser.usage);
+  MetroService.hasHelpFlag(argResults[helpFlag], parser.usage);
 
   String className = argResults.arguments.first;
   ReCase classReCase = ReCase(className);
@@ -814,10 +814,18 @@ _makePage(List<String> arguments) async {
     help: 'Creates a new page with a controller',
     negatable: false,
   );
+  parser.addFlag(
+    forceFlag,
+    abbr: 'f',
+    help: 'Creates a new page even if it already exists.',
+    negatable: false,
+  );
 
   final ArgResults argResults = parser.parse(arguments);
 
-  _checkHelpFlag(argResults[helpFlag], parser.usage);
+  MetroService.hasHelpFlag(argResults[helpFlag], parser.usage);
+
+  bool? hasForceFlag = argResults[forceFlag];
 
   bool shouldCreateController = false;
   if (argResults["controller"]) {
@@ -851,23 +859,24 @@ _makePage(List<String> arguments) async {
     String stubPageAndController =
         pageWithControllerStub(className: classReCase);
     await MetroService.makePage(className.snakeCase, stubPageAndController,
-        pathWithinFolder: creationPath);
+        pathWithinFolder: creationPath, forceCreate: hasForceFlag ?? false);
 
     String stubController = controllerStub(controllerName: classReCase);
-    await MetroService.makeController(className.snakeCase, stubController);
+    await MetroService.makeController(className.snakeCase, stubController,
+        forceCreate: hasForceFlag ?? false);
 
     printMessage =
         '${className.snakeCase}_page & ${className.snakeCase}_controller created 🎉';
   } else {
     String stubPage = pageStub(pageName: classReCase);
     await MetroService.makePage(className.snakeCase, stubPage,
-        pathWithinFolder: creationPath);
+        pathWithinFolder: creationPath, forceCreate: hasForceFlag ?? false);
     printMessage = '${classReCase.snakeCase}_page created 🎉';
   }
 
   // Add to router
   String classImport =
-      "import '../../resources/pages/${creationPath != null ? '$creationPath/' : ''}${className.toLowerCase()}_page.dart';";
+      "import '/resources/pages/${creationPath != null ? '$creationPath/' : ''}${className.toLowerCase()}_page.dart';";
   await MetroService.addToRouter(
       classImport: classImport,
       createTemplate: (file) {
@@ -894,20 +903,6 @@ appRouter() => nyRoutes((router) {${reg.allMatches(file).map((e) => e.group(1)).
       });
 
   MetroConsole.writeInGreen(printMessage);
-}
-
-_checkArguments(List<String> arguments, String usage) {
-  if (arguments.isEmpty) {
-    MetroConsole.writeInBlack(usage);
-    exit(1);
-  }
-}
-
-_checkHelpFlag(bool hasHelpFlag, String usage) {
-  if (hasHelpFlag) {
-    MetroConsole.writeInBlack(usage);
-    exit(0);
-  }
 }
 
 /// helper to encode and decode data

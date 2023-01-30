@@ -1,3 +1,11 @@
+## [4.1.0] - 2023-01-30
+
+* Update stubs.
+* Now you can pass a baseUrl to the `network` or `nyApi` method.
+* Small refactor to the Metro class.
+* Fix importPaths when using `addToRouter`.
+* Pubspec.yaml dependency updates.
+
 ## [4.0.0] - 2023-01-01
 
 * Metro will automatically add Routes to the router.dart file

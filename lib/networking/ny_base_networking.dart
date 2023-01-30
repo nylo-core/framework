@@ -33,6 +33,11 @@ class NyBaseApiService {
     _api.options.headers.addAll({"Authorization": "Bearer $bearerToken"});
   }
 
+  /// Set a [baseUrl] for the request.
+  setBaseUrl(String baseUrl) {
+    _api.options.baseUrl = baseUrl;
+  }
+
   /// Initialize class
   void init() {
     baseOptions = BaseOptions(baseUrl: baseUrl, headers: {
@@ -63,6 +68,7 @@ class NyBaseApiService {
       Function(Response response)? handleSuccess,
       Function(DioError error)? handleFailure,
       String? bearerToken,
+      String? baseUrl,
       Map<String, dynamic> headers = const {}}) async {
     try {
       Map<String, dynamic> oldHeader = _api.options.headers;
@@ -78,8 +84,13 @@ class NyBaseApiService {
         newValuesToAddToHeader.addAll({"Authorization": "Bearer $bearerToken"});
       }
       _api.options.headers.addAll(newValuesToAddToHeader);
+      String oldBaseUrl = _api.options.baseUrl;
+      if (baseUrl != null) {
+        _api.options.baseUrl = baseUrl;
+      }
       Response response = await request(_api);
       _api.options.headers = oldHeader; // reset headers
+      _api.options.baseUrl = oldBaseUrl; //  reset base url
 
       return handleResponse<T>(response, handleSuccess: handleSuccess);
     } on DioError catch (dioError) {

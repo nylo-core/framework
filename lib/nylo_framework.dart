@@ -16,10 +16,11 @@ export 'package:nylo_support/alerts/toast_notification.dart';
 export 'package:nylo_support/networking/default_response.dart';
 export 'package:nylo_support/providers/providers.dart';
 export 'package:nylo_support/events/events.dart';
+export 'package:nylo_support/widgets/ny_future_builder.dart';
 export 'package:nylo_support/nylo.dart';
 export 'package:theme_provider/theme_provider.dart';
 export 'package:page_transition/page_transition.dart';
 export 'package:dio/dio.dart';
 
 /// Nylo version
-const String nyloVersion = 'v4.0.0';
+const String nyloVersion = 'v4.1.0';

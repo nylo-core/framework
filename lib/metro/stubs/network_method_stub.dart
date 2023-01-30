@@ -1,5 +1,6 @@
 import 'package:recase/recase.dart';
 
+/// Creates a network method
 String networkMethodStub({
   required String methodName,
   Map<String, dynamic> queryParams = const {},

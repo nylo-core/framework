@@ -3,9 +3,9 @@ import 'package:recase/recase.dart';
 String themeStub(ReCase rc, {bool isDark = false}) => '''
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../config/font.dart';
-import '../../resources/themes/styles/base_styles.dart';
-import '../../resources/themes/text_theme/default_text_theme.dart';
+import '/config/font.dart';
+import '/resources/themes/styles/color_styles.dart';
+import '/resources/themes/text_theme/default_text_theme.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 
 /*
@@ -16,51 +16,52 @@ import 'package:nylo_framework/nylo_framework.dart';
 |--------------------------------------------------------------------------
 */
 
-ThemeData ${rc.camelCase}Theme(ColorStyles ${rc.camelCase}Colors) {
-  TextTheme ${rc.camelCase}TextTheme =
-  getAppTextTheme(appFont, defaultTextTheme.merge(_${rc.camelCase}TextTheme(${rc.camelCase}Colors)));
+ThemeData ${rc.camelCase}Theme(ColorStyles color) {
+  TextTheme ${rc.camelCase}Theme = getAppTextTheme(
+      appFont, defaultTextTheme.merge(_textTheme(color)));
 
   return ThemeData(
-    primaryColor: ${rc.camelCase}Colors.primaryContent,
-    backgroundColor: ${rc.camelCase}Colors.background,
-    colorScheme: ColorScheme.${isDark == true ? 'dark' : 'light'}(),
-    primaryColorLight: ${rc.camelCase}Colors.primaryAccent,
-    focusColor: ${rc.camelCase}Colors.primaryContent,
-    scaffoldBackgroundColor: ${rc.camelCase}Colors.background,
-    hintColor: ${rc.camelCase}Colors.primaryAccent,
+    primaryColor: color.primaryContent,
+    primaryColorLight: color.primaryAccent,
+    focusColor: color.primaryContent,
+    scaffoldBackgroundColor: color.background,
+    hintColor: color.primaryAccent,
     appBarTheme: AppBarTheme(
-      backgroundColor: ${rc.camelCase}Colors.appBarBackground,
-      titleTextStyle: ${rc.camelCase}TextTheme.headline6!
-          .copyWith(color: ${rc.camelCase}Colors.appBarPrimaryContent),
-      iconTheme: IconThemeData(color: ${rc.camelCase}Colors.appBarPrimaryContent),
+      backgroundColor: color.appBarBackground,
+      titleTextStyle: ${rc.camelCase}Theme.titleLarge!
+          .copyWith(color: color.appBarPrimaryContent),
+      iconTheme: IconThemeData(color: color.appBarPrimaryContent),
       elevation: 1.0,
-      systemOverlayStyle: SystemUiOverlayStyle.${isDark == true ? 'dark' : 'light'},
+      systemOverlayStyle: SystemUiOverlayStyle.dark,
     ),
     buttonTheme: ButtonThemeData(
-      buttonColor: ${rc.camelCase}Colors.buttonPrimaryContent,
-      colorScheme: ColorScheme.light(primary: ${rc.camelCase}Colors.buttonBackground),
+      buttonColor: color.buttonPrimaryContent,
+      colorScheme: ColorScheme.light(primary: color.buttonBackground),
     ),
     textButtonTheme: TextButtonThemeData(
-      style: TextButton.styleFrom(foregroundColor: ${rc.camelCase}Colors.primaryContent),
+      style: TextButton.styleFrom(foregroundColor: color.primaryContent),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: TextButton.styleFrom(
-          foregroundColor: ${rc.camelCase}Colors.buttonPrimaryContent,
-          backgroundColor: ${rc.camelCase}Colors.buttonBackground),
+          foregroundColor: color.buttonPrimaryContent,
+          backgroundColor: color.buttonBackground),
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
-      backgroundColor: ${rc.camelCase}Colors.bottomTabBarBackground,
+      backgroundColor: color.bottomTabBarBackground,
       unselectedIconTheme:
-      IconThemeData(color: ${rc.camelCase}Colors.bottomTabBarIconUnselected),
+          IconThemeData(color: color.bottomTabBarIconUnselected),
       selectedIconTheme:
-      IconThemeData(color: ${rc.camelCase}Colors.bottomTabBarIconSelected),
+          IconThemeData(color: color.bottomTabBarIconSelected),
       unselectedLabelStyle:
-      TextStyle(color: ${rc.camelCase}Colors.bottomTabBarLabelUnselected),
+          TextStyle(color: color.bottomTabBarLabelUnselected),
       selectedLabelStyle:
-      TextStyle(color: ${rc.camelCase}Colors.bottomTabBarLabelSelected),
-      selectedItemColor: ${rc.camelCase}Colors.bottomTabBarLabelSelected,
+          TextStyle(color: color.bottomTabBarLabelSelected),
+      selectedItemColor: color.bottomTabBarLabelSelected,
     ),
-    textTheme: ${rc.camelCase}TextTheme,
+    textTheme: ${rc.camelCase}Theme,
+    colorScheme: ColorScheme.light(
+      background: color.background
+    ),
   );
 }
 
@@ -70,47 +71,11 @@ ThemeData ${rc.camelCase}Theme(ColorStyles ${rc.camelCase}Colors) {
 |--------------------------------------------------------------------------
 */
 
-TextTheme _${rc.camelCase}TextTheme(ColorStyles ${rc.camelCase}Colors) {
-  return TextTheme(
-    headline6: TextStyle(
-      color: ${rc.camelCase}Colors.primaryContent,
-    ),
-    headline5: TextStyle(
-      color: ${rc.camelCase}Colors.primaryContent,
-    ),
-    headline4: TextStyle(
-      color: ${rc.camelCase}Colors.primaryContent,
-    ),
-    headline3: TextStyle(
-      color: ${rc.camelCase}Colors.primaryContent,
-    ),
-    headline2: TextStyle(
-      color: ${rc.camelCase}Colors.primaryContent,
-    ),
-    headline1: TextStyle(
-      color: ${rc.camelCase}Colors.primaryContent,
-    ),
-    subtitle2: TextStyle(
-      color: ${rc.camelCase}Colors.primaryContent,
-    ),
-    subtitle1: TextStyle(
-      color: ${rc.camelCase}Colors.primaryContent,
-    ),
-    overline: TextStyle(
-      color: ${rc.camelCase}Colors.primaryContent,
-    ),
-    button: TextStyle(
-      color: ${rc.camelCase}Colors.primaryContent.withOpacity(0.8),
-    ),
-    bodyText2: TextStyle(
-      color: ${rc.camelCase}Colors.primaryContent.withOpacity(0.8),
-    ),
-    bodyText1: TextStyle(
-      color: ${rc.camelCase}Colors.primaryContent,
-    ),
-    caption: TextStyle(
-      color: ${rc.camelCase}Colors.primaryContent,
-    ),
+TextTheme _textTheme(ColorStyles color) {
+  Color primaryContent = color.primaryContent;
+  TextTheme textTheme = TextTheme().apply(displayColor: primaryContent);
+  return textTheme.copyWith(
+      labelLarge: TextStyle(color: primaryContent.withOpacity(0.8))
   );
 }
 ''';

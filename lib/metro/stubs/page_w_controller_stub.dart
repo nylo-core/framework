@@ -19,6 +19,7 @@ class _${className.pascalCase}PageState extends NyState<${className.pascalCase}P
   @override
   init() async {
     super.init();
+    
   }
   
   @override

@@ -2,7 +2,7 @@ import 'package:recase/recase.dart';
 
 String themeColorsStub(ReCase rc) => '''
 import 'package:flutter/material.dart';
-import 'base_styles.dart';
+import '/resources/themes/styles/color_styles.dart';
 
 /*
 |--------------------------------------------------------------------------
