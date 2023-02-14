@@ -1,3 +1,8 @@
+## [4.1.1] - 2023-02-14
+
+* Add logo to package
+* Pubspec.yaml dependency updates.
+
 ## [4.1.0] - 2023-01-30
 
 * Update stubs.
