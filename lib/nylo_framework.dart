@@ -23,4 +23,4 @@ export 'package:page_transition/page_transition.dart';
 export 'package:dio/dio.dart';
 
 /// Nylo version
-const String nyloVersion = 'v4.1.1';
+const String nyloVersion = 'v4.1.2';
