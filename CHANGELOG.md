@@ -2,7 +2,7 @@
 
 * Pubspec.yaml dependency updates.
 
-* ## [4.1.2] - 2023-02-14
+## [4.1.2] - 2023-02-14
 
 * Add logo to package
 * Pubspec.yaml dependency updates.
