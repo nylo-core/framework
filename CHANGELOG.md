@@ -1,3 +1,8 @@
+## [4.2.0] - 2023-05-16
+
+* Flutter v3.10.0 fixes:
+    * Update: theme_provider package
+
 ## [4.1.4] - 2023-03-03
 
 * Pubspec.yaml dependency updates.
