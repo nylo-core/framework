@@ -7,6 +7,7 @@ import 'package:args/args.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:json_dart_generator/json_dart_generator.dart';
 import 'package:nylo_framework/metro/menu.dart';
+import 'package:nylo_framework/metro/stubs/route_guard_stub.dart';
 import 'package:nylo_support/metro/models/ny_command.dart';
 import 'package:nylo_framework/metro/stubs/api_service_stub.dart';
 import 'package:nylo_framework/metro/stubs/controller_stub.dart';
@@ -82,6 +83,12 @@ List<NyCommand> _allCommands = [
       arguments: ["-h", "-f"],
       category: "make",
       action: _makeTheme),
+  NyCommand(
+      name: "route_guard",
+      options: 1,
+      arguments: ["-h", "-f"],
+      category: "make",
+      action: _makeRouteGuard),
 ];
 
 Future<void> commands(List<String> arguments) async {
@@ -108,8 +115,10 @@ Future<void> commands(List<String> arguments) async {
     exit(1);
   }
 
-  arguments.removeAt(0);
-  await nyCommand.action!(arguments);
+  List<String> argumentsForAction = arguments.toList();
+  argumentsForAction.removeAt(0);
+
+  await nyCommand.action!(argumentsForAction);
 }
 
 _makeStatefulWidget(List<String> arguments) async {
@@ -141,7 +150,8 @@ _makeStatefulWidget(List<String> arguments) async {
       classReCase.snakeCase, stubStatefulWidget,
       forceCreate: hasForceFlag ?? false);
 
-  MetroConsole.writeInGreen(classReCase.snakeCase + ' created 🎉');
+  MetroConsole.writeInGreen(
+      '[Stateful Widget] ${classReCase.snakeCase} created 🎉');
 }
 
 _makeStatelessWidget(List<String> arguments) async {
@@ -172,7 +182,39 @@ _makeStatelessWidget(List<String> arguments) async {
       classReCase.snakeCase, stubStatelessWidget,
       forceCreate: hasForceFlag ?? false);
 
-  MetroConsole.writeInGreen(classReCase.snakeCase + ' created 🎉');
+  MetroConsole.writeInGreen(
+      '[Stateless Widget] ${classReCase.snakeCase} created 🎉');
+}
+
+_makeRouteGuard(List<String> arguments) async {
+  parser.addFlag(helpFlag,
+      abbr: 'h',
+      help: 'e.g. make:route_guard subscription_route_guard',
+      negatable: false);
+  parser.addFlag(forceFlag,
+      abbr: 'f',
+      help: 'Creates a new route guard even if it already exists.',
+      negatable: false);
+
+  final ArgResults argResults = parser.parse(arguments);
+
+  bool? hasForceFlag = argResults[forceFlag];
+
+  MetroService.hasHelpFlag(argResults[helpFlag], parser.usage);
+
+  MetroService.checkArguments(arguments,
+      'You are missing the \'name\' of the widget that you want to create.\ne.g. make:route_guard subscription_route_guard');
+
+  String className =
+      argResults.arguments.first.replaceAll(RegExp(r'(_?route_guard)'), "");
+  ReCase classReCase = ReCase(className);
+
+  String routeGuard = routeGuardStub(classReCase);
+  await MetroService.makeRouteGuard(classReCase.snakeCase, routeGuard,
+      forceCreate: hasForceFlag ?? false);
+
+  MetroConsole.writeInGreen(
+      '[Route Guard] ${classReCase.snakeCase} created 🎉');
 }
 
 _makeProvider(List<String> arguments) async {
@@ -224,7 +266,8 @@ final Map<Type, NyProvider> providers = {${reg.allMatches(file).map((e) => e.gro
             template);
       });
 
-  MetroConsole.writeInGreen(classReCase.snakeCase + '_provider created 🎉');
+  MetroConsole.writeInGreen(
+      '[Provider] ${classReCase.snakeCase}_provider created 🎉');
 }
 
 _makeEvent(List<String> arguments) async {
@@ -277,7 +320,8 @@ final Map<Type, NyEvent> events = {${reg.allMatches(file).map((e) => e.group(1))
             template);
       });
 
-  MetroConsole.writeInGreen(classReCase.snakeCase + '_event created 🎉');
+  MetroConsole.writeInGreen(
+      '[Event] ${classReCase.snakeCase}_event created 🎉');
 }
 
 _makeApiService(List<String> arguments) async {
@@ -620,7 +664,8 @@ final Map<Type, BaseApiService> apiDecoders = {${reg.allMatches(file).map((e) =>
         );
       });
 
-  MetroConsole.writeInGreen(className.snakeCase + '_api_service created 🎉');
+  MetroConsole.writeInGreen(
+      '[API Service] ${className.snakeCase}_api_service created 🎉');
 }
 
 _replacePostmanStringVars(Map<String, dynamic> postmanGlobal, String string) =>
@@ -670,7 +715,8 @@ final Map<Type, BaseApiService> apiDecoders = {${reg.allMatches(file).map((e) =>
         );
       });
 
-  MetroConsole.writeInGreen(classReCase.snakeCase + '_api_service created 🎉');
+  MetroConsole.writeInGreen(
+      '[API Service] ${classReCase.snakeCase}_api_service created 🎉');
 }
 
 _makeTheme(List<String> arguments) async {
@@ -705,7 +751,8 @@ _makeTheme(List<String> arguments) async {
   await MetroService.makeThemeColors(classReCase.snakeCase, stubThemeColors,
       forceCreate: hasForceFlag ?? false);
 
-  MetroConsole.writeInGreen(classReCase.snakeCase + '_theme created 🎉');
+  MetroConsole.writeInGreen(
+      '[Theme] ${classReCase.snakeCase}_theme created 🎉');
 }
 
 _makeController(List<String> arguments) async {
@@ -733,7 +780,8 @@ _makeController(List<String> arguments) async {
   await MetroService.makeController(classReCase.snakeCase, stubController,
       forceCreate: hasForceFlag ?? false);
 
-  MetroConsole.writeInGreen(classReCase.snakeCase + '_controller created 🎉');
+  MetroConsole.writeInGreen(
+      '[Controller] ${classReCase.snakeCase}_controller created 🎉');
 }
 
 _makeModel(List<String> arguments) async {
@@ -746,24 +794,19 @@ _makeModel(List<String> arguments) async {
       abbr: 'f',
       help: 'Creates a new model even if it already exists.',
       negatable: false);
-  parser.addFlag(storableFlag,
-      abbr: 's', help: 'Create a new Storable model.', negatable: false);
 
   final ArgResults argResults = parser.parse(arguments);
 
   MetroService.checkArguments(argResults.arguments, parser.usage);
 
   bool? hasForceFlag = argResults[forceFlag];
-  bool? hasStorableFlag = argResults[storableFlag];
-
   MetroService.hasHelpFlag(argResults[helpFlag], parser.usage);
 
   String className = argResults.arguments.first;
   ReCase classReCase = ReCase(className);
 
   String modelName = classReCase.pascalCase;
-  String stubModel =
-      modelStub(modelName: modelName, isStorable: hasStorableFlag);
+  String stubModel = modelStub(modelName: modelName);
 
   await _createNyloModel(classReCase,
       stubModel: stubModel, hasForceFlag: hasForceFlag);
@@ -786,6 +829,9 @@ _createNyloModel(ReCase classReCase,
 
         RegExp reg =
             RegExp(r'final Map<Type, dynamic> modelDecoders = {([^};]*)};');
+        if (reg.allMatches(file).map((e) => e.group(1)).toList().isEmpty) {
+          return file;
+        }
         String template = """
 final Map<Type, dynamic> modelDecoders = {${reg.allMatches(file).map((e) => e.group(1)).toList()[0]}
   List<$modelName>: (data) => List.from(data).map((json) => $modelName.fromJson(json)).toList(),
@@ -798,7 +844,7 @@ final Map<Type, dynamic> modelDecoders = {${reg.allMatches(file).map((e) => e.gr
             template);
       });
 
-  MetroConsole.writeInGreen(classReCase.snakeCase + ' created 🎉');
+  MetroConsole.writeInGreen('[Model] ${classReCase.snakeCase} created 🎉');
 }
 
 _makePage(List<String> arguments) async {
@@ -866,12 +912,12 @@ _makePage(List<String> arguments) async {
         forceCreate: hasForceFlag ?? false);
 
     printMessage =
-        '${className.snakeCase}_page & ${className.snakeCase}_controller created 🎉';
+        '[Page & Controller] ${className.snakeCase}_page & ${className.snakeCase}_controller created 🎉';
   } else {
     String stubPage = pageStub(pageName: classReCase);
     await MetroService.makePage(className.snakeCase, stubPage,
         pathWithinFolder: creationPath, forceCreate: hasForceFlag ?? false);
-    printMessage = '${classReCase.snakeCase}_page created 🎉';
+    printMessage = '[Page] ${classReCase.snakeCase}_page created 🎉';
   }
 
   // Add to router
@@ -881,7 +927,7 @@ _makePage(List<String> arguments) async {
       classImport: classImport,
       createTemplate: (file) {
         String routeName =
-            'router.route("/${classReCase.pathCase}", (context) => ${classReCase.pascalCase}Page());';
+            'router.route(${classReCase.pascalCase}Page.path, (context) => ${classReCase.pascalCase}Page());';
         if (file.contains(routeName)) {
           return "";
         }
@@ -892,7 +938,7 @@ _makePage(List<String> arguments) async {
         }
         String temp = """
 appRouter() => nyRoutes((router) {${reg.allMatches(file).map((e) => e.group(1)).toList()[0]}
-  router.route("/${classReCase.paramCase}", (context) => ${classReCase.pascalCase}Page());
+  router.route(${classReCase.pascalCase}Page.path, (context) => ${classReCase.pascalCase}Page());
 });
   """;
 

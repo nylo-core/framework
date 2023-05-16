@@ -7,6 +7,9 @@ import '/app/controllers/controller.dart';
 
 class ${pageName.pascalCase}Page extends NyStatefulWidget {
   final Controller controller = Controller();
+  
+  static const path = '/${pageName.paramCase}';
+  
   ${pageName.pascalCase}Page({Key? key}) : super(key: key);
   
   @override

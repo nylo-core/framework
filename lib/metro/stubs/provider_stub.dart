@@ -12,5 +12,11 @@ class ${rc.pascalCase}Provider implements NyProvider {
    
      return nylo;
   }
+  
+  afterBoot(Nylo nylo) async {
+   
+     // Called after booting your provider
+     // ...
+  }
 }
 ''';

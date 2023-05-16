@@ -23,6 +23,9 @@ class NyBaseApiService {
     _context = context;
   }
 
+  /// Get the build context
+  BuildContext? getContext() => _context;
+
   /// Set new [headers] to the baseOptions variable.
   setHeaders(Map<String, dynamic> headers) {
     _api.options.headers.addAll(headers);
@@ -40,10 +43,14 @@ class NyBaseApiService {
 
   /// Initialize class
   void init() {
-    baseOptions = BaseOptions(baseUrl: baseUrl, headers: {
-      "Content-type": "application/json",
-      "Accept": "application/json"
-    });
+    baseOptions = BaseOptions(
+      baseUrl: baseUrl,
+      headers: {
+        "Content-type": "application/json",
+        "Accept": "application/json",
+      },
+      connectTimeout: Duration(seconds: 5),
+    );
 
     _api = Dio(baseOptions);
 
@@ -94,9 +101,7 @@ class NyBaseApiService {
 
       return handleResponse<T>(response, handleSuccess: handleSuccess);
     } on DioError catch (dioError) {
-      if (getEnv('APP_DEBUG') == true) {
-        NyLogger.error(dioError.toString());
-      }
+      NyLogger.error(dioError.toString());
       onError(dioError);
       if (_context != null) {
         displayError(dioError, _context!);
@@ -108,10 +113,7 @@ class NyBaseApiService {
 
       return null;
     } on Exception catch (e) {
-      if (getEnv('APP_DEBUG') == true) {
-        NyLogger.error(e.toString());
-      }
-
+      NyLogger.error(e.toString());
       return null;
     }
   }

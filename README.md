@@ -6,7 +6,7 @@
   <a href="https://github.com/nylo-core/framework"><img alt="GitHub stars" src="https://img.shields.io/github/stars/nylo-core/framework?style=plastic"></a>
 </p>
 
-## Nylo Framework (v4.1.4)
+## Nylo Framework (v5.0.0)
 
 Nylo is a micro-framework for Flutter which is designed to help simplify app development. Every project provides a simple boilerplate and MVC pattern to help you build apps easier.
 
@@ -18,21 +18,21 @@ This project is open source and MIT-licenced, we welcome any contributions. You 
 
 ## Features
 Some core features available
-* [Routing](https://nylo.dev/docs/4.x/router).
-* [Light and dark themes](https://nylo.dev/docs/4.x/themes).
-* [Localization](https://nylo.dev/docs/4.x/localization).
-* [CLI for generating project files](https://nylo.dev/docs/4.x/metro).
-* [Elegant API Services for Networking](https://nylo.dev/docs/4.x/networking).
-* [Creating App Icons](https://nylo.dev/docs/4.x/app-icons).
-* [Project Configuration](https://nylo.dev/docs/4.x/configuration).
-* [Streamlined Project Structure](https://nylo.dev/docs/4.x/directory-structure).
+* [Routing](https://nylo.dev/docs/5.x/router).
+* [Light and dark themes](https://nylo.dev/docs/5.x/themes-and-styling).
+* [Localization](https://nylo.dev/docs/5.x/localization).
+* [CLI for generating project files](https://nylo.dev/docs/5.x/metro).
+* [Elegant API Services for Networking](https://nylo.dev/docs/5.x/networking).
+* [Creating App Icons](https://nylo.dev/docs/5.x/app-icons).
+* [Project Configuration](https://nylo.dev/docs/5.x/configuration).
+* [Streamlined Project Structure](https://nylo.dev/docs/5.x/directory-structure).
 
 ## Documentation
 
 Visit the docs on [Nylo](https://nylo.dev/docs) to view our extensive and thorough documentation. 
 
 ## Changelog
-Please see [CHANGELOG](https://github.com/nylo-core/framework/blob/4.x/CHANGELOG.md) for more information what has changed recently.
+Please see [CHANGELOG](https://github.com/nylo-core/framework/blob/5.x/CHANGELOG.md) for more information what has changed recently.
 
 ## Social
 * [Twitter](https://twitter.com/nylo_dev)
@@ -42,4 +42,4 @@ If you discover any security related issues, please email support@nylo.dev inste
 
 ## Licence
 
-The MIT License (MIT). Please view the [License](https://github.com/nylo-core/nylo/blob/4.x/LICENSE) File for more information.
+The MIT License (MIT). Please view the [License](https://github.com/nylo-core/nylo/blob/5.x/LICENSE) File for more information.

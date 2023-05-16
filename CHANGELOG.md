@@ -1,3 +1,21 @@
+## [5.0.0] - 2023-05-16
+
+* `NyBaseApiService` has a new method `getContext` to get the BuildContext.
+* Remove 'Storable' from the Model stub.
+* Page stubs now include a a `path` variable to make routing easier.
+* New command to create Route Guards.
+* Pubspec.yaml dependency updates.
+* Readme update.
+
+## [4.2.0] - 2023-05-16
+
+* Flutter v3.10.0 fixes:
+    * Update: theme_provider package
+
+## [4.1.5] - 2023-03-07
+
+* Fix metro make:model if modelDecoders doesn't exist.
+
 ## [4.1.4] - 2023-03-03
 
 * Pubspec.yaml dependency updates.
@@ -25,7 +43,7 @@
 * Metro will automatically add Events to the config/events.dart file
 * Metro will automatically add ApiServices and Models to the config/decoders.dart file
 * Metro will automatically add Providers to the config/providers.dart file
-* Create Api Services from Postman collections using Metro, read more [here](http://nylo.dev/docs/4.x/metro#make-api-service-using-postman)
+* Create Api Services from Postman collections using Metro, read more [here](http://nylo.dev/docs/5.x/metro#make-api-service-using-postman)
 * `NyBaseApiService` class has new parameters to add a `bearerToken` or `headers` on each request
 * Update stubs
 * Copyright year updated

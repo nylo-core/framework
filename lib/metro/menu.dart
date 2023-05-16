@@ -19,4 +19,5 @@ All commands:
   make:event
   make:api_service
   make:theme
+  make:route_guard
 """;

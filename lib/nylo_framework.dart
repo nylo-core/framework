@@ -2,11 +2,13 @@ library nylo_framework;
 
 export 'package:nylo_support/router/router.dart';
 export 'package:nylo_support/router/models/ny_page_transition_settings.dart';
+export 'package:nylo_support/router/models/ny_argument.dart';
 export 'package:nylo_support/widgets/ny_stateful_widget.dart';
 export 'package:nylo_support/widgets/ny_state.dart';
 export 'package:nylo_support/helpers/helper.dart';
 export 'package:nylo_support/helpers/backpack.dart';
-export 'package:nylo_support/abstracts/json_operations.dart';
+export 'package:nylo_support/helpers/auth.dart';
+export 'package:nylo_support/helpers/extensions.dart';
 export 'package:nylo_support/controllers/controller.dart';
 export 'package:nylo_support/localization/app_localization.dart';
 export 'package:nylo_support/themes/base_color_styles.dart';
@@ -16,11 +18,17 @@ export 'package:nylo_support/alerts/toast_notification.dart';
 export 'package:nylo_support/networking/default_response.dart';
 export 'package:nylo_support/providers/providers.dart';
 export 'package:nylo_support/events/events.dart';
+export 'package:nylo_support/events/auth_user_event.dart';
+export 'package:nylo_support/events/sync_auth_to_backpack.dart';
+export 'package:nylo_support/validation/ny_validator.dart';
+export 'package:nylo_support/validation/rules.dart';
 export 'package:nylo_support/widgets/ny_future_builder.dart';
+export 'package:nylo_support/widgets/ny_text_field.dart';
+export 'package:nylo_support/router/models/nyrouter_route_guard.dart';
 export 'package:nylo_support/nylo.dart';
 export 'package:theme_provider/theme_provider.dart';
 export 'package:page_transition/page_transition.dart';
 export 'package:dio/dio.dart';
 
 /// Nylo version
-const String nyloVersion = 'v4.1.4';
+const String nyloVersion = 'v5.0.0';
