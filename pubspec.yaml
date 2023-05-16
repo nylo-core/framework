@@ -7,7 +7,7 @@ issue_tracker: https://github.com/nylo-core/framework/issues
 documentation: https://github.com/nylo-core/framework
 
 environment:
-  sdk: '>=2.14.0 <3.0.0'
+  sdk: '>=2.14.0 <4.0.0'
 
 dependencies:
   dio: ^5.1.2
