@@ -108,8 +108,10 @@ Future<void> commands(List<String> arguments) async {
     exit(1);
   }
 
-  arguments.removeAt(0);
-  await nyCommand.action!(arguments);
+  List<String> argumentsForAction = arguments.toList();
+  argumentsForAction.removeAt(0);
+
+  await nyCommand.action!(argumentsForAction);
 }
 
 _makeStatefulWidget(List<String> arguments) async {
