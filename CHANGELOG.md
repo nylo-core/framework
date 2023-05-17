@@ -2,7 +2,7 @@
 
 * `NyBaseApiService` has a new method `getContext` to get the BuildContext.
 * Remove 'Storable' from the Model stub.
-* Page stubs now include a a `path` variable to make routing easier.
+* Page stubs now include a `path` variable to make routing easier.
 * New command to create Route Guards.
 * Pubspec.yaml dependency updates.
 * Readme update.
