@@ -283,15 +283,15 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "5.0.1"
+    version: "5.0.2"
   nylo_support:
     dependency: transitive
     description:
       name: nylo_support
-      sha256: "71bf7f168b41cba176a3bdd3997ab5578e8042567826d09026db736027634fd6"
+      sha256: "011a1614b2440ffcbac821e6624ca25355e304af6c8b5c298203bbbe547da00e"
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.1"
+    version: "5.1.2"
   package_config:
     dependency: transitive
     description:
