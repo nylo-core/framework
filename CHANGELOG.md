@@ -1,3 +1,7 @@
+## [5.0.4] - 2023-06-08
+
+* Change nylo_framework version.
+
 ## [5.0.3] - 2023-06-08
 
 * Change `DioError` to `DioException` as per dio upgrade notes.
