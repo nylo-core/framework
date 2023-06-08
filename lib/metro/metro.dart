@@ -4,9 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:collection/collection.dart' show IterableExtension;
 import 'package:json_dart_generator/json_dart_generator.dart';
-import 'package:nylo_framework/metro/menu.dart';
 import 'package:nylo_framework/metro/stubs/route_guard_stub.dart';
 import 'package:nylo_support/metro/models/ny_command.dart';
 import 'package:nylo_framework/metro/stubs/api_service_stub.dart';
@@ -28,7 +26,7 @@ import 'package:nylo_support/metro/metro_service.dart';
 import 'package:recase/recase.dart';
 
 final ArgParser parser = ArgParser(allowTrailingOptions: true);
-List<NyCommand> _allCommands = [
+List<NyCommand> allCommands = [
   NyCommand(
       name: "controller",
       options: 1,
@@ -90,36 +88,6 @@ List<NyCommand> _allCommands = [
       category: "make",
       action: _makeRouteGuard),
 ];
-
-Future<void> commands(List<String> arguments) async {
-  if (arguments.isEmpty) {
-    MetroConsole.writeInBlack(metroMenu);
-    return;
-  }
-
-  List<String> argumentSplit = arguments[0].split(":");
-
-  if (argumentSplit.length == 0 || argumentSplit.length <= 1) {
-    MetroConsole.writeInBlack('Invalid arguments ' + arguments.toString());
-    exit(2);
-  }
-
-  String type = argumentSplit[0];
-  String action = argumentSplit[1];
-
-  NyCommand? nyCommand = _allCommands.firstWhereOrNull(
-      (command) => type == command.category && command.name == action);
-
-  if (nyCommand == null) {
-    MetroConsole.writeInBlack('Invalid arguments ' + arguments.toString());
-    exit(1);
-  }
-
-  List<String> argumentsForAction = arguments.toList();
-  argumentsForAction.removeAt(0);
-
-  await nyCommand.action!(argumentsForAction);
-}
 
 _makeStatefulWidget(List<String> arguments) async {
   parser.addFlag(helpFlag,

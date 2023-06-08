@@ -1,20 +1,10 @@
 import 'dart:io';
 
+import 'package:nylo_framework/metro/menu.dart';
 import 'package:nylo_framework/metro/metro.dart' as metro_cli;
-import 'package:nylo_support/metro/metro_console.dart';
+import 'package:nylo_support/metro/metro_service.dart';
 
 void main(List<String> arguments) async {
-  var time = Stopwatch();
-  bool hasDebugFlag = arguments.contains("--debug");
-  if (hasDebugFlag == true) {
-    time.start();
-    arguments.removeWhere((element) => element == "--debug");
-  }
-  await metro_cli.commands(arguments);
-  if (hasDebugFlag == true) {
-    time.stop();
-    MetroConsole.writeInBlack(
-        'Time: ${time.elapsed.inMilliseconds} Milliseconds');
-  }
+  await MetroService.runCommand(arguments, allCommands: metro_cli.allCommands, menu: metroMenu);
   exit(0);
 }

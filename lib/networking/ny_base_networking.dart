@@ -73,7 +73,7 @@ class NyBaseApiService {
   Future<T?> network<T>(
       {required Function(Dio api) request,
       Function(Response response)? handleSuccess,
-      Function(DioError error)? handleFailure,
+      Function(DioException error)? handleFailure,
       String? bearerToken,
       String? baseUrl,
       Map<String, dynamic> headers = const {}}) async {
@@ -100,7 +100,7 @@ class NyBaseApiService {
       _api.options.baseUrl = oldBaseUrl; //  reset base url
 
       return handleResponse<T>(response, handleSuccess: handleSuccess);
-    } on DioError catch (dioError) {
+    } on DioException catch (dioError) {
       NyLogger.error(dioError.toString());
       onError(dioError);
       if (_context != null) {
@@ -118,13 +118,13 @@ class NyBaseApiService {
     }
   }
 
-  /// Handle the [DioError] response if there is an issue.
-  onError(DioError dioError) {}
+  /// Handle the [DioException] response if there is an issue.
+  onError(DioException dioError) {}
 
   /// Display a error to the user
   /// This method is only called if you provide the API service
   /// with a [BuildContext].
-  displayError(DioError dioError, BuildContext context) {}
+  displayError(DioException dioError, BuildContext context) {}
 
   /// Handles an API network response from [Dio].
   /// [handleSuccess] overrides the return value

@@ -1,3 +1,9 @@
+## [5.0.3] - 2023-06-08
+
+* Change `DioError` to `DioException` as per dio upgrade notes.
+* Refactor metro to use `runCommand` from MetroService.
+* Pubspec.yaml dependency updates.
+
 ## [5.0.2] - 2023-05-28
 
 * Pubspec.yaml dependency updates.
