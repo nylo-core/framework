@@ -1,3 +1,7 @@
+## [5.0.6] - 2023-06-14
+
+* Update Nylo framework version.
+
 ## [5.0.5] - 2023-06-14
 
 * Update GitHub actions.
