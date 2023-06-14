@@ -8,6 +8,8 @@ import '/app/controllers/${className.snakeCase}_controller.dart';
 class ${className.pascalCase}Page extends NyStatefulWidget {
   final ${className.pascalCase}Controller controller = ${className.pascalCase}Controller();
   
+  static const path = '/${className.paramCase}';
+  
   ${className.pascalCase}Page({Key? key}) : super(key: key);
   
   @override

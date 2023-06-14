@@ -38,8 +38,9 @@ jobs:
           skipTests: true
 
       - name: Update nylo.dev
-        uses: alikamal1/Form_Data_HTTP_POST_Action@v.1.0
+        uses: fjogeleit/http-request-action@v1
         with:
           url: 'https://nylo.dev/api/github/actions/framework/version'
-          headers: '{"X-GH-API-KEY": "${{ secrets.NYLO_API_GH_SECRET }}"}'
-          data: '{"version": "${{  github.ref_name }}"}'
+          method: 'POST'
+          customHeaders: '{"Content-Type": "application/json", "X-GH-API-KEY": "${{ secrets.NYLO_API_GH_SECRET }}"}'
+          data: '{"version": "${{ github.ref_name }}"}'

@@ -1,3 +1,9 @@
+## [5.0.4] - 2023-06-14
+
+* Update GitHub actions.
+* Refactor metro class.
+* Pubspec.yaml dependency updates.
+
 ## [5.0.4] - 2023-06-08
 
 * Change nylo_framework version.

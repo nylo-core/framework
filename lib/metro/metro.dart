@@ -117,9 +117,6 @@ _makeStatefulWidget(List<String> arguments) async {
   await MetroService.makeStatefulWidget(
       classReCase.snakeCase, stubStatefulWidget,
       forceCreate: hasForceFlag ?? false);
-
-  MetroConsole.writeInGreen(
-      '[Stateful Widget] ${classReCase.snakeCase} created 🎉');
 }
 
 _makeStatelessWidget(List<String> arguments) async {
@@ -149,9 +146,6 @@ _makeStatelessWidget(List<String> arguments) async {
   await MetroService.makeStatelessWidget(
       classReCase.snakeCase, stubStatelessWidget,
       forceCreate: hasForceFlag ?? false);
-
-  MetroConsole.writeInGreen(
-      '[Stateless Widget] ${classReCase.snakeCase} created 🎉');
 }
 
 _makeRouteGuard(List<String> arguments) async {
@@ -180,9 +174,6 @@ _makeRouteGuard(List<String> arguments) async {
   String routeGuard = routeGuardStub(classReCase);
   await MetroService.makeRouteGuard(classReCase.snakeCase, routeGuard,
       forceCreate: hasForceFlag ?? false);
-
-  MetroConsole.writeInGreen(
-      '[Route Guard] ${classReCase.snakeCase} created 🎉');
 }
 
 _makeProvider(List<String> arguments) async {
@@ -208,34 +199,7 @@ _makeProvider(List<String> arguments) async {
 
   String stubProvider = providerStub(classReCase);
   await MetroService.makeProvider(classReCase.snakeCase, stubProvider,
-      forceCreate: hasForceFlag ?? false);
-
-  String classImport = makeImportPathProviders(classReCase.snakeCase);
-  await MetroService.addToConfig(
-      configName: "providers",
-      classImport: classImport,
-      createTemplate: (file) {
-        String providerName = "${classReCase.pascalCase}Provider";
-        if (file.contains(providerName)) {
-          return "";
-        }
-
-        RegExp reg = RegExp(
-            r'final Map<Type, NyProvider> providers = {([\w\W\n\r\s:(),\/\/]+)};');
-        String template = """
-final Map<Type, NyProvider> providers = {${reg.allMatches(file).map((e) => e.group(1)).toList()[0]}
-  $providerName: $providerName(),
-};
-  """;
-
-        return file.replaceFirst(
-            RegExp(
-                r'final Map<Type, NyProvider> providers = {[\w\W\n\r\s:(),\/\/]+(};)'),
-            template);
-      });
-
-  MetroConsole.writeInGreen(
-      '[Provider] ${classReCase.snakeCase}_provider created 🎉');
+      forceCreate: hasForceFlag ?? false, addToConfig: true);
 }
 
 _makeEvent(List<String> arguments) async {
@@ -259,37 +223,9 @@ _makeEvent(List<String> arguments) async {
       argResults.arguments.first.replaceAll(RegExp(r'(_?event)'), "");
 
   ReCase classReCase = ReCase(eventName);
-
   String stubEvent = eventStub(eventName: classReCase);
   await MetroService.makeEvent(classReCase.snakeCase, stubEvent,
-      forceCreate: hasForceFlag ?? false);
-
-  String classImport = makeImportPathEvent(classReCase.snakeCase);
-  await MetroService.addToConfig(
-      configName: "events",
-      classImport: classImport,
-      createTemplate: (file) {
-        String eventName = "${classReCase.pascalCase}Event";
-        if (file.contains(eventName)) {
-          return "";
-        }
-
-        RegExp reg = RegExp(
-            r'final Map<Type, NyEvent> events = {([\w\W\n\r\s:(),\/\/]+)};');
-        String template = """
-final Map<Type, NyEvent> events = {${reg.allMatches(file).map((e) => e.group(1)).toList()[0]}
-  $eventName: $eventName(),
-};
-  """;
-
-        return file.replaceFirst(
-            RegExp(
-                r'final Map<Type, NyEvent> events = {[\w\W\n\r\s:(),\/\/]+(};)'),
-            template);
-      });
-
-  MetroConsole.writeInGreen(
-      '[Event] ${classReCase.snakeCase}_event created 🎉');
+      forceCreate: hasForceFlag ?? false, addToConfig: true);
 }
 
 _makeApiService(List<String> arguments) async {
@@ -604,7 +540,7 @@ _makePostmanApiService(
       forceCreate: hasForceFlag ?? false,
       folderPath: exportPath != null
           ? "$networkingFolder/$exportPath"
-          : networkingFolder);
+          : networkingFolder, addToConfig: false);
 
   String classImport = makeImportPathApiService(exportPath != null
       ? "$exportPath/${className.snakeCase}"
@@ -631,9 +567,6 @@ final Map<Type, BaseApiService> apiDecoders = {${reg.allMatches(file).map((e) =>
           temp,
         );
       });
-
-  MetroConsole.writeInGreen(
-      '[API Service] ${className.snakeCase}_api_service created 🎉');
 }
 
 _replacePostmanStringVars(Map<String, dynamic> postmanGlobal, String string) =>
@@ -656,35 +589,7 @@ _createApiService(ReCase classReCase,
   String stubApiService = apiServiceStub(classReCase,
       model: ReCase(modelFlagValue), baseUrl: baseUrlFlagValue);
   await MetroService.makeApiService(classReCase.snakeCase, stubApiService,
-      forceCreate: hasForceFlag ?? false);
-
-  String classImport = makeImportPathApiService(classReCase.snakeCase);
-  await MetroService.addToConfig(
-      configName: "decoders",
-      classImport: classImport,
-      createTemplate: (file) {
-        String apiServiceName = "${classReCase.pascalCase}ApiService";
-        if (file.contains(apiServiceName)) {
-          return "";
-        }
-
-        RegExp reg = RegExp(
-            r'final Map<Type, BaseApiService> apiDecoders = {([\w\W\n\r\s:(),\/\/]+)};');
-        String temp = """
-final Map<Type, BaseApiService> apiDecoders = {${reg.allMatches(file).map((e) => e.group(1)).toList()[0]}
-  $apiServiceName: $apiServiceName(),
-};
-  """;
-
-        return file.replaceFirst(
-          RegExp(
-              r'final Map<Type, BaseApiService> apiDecoders = {[\w\W\n\r\s:(),\/\/]+(};)'),
-          temp,
-        );
-      });
-
-  MetroConsole.writeInGreen(
-      '[API Service] ${classReCase.snakeCase}_api_service created 🎉');
+      forceCreate: hasForceFlag ?? false, addToConfig: true);
 }
 
 _makeTheme(List<String> arguments) async {
@@ -718,9 +623,6 @@ _makeTheme(List<String> arguments) async {
   String stubThemeColors = themeColorsStub(classReCase);
   await MetroService.makeThemeColors(classReCase.snakeCase, stubThemeColors,
       forceCreate: hasForceFlag ?? false);
-
-  MetroConsole.writeInGreen(
-      '[Theme] ${classReCase.snakeCase}_theme created 🎉');
 }
 
 _makeController(List<String> arguments) async {
@@ -747,9 +649,6 @@ _makeController(List<String> arguments) async {
 
   await MetroService.makeController(classReCase.snakeCase, stubController,
       forceCreate: hasForceFlag ?? false);
-
-  MetroConsole.writeInGreen(
-      '[Controller] ${classReCase.snakeCase}_controller created 🎉');
 }
 
 _makeModel(List<String> arguments) async {
@@ -783,36 +682,7 @@ _makeModel(List<String> arguments) async {
 _createNyloModel(ReCase classReCase,
     {required String stubModel, bool? hasForceFlag}) async {
   await MetroService.makeModel(classReCase.snakeCase, stubModel,
-      forceCreate: hasForceFlag ?? false);
-
-  String classImport = makeImportPathModel(classReCase.snakeCase);
-  await MetroService.addToConfig(
-      configName: "decoders",
-      classImport: classImport,
-      createTemplate: (file) {
-        String modelName = classReCase.pascalCase;
-        if (file.contains(modelName)) {
-          return "";
-        }
-
-        RegExp reg =
-            RegExp(r'final Map<Type, dynamic> modelDecoders = {([^};]*)};');
-        if (reg.allMatches(file).map((e) => e.group(1)).toList().isEmpty) {
-          return file;
-        }
-        String template = """
-final Map<Type, dynamic> modelDecoders = {${reg.allMatches(file).map((e) => e.group(1)).toList()[0]}
-  List<$modelName>: (data) => List.from(data).map((json) => $modelName.fromJson(json)).toList(),
-
-  $modelName: (data) => $modelName.fromJson(data),
-};""";
-
-        return file.replaceFirst(
-            RegExp(r'final Map<Type, dynamic> modelDecoders = {([^};]*)};'),
-            template);
-      });
-
-  MetroConsole.writeInGreen('[Model] ${classReCase.snakeCase} created 🎉');
+      forceCreate: hasForceFlag ?? false, addToConfig: true);
 }
 
 _makePage(List<String> arguments) async {
@@ -853,70 +723,22 @@ _makePage(List<String> arguments) async {
 
   String className =
       argResults.arguments.first.replaceAll(RegExp(r'(_?page)'), "");
-
-  String? creationPath;
-  if (className.contains("/")) {
-    List<String> pathSegments = Uri.parse(className).pathSegments.toList();
-    className = pathSegments.removeLast();
-    String folder = pagesFolder;
-
-    for (var segment in pathSegments) {
-      await MetroService.makeDirectory("$folder/$segment");
-      folder += '/$segment';
-    }
-    creationPath = pathSegments.join("/");
-  }
-
   ReCase classReCase = ReCase(className);
-  String printMessage = "";
+
   if (shouldCreateController) {
     String stubPageAndController =
         pageWithControllerStub(className: classReCase);
     await MetroService.makePage(className.snakeCase, stubPageAndController,
-        pathWithinFolder: creationPath, forceCreate: hasForceFlag ?? false);
+         forceCreate: hasForceFlag ?? false, addToRoute: true);
 
     String stubController = controllerStub(controllerName: classReCase);
     await MetroService.makeController(className.snakeCase, stubController,
         forceCreate: hasForceFlag ?? false);
-
-    printMessage =
-        '[Page & Controller] ${className.snakeCase}_page & ${className.snakeCase}_controller created 🎉';
   } else {
     String stubPage = pageStub(pageName: classReCase);
     await MetroService.makePage(className.snakeCase, stubPage,
-        pathWithinFolder: creationPath, forceCreate: hasForceFlag ?? false);
-    printMessage = '[Page] ${classReCase.snakeCase}_page created 🎉';
+         forceCreate: hasForceFlag ?? false, addToRoute: true);
   }
-
-  // Add to router
-  String classImport =
-      "import '/resources/pages/${creationPath != null ? '$creationPath/' : ''}${className.toLowerCase()}_page.dart';";
-  await MetroService.addToRouter(
-      classImport: classImport,
-      createTemplate: (file) {
-        String routeName =
-            'router.route(${classReCase.pascalCase}Page.path, (context) => ${classReCase.pascalCase}Page());';
-        if (file.contains(routeName)) {
-          return "";
-        }
-        RegExp reg =
-            RegExp(r'appRouter\(\) => nyRoutes\(\(router\) {([^}]*)}\);');
-        if (reg.allMatches(file).map((e) => e.group(1)).toList().isEmpty) {
-          return "";
-        }
-        String temp = """
-appRouter() => nyRoutes((router) {${reg.allMatches(file).map((e) => e.group(1)).toList()[0]}
-  router.route(${classReCase.pascalCase}Page.path, (context) => ${classReCase.pascalCase}Page());
-});
-  """;
-
-        return file.replaceFirst(
-          RegExp(r'appRouter\(\) => nyRoutes\(\(router\) {([^}]*)\n}\);'),
-          temp,
-        );
-      });
-
-  MetroConsole.writeInGreen(printMessage);
 }
 
 /// helper to encode and decode data
