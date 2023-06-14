@@ -540,7 +540,8 @@ _makePostmanApiService(
       forceCreate: hasForceFlag ?? false,
       folderPath: exportPath != null
           ? "$networkingFolder/$exportPath"
-          : networkingFolder, addToConfig: false);
+          : networkingFolder,
+      addToConfig: false);
 
   String classImport = makeImportPathApiService(exportPath != null
       ? "$exportPath/${className.snakeCase}"
@@ -729,7 +730,7 @@ _makePage(List<String> arguments) async {
     String stubPageAndController =
         pageWithControllerStub(className: classReCase);
     await MetroService.makePage(className.snakeCase, stubPageAndController,
-         forceCreate: hasForceFlag ?? false, addToRoute: true);
+        forceCreate: hasForceFlag ?? false, addToRoute: true);
 
     String stubController = controllerStub(controllerName: classReCase);
     await MetroService.makeController(className.snakeCase, stubController,
@@ -737,7 +738,7 @@ _makePage(List<String> arguments) async {
   } else {
     String stubPage = pageStub(pageName: classReCase);
     await MetroService.makePage(className.snakeCase, stubPage,
-         forceCreate: hasForceFlag ?? false, addToRoute: true);
+        forceCreate: hasForceFlag ?? false, addToRoute: true);
   }
 }
 
