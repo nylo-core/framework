@@ -1,4 +1,4 @@
-## [5.0.4] - 2023-06-14
+## [5.0.5] - 2023-06-14
 
 * Update GitHub actions.
 * Refactor metro class.
