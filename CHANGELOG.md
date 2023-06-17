@@ -1,3 +1,14 @@
+## [5.1.0] - 2023-06-17
+
+* Breaking change to validation.
+* If you are using Nylo 5.x, do the following:
+  * Go to **config/validation_rules.dart**.
+  * Update 'final Map<Type, dynamic> validationRules = {'
+  * to this 'final Map<String, dynamic> validationRules = {'
+  * Custom validation rules must now the follow the following format:
+    * "simple_password": (attribute) => SimplePassword(attribute), // example
+* Pubspec.yaml dependency updates.
+
 ## [5.0.6] - 2023-06-14
 
 * Update Nylo framework version.
