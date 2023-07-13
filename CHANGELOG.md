@@ -1,3 +1,7 @@
+## [5.1.2] - 2023-07-13
+
+* Pubspec.yaml dependency updates.
+
 ## [5.1.1] - 2023-07-03
 
 * Pubspec.yaml dependency updates.
