@@ -43,7 +43,7 @@ extension DartCodeGenerator on ValueDef {
             try {
               findCustomDef = findCustomObject(value)!;
             } catch (e) {
-              print('${value}');
+              print('$value');
             }
             text += '${findCustomDef.classNameFull}? ${key.lowerCamel()};';
           } else {
