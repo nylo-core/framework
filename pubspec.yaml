@@ -17,7 +17,7 @@ environment:
 dependencies:
   dio: ^5.2.1+1
   flutter_dotenv: ^5.1.0
-  nylo_support: ^5.5.0
+  nylo_support: ^5.5.1
   theme_provider: ^0.6.0
   page_transition: ^2.0.9
   collection: ^1.17.1
