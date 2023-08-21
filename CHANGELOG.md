@@ -1,3 +1,11 @@
+## [5.2.0] - 2023-08-21
+
+* Add `useUndefinedResponse` to `network` helper. This will allow you to catch the response when your decoder.dart file fails to return the correct type. To listen to undefinedResponse's, call `onUndefinedResponse(dynamic data, Response response, BuildContext? context)` in your ApiService.
+* Update stateful_stub to include `stateInit` and `stateUpdated`
+* Small refactor to page_stub 
+* Fix Metro error -  The class 'FileSystemEvent' can't be extended, implemented
+* Add json_dart_generator into the library
+
 ## [5.1.2] - 2023-07-13
 
 * Pubspec.yaml dependency updates.

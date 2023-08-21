@@ -28,7 +28,10 @@ export 'package:nylo_support/router/models/nyrouter_route_guard.dart';
 export 'package:nylo_support/nylo.dart';
 export 'package:theme_provider/theme_provider.dart';
 export 'package:page_transition/page_transition.dart';
+export 'package:nylo_support/widgets/event_bus/update_state.dart';
+export 'package:nylo_support/widgets/ny_pull_to_refresh.dart';
+export 'package:nylo_support/widgets/ny_list_view.dart';
 export 'package:dio/dio.dart';
 
 /// Nylo version
-const String nyloVersion = 'v5.1.2';
+const String nyloVersion = 'v5.2.0';

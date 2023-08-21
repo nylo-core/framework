@@ -9,7 +9,8 @@ class NyBaseApiService {
   BaseOptions? baseOptions;
 
   final String baseUrl = "";
-  final bool useInterceptors = true;
+  bool get useInterceptors => interceptors.isNotEmpty;
+  final bool useHttpOnResponse = true;
   final Map<Type, Interceptor> interceptors = {};
   final Map<Type, dynamic> decoders = {};
 
@@ -54,7 +55,7 @@ class NyBaseApiService {
 
     _api = Dio(baseOptions);
 
-    if (useInterceptors == true) {
+    if (useInterceptors) {
       _addInterceptors();
     }
   }
@@ -76,6 +77,7 @@ class NyBaseApiService {
       Function(DioException error)? handleFailure,
       String? bearerToken,
       String? baseUrl,
+      bool useUndefinedResponse = true,
       Map<String, dynamic> headers = const {}}) async {
     try {
       Map<String, dynamic> oldHeader = _api.options.headers;
@@ -99,7 +101,12 @@ class NyBaseApiService {
       _api.options.headers = oldHeader; // reset headers
       _api.options.baseUrl = oldBaseUrl; //  reset base url
 
-      return handleResponse<T>(response, handleSuccess: handleSuccess);
+      dynamic data = handleResponse<T>(response, handleSuccess: handleSuccess);
+      if (data != T && useUndefinedResponse) {
+        onUndefinedResponse(data, response, _context);
+      }
+      _context = null;
+      return data;
     } on DioException catch (dioError) {
       NyLogger.error(dioError.toString());
       onError(dioError);
@@ -126,6 +133,10 @@ class NyBaseApiService {
   /// with a [BuildContext].
   displayError(DioException dioError, BuildContext context) {}
 
+  /// Handle the undefined response's for HTTP requests.
+  /// The [data] parameter contains what was returned from your decoder.
+  onUndefinedResponse(dynamic data, Response response, BuildContext? context) {}
+
   /// Handles an API network response from [Dio].
   /// [handleSuccess] overrides the return value
   /// [handleFailure] is called then the response status is not 200.
@@ -145,7 +156,7 @@ class NyBaseApiService {
     }
   }
 
-  /// Morphs json into Object using the 'config/api_decoders'.
+  /// Morphs json into Object using 'config/decoders.dart'.
   _morphJsonResponse<T>(dynamic json) {
     DefaultResponse defaultResponse =
         DefaultResponse<T>.fromJson(json, decoders, type: T);

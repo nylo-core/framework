@@ -33,7 +33,7 @@ class _${pageName.pascalCase}PageState extends NyState<${pageName.pascalCase}Pag
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        
+        title: Text("${pageName.titleCase}")
       ),
       body: SafeArea(
          child: Container(),

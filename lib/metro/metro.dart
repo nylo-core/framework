@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:json_dart_generator/json_dart_generator.dart';
+import 'package:nylo_framework/json_dart_generator/dart_code_generator.dart';
 import 'package:nylo_framework/metro/stubs/route_guard_stub.dart';
 import 'package:nylo_support/metro/models/ny_command.dart';
 import 'package:nylo_framework/metro/stubs/api_service_stub.dart';
@@ -314,6 +314,12 @@ _makeApiService(List<String> arguments) async {
         classReCase: classReCase,
         hasForceFlag: hasForceFlag,
         baseUrlFlagValue: baseUrlFlagValue);
+    final arguments = <String>["format", "lib/app/models"];
+    print('Dart format lib/app/models');
+    print('============');
+    final process = await Process.start('dart', arguments, runInShell: false);
+    await stdout.addStream(process.stdout);
+    await stderr.addStream(process.stderr);
     exit(0);
   }
 
