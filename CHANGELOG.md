@@ -1,3 +1,7 @@
+## [5.2.1] - 2023-08-21
+
+* Update pubspec.yaml
+
 ## [5.2.0] - 2023-08-21
 
 * Add `useUndefinedResponse` to `network` helper. This will allow you to catch the response when your decoder.dart file fails to return the correct type. To listen to undefinedResponse's, call `onUndefinedResponse(dynamic data, Response response, BuildContext? context)` in your ApiService.
@@ -98,7 +102,7 @@
 * Metro will automatically add Events to the config/events.dart file
 * Metro will automatically add ApiServices and Models to the config/decoders.dart file
 * Metro will automatically add Providers to the config/providers.dart file
-* Create Api Services from Postman collections using Metro, read more [here](http://nylo.dev/docs/5.x/metro#make-api-service-using-postman)
+* Create Api Services from Postman collections using Metro, read more [here](https://nylo.dev/docs/5.x/metro#make-api-service-using-postman)
 * `NyBaseApiService` class has new parameters to add a `bearerToken` or `headers` on each request
 * Update stubs
 * Copyright year updated

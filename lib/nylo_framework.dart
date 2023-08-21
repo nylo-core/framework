@@ -34,4 +34,4 @@ export 'package:nylo_support/widgets/ny_list_view.dart';
 export 'package:dio/dio.dart';
 
 /// Nylo version
-const String nyloVersion = 'v5.2.0';
+const String nyloVersion = 'v5.2.1';
