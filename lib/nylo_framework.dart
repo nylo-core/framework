@@ -15,6 +15,7 @@ export 'package:nylo_support/themes/base_color_styles.dart';
 export 'package:nylo_support/themes/base_theme_config.dart';
 export 'package:nylo_support/alerts/toast_enums.dart';
 export 'package:nylo_support/alerts/toast_notification.dart';
+export 'package:nylo_support/alerts/toast_meta.dart';
 export 'package:nylo_support/networking/default_response.dart';
 export 'package:nylo_support/providers/providers.dart';
 export 'package:nylo_support/events/events.dart';
@@ -30,8 +31,9 @@ export 'package:theme_provider/theme_provider.dart';
 export 'package:page_transition/page_transition.dart';
 export 'package:nylo_support/widgets/event_bus/update_state.dart';
 export 'package:nylo_support/widgets/ny_pull_to_refresh.dart';
+export 'package:nylo_support/widgets/ny_switch.dart';
 export 'package:nylo_support/widgets/ny_list_view.dart';
 export 'package:dio/dio.dart';
 
 /// Nylo version
-const String nyloVersion = 'v5.2.1';
+const String nyloVersion = 'v5.3.0';

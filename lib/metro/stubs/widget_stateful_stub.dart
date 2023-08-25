@@ -27,12 +27,7 @@ class _${rc.pascalCase}State extends NyState<${rc.pascalCase}> {
   }
   
   @override
-  stateInit(data) {
-    
-  }
-  
-  @override
-  void stateUpdated(data) {
+  stateUpdated(dynamic data) async {
     // e.g. to update this state from another class
     // updateState(${rc.pascalCase}.state, data: "example payload");
   }

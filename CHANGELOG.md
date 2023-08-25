@@ -1,3 +1,9 @@
+## [5.3.0] - 2023-08-25
+
+* Update stateful_stub to remove `stateInit`
+* Add `setPagination` to NyBaseNetworking
+* Update pubspec.yaml
+
 ## [5.2.1] - 2023-08-21
 
 * Update pubspec.yaml

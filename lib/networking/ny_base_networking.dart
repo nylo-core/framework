@@ -42,6 +42,15 @@ class NyBaseApiService {
     _api.options.baseUrl = baseUrl;
   }
 
+  setPagination(int page,
+      {String? paramPage, String? paramPerPage, String? perPage}) {
+    Map<String, dynamic> query = {(paramPage ?? "page"): page};
+    if (perPage != null) {
+      query.addAll({(paramPerPage ?? "per_page"): perPage});
+    }
+    _api.options.queryParameters.addAll(query);
+  }
+
   /// Initialize class
   void init() {
     baseOptions = BaseOptions(

@@ -251,15 +251,14 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "5.2.0"
+    version: "5.2.1"
   nylo_support:
     dependency: transitive
     description:
-      name: nylo_support
-      sha256: c036f49f235fa06e42f0d7615f98d522762f428b8f912d2ce819b2d99c3ae780
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.5.0"
+      path: "/Users/anthony/StudioProjects/support"
+      relative: false
+    source: path
+    version: "5.5.1"
   page_transition:
     dependency: transitive
     description:
