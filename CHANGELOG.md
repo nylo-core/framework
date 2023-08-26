@@ -1,3 +1,7 @@
+## [5.3.1] - 2023-08-26
+
+* Update pubspec.yaml
+
 ## [5.3.0] - 2023-08-25
 
 * Update stateful_stub to remove `stateInit`
