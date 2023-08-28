@@ -42,6 +42,7 @@ class NyBaseApiService {
     _api.options.baseUrl = baseUrl;
   }
 
+  /// Apply a pagination query to the HTTP request
   setPagination(int page,
       {String? paramPage, String? paramPerPage, String? perPage}) {
     Map<String, dynamic> query = {(paramPage ?? "page"): page};
@@ -109,6 +110,7 @@ class NyBaseApiService {
       Response response = await request(_api);
       _api.options.headers = oldHeader; // reset headers
       _api.options.baseUrl = oldBaseUrl; //  reset base url
+      _api.options.queryParameters = {}; // reset query parameters
 
       dynamic data = handleResponse<T>(response, handleSuccess: handleSuccess);
       if (data != T && useUndefinedResponse) {
@@ -135,12 +137,12 @@ class NyBaseApiService {
   }
 
   /// Handle the [DioException] response if there is an issue.
-  onError(DioException dioError) {}
+  onError(DioException dioException) {}
 
   /// Display a error to the user
   /// This method is only called if you provide the API service
   /// with a [BuildContext].
-  displayError(DioException dioError, BuildContext context) {}
+  displayError(DioException dioException, BuildContext context) {}
 
   /// Handle the undefined response's for HTTP requests.
   /// The [data] parameter contains what was returned from your decoder.
