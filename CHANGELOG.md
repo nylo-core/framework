@@ -1,3 +1,7 @@
+## [5.3.3] - 2023-08-31
+
+* Update pubspec.yaml
+
 ## [5.3.2] - 2023-08-28
 
 * Add docblock to setPagination method and fix the queryParameters not being reset when using the `api` helper
