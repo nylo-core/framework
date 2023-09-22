@@ -1,3 +1,7 @@
+## [5.3.7] - 2023-09-22
+
+* Update pubspec.yaml
+
 ## [5.3.6] - 2023-09-14
 
 * Update pubspec.yaml
