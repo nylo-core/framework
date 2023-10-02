@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:nylo_framework/json_dart_generator/dart_code_generator.dart';
+import 'package:nylo_framework/metro/stubs/config_stub.dart';
 import 'package:nylo_framework/metro/stubs/route_guard_stub.dart';
 import 'package:nylo_support/metro/models/ny_command.dart';
 import 'package:nylo_framework/metro/stubs/api_service_stub.dart';
@@ -87,7 +88,40 @@ List<NyCommand> allCommands = [
       arguments: ["-h", "-f"],
       category: "make",
       action: _makeRouteGuard),
+  NyCommand(
+      name: "config",
+      options: 1,
+      arguments: ["-h", "-f"],
+      category: "make",
+      action: _makeConfig),
 ];
+
+_makeConfig(List<String> arguments) async {
+  parser.addFlag(helpFlag,
+      abbr: 'h', help: 'e.g. make:config currencies', negatable: false);
+  parser.addFlag(forceFlag,
+      abbr: 'f',
+      help: 'Creates a new config file even if it already exists.',
+      negatable: false);
+
+  final ArgResults argResults = parser.parse(arguments);
+
+  bool? hasForceFlag = argResults[forceFlag];
+
+  MetroService.hasHelpFlag(argResults[helpFlag], parser.usage);
+
+  MetroService.checkArguments(arguments,
+      'You are missing the \'name\' of the config file that you want to create.\ne.g. make:config settings');
+
+  String configName =
+      argResults.arguments.first.replaceAll(RegExp(r'(_?config)'), "");
+
+  ReCase classReCase = ReCase(configName);
+
+  String stubConfig = configStub(classReCase);
+  await MetroService.makeConfig(classReCase.snakeCase, stubConfig,
+      forceCreate: hasForceFlag ?? false);
+}
 
 _makeStatefulWidget(List<String> arguments) async {
   parser.addFlag(helpFlag,

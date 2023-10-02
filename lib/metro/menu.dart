@@ -20,4 +20,5 @@ All commands:
   make:api_service
   make:theme
   make:route_guard
+  make:config
 """;
