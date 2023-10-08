@@ -1,3 +1,7 @@
+## [5.4.1] - 2023-10-08
+
+* Update pubspec.yaml
+
 ## [5.4.0] - 2023-10-01
 
 * Ability to create config files via Metro
