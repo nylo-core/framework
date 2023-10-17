@@ -232,10 +232,9 @@ packages:
   nylo_support:
     dependency: "direct main"
     description:
-      name: nylo_support
-      sha256: ad896cf9cba4868340b012a0353b56721badbac03221cb75fb21b82a4760b079
-      url: "https://pub.dev"
-    source: hosted
+      path: "/Users/anthony/StudioProjects/support"
+      relative: false
+    source: path
     version: "5.10.1"
   page_transition:
     dependency: "direct main"

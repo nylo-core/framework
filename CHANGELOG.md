@@ -1,3 +1,9 @@
+## [5.5.0] - 2023-10-17
+
+* Update page stub to use `NyPage`
+* Fix metro make:api_service Postman error when URL is null
+* Update pubspec.yaml
+
 ## [5.4.1] - 2023-10-08
 
 * Update pubspec.yaml

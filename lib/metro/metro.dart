@@ -526,6 +526,11 @@ _makePostmanApiService(
         imports.add(makeImportPathModel(ReCase(modelName).snakeCase));
       }
 
+      if (postmanItem["request"]["url"] == null) {
+        MetroConsole.writeInRed(
+            "[Postman] request \"${postmanItem['name']}\" is missing a URL, skipping...");
+        continue;
+      }
       String urlRaw = postmanItem["request"]["url"]['raw'];
       String cleanUrlRaw = _replacePostmanStringVars(postmanGlobalVars, urlRaw);
 

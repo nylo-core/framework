@@ -10,6 +10,7 @@ export 'package:nylo_support/helpers/backpack.dart';
 export 'package:nylo_support/helpers/auth.dart';
 export 'package:nylo_support/helpers/extensions.dart';
 export 'package:nylo_support/controllers/controller.dart';
+export 'package:nylo_support/controllers/ny_controller.dart';
 export 'package:nylo_support/localization/app_localization.dart';
 export 'package:nylo_support/themes/base_color_styles.dart';
 export 'package:nylo_support/themes/base_theme_config.dart';
@@ -33,7 +34,8 @@ export 'package:nylo_support/widgets/event_bus/update_state.dart';
 export 'package:nylo_support/widgets/ny_pull_to_refresh.dart';
 export 'package:nylo_support/widgets/ny_switch.dart';
 export 'package:nylo_support/widgets/ny_list_view.dart';
+export 'package:nylo_support/widgets/ny_page.dart';
 export 'package:dio/dio.dart';
 
 /// Nylo version
-const String nyloVersion = 'v5.4.1';
+const String nyloVersion = 'v5.5.0';
