@@ -1,5 +1,6 @@
 import 'package:recase/recase.dart';
 
+/// This stub is used to create an API Service class in the /app/networking/ directory.
 String postmanApiServiceStub(ReCase rc,
         {required String networkMethods,
         required,

@@ -1,5 +1,6 @@
 import 'package:recase/recase.dart';
 
+/// This stub is used to create a new Theme in the /resources/themes/ directory.
 String themeStub(ReCase rc, {bool isDark = false}) => '''
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

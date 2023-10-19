@@ -1,5 +1,6 @@
 import 'package:recase/recase.dart';
 
+/// This stub is used to create ColorStyles in the /resources/themes/styles/ directory.
 String themeColorsStub(ReCase rc) => '''
 import 'package:flutter/material.dart';
 import '/resources/themes/styles/color_styles.dart';

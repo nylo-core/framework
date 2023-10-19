@@ -1,3 +1,5 @@
+/// The [metroMenu] is displayed when running `dart run nylo_framework:main`
+/// To run a command you can call `dart run nylo_framework:main make:model MyModel`
 const String metroMenu = """
 Metro - Nylo\'s Companion to Build Flutter apps by Anthony Gordon
 

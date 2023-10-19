@@ -1,5 +1,6 @@
 import 'package:recase/recase.dart';
 
+/// This stub is used to create a Provider class in the /app/providers/ directory.
 String providerStub(ReCase rc) => '''
 import 'package:nylo_framework/nylo_framework.dart';
 

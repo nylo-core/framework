@@ -1,3 +1,8 @@
+## [5.6.0] - 2023-10-19
+
+* Add docblock to more APIs
+* Update pubspec.yaml
+
 ## [5.5.0] - 2023-10-17
 
 * Update page stub to use `NyPage`

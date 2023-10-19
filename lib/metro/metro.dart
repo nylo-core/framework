@@ -697,6 +697,7 @@ _makeController(List<String> arguments) async {
       forceCreate: hasForceFlag ?? false);
 }
 
+/// Creates a new Model
 _makeModel(List<String> arguments) async {
   parser.addFlag(helpFlag,
       abbr: 'h',
@@ -725,12 +726,14 @@ _makeModel(List<String> arguments) async {
       stubModel: stubModel, hasForceFlag: hasForceFlag);
 }
 
+/// Creates a new Model
 _createNyloModel(ReCase classReCase,
     {required String stubModel, bool? hasForceFlag}) async {
   await MetroService.makeModel(classReCase.snakeCase, stubModel,
       forceCreate: hasForceFlag ?? false, addToConfig: true);
 }
 
+/// Creates a new Page
 _makePage(List<String> arguments) async {
   parser.addFlag(
     helpFlag,

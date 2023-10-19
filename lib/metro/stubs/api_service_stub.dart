@@ -1,5 +1,6 @@
 import 'package:recase/recase.dart';
 
+/// This stub is used to create a new API Service.
 String apiServiceStub(ReCase rc,
         {required ReCase model, required String baseUrl}) =>
     '''

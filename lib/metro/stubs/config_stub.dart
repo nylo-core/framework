@@ -1,5 +1,6 @@
 import 'package:recase/recase.dart';
 
+/// This stub is used to create a new Config.
 String configStub(ReCase configName) => '''
 /*
 |--------------------------------------------------------------------------
