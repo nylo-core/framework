@@ -669,6 +669,8 @@ _makeTheme(List<String> arguments) async {
   String stubThemeColors = themeColorsStub(classReCase);
   await MetroService.makeThemeColors(classReCase.snakeCase, stubThemeColors,
       forceCreate: hasForceFlag ?? false);
+
+  await MetroService.addToTheme(classReCase.snakeCase);
 }
 
 _makeController(List<String> arguments) async {

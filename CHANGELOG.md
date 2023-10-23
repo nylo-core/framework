@@ -1,3 +1,9 @@
+## [5.7.0] - 2023-10-22
+
+* Ability to auto add themes to the Nylo config using e.g. `metro make:theme bright_theme`
+* Update default theme stub to use `useMaterial3`
+* Update pubspec.yaml
+
 ## [5.6.0] - 2023-10-19
 
 * Add docblock to more APIs

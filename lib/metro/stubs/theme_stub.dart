@@ -22,6 +22,7 @@ ThemeData ${rc.camelCase}Theme(ColorStyles color) {
       appFont, defaultTextTheme.merge(_textTheme(color)));
 
   return ThemeData(
+    useMaterial3: true,
     primaryColor: color.primaryContent,
     primaryColorLight: color.primaryAccent,
     focusColor: color.primaryContent,
