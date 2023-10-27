@@ -1,3 +1,7 @@
+## [5.7.1] - 2023-10-27
+
+* Update page stub to include an example on how to set the state. 
+
 ## [5.7.0] - 2023-10-22
 
 * Ability to auto add themes to the Nylo config using e.g. `metro make:theme bright_theme`

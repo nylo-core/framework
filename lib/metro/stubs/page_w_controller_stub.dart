@@ -12,7 +12,8 @@ class ${className.pascalCase}Page extends NyPage<${className.pascalCase}Controll
 
   @override
   init() async {
-    
+    // To update the state, 
+    // use: refreshPage(setState: () { }); 
   }
 
   @override

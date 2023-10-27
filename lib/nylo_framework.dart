@@ -38,4 +38,4 @@ export 'package:nylo_support/widgets/ny_page.dart';
 export 'package:dio/dio.dart';
 
 /// Nylo version
-const String nyloVersion = 'v5.7.0';
+const String nyloVersion = 'v5.7.1';
