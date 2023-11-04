@@ -1,3 +1,9 @@
+## [5.8.0] - 2023-11-04
+
+* Fix `make:api_service` when using Postman flag
+* New `publish:slate` command added to Metro
+* Added more docs to Metro methods
+
 ## [5.7.1] - 2023-10-27
 
 * Update page stub to include an example on how to set the state. 

@@ -23,4 +23,7 @@ All commands:
   make:theme
   make:route_guard
   make:config
+  
+publish
+  publish:slate
 """;

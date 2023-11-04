@@ -94,8 +94,34 @@ List<NyCommand> allCommands = [
       arguments: ["-h", "-f"],
       category: "make",
       action: _makeConfig),
+  NyCommand(
+      name: "slate",
+      options: 1,
+      arguments: ["-h", "-f"],
+      category: "publish",
+      action: _publishSlate),
 ];
 
+/// Publishes the contents from a Slate package into a Nylo project.
+/// E.g. run: `dart run nylo_framework:main publish:slate example_slate`
+_publishSlate(List<String> arguments) async {
+  parser.addFlag(helpFlag,
+      abbr: 'h', help: 'e.g. publish:slate example_slate', negatable: false);
+
+  final ArgResults argResults = parser.parse(arguments);
+
+  MetroService.hasHelpFlag(argResults[helpFlag], parser.usage);
+
+  MetroService.checkArguments(arguments,
+      'You are missing the \'name\' of the slate package.\ne.g. publish:slate example_slate');
+
+  String slateName = argResults.arguments.first;
+
+  await MetroService.runProcess("dart run $slateName:main publish:all");
+}
+
+/// Creates a config file for Nylo projects
+/// E.g. run: `dart run nylo_framework:main make:config permission_settings`
 _makeConfig(List<String> arguments) async {
   parser.addFlag(helpFlag,
       abbr: 'h', help: 'e.g. make:config currencies', negatable: false);
@@ -123,6 +149,8 @@ _makeConfig(List<String> arguments) async {
       forceCreate: hasForceFlag ?? false);
 }
 
+/// Creates a Stateful Widget file for Nylo projects
+/// E.g. run: `dart run nylo_framework:main make:stateful_widget video_player_widget`
 _makeStatefulWidget(List<String> arguments) async {
   parser.addFlag(helpFlag,
       abbr: 'h',
@@ -153,6 +181,8 @@ _makeStatefulWidget(List<String> arguments) async {
       forceCreate: hasForceFlag ?? false);
 }
 
+/// Creates a Stateless Widget file for Nylo projects
+/// E.g. run: `dart run nylo_framework:main make:stateless_widget avatar_widget`
 _makeStatelessWidget(List<String> arguments) async {
   parser.addFlag(helpFlag,
       abbr: 'h',
@@ -182,6 +212,8 @@ _makeStatelessWidget(List<String> arguments) async {
       forceCreate: hasForceFlag ?? false);
 }
 
+/// Creates a Route Guard for Nylo projects
+/// E.g. run: `dart run nylo_framework:main make:route_guard subscription_route_guard`
 _makeRouteGuard(List<String> arguments) async {
   parser.addFlag(helpFlag,
       abbr: 'h',
@@ -210,6 +242,8 @@ _makeRouteGuard(List<String> arguments) async {
       forceCreate: hasForceFlag ?? false);
 }
 
+/// Creates a Provider for Nylo projects
+/// E.g. run: `dart run nylo_framework:main make:provider firebase_provider`
 _makeProvider(List<String> arguments) async {
   parser.addFlag(helpFlag,
       abbr: 'h', help: 'e.g. make:provider storage_provider', negatable: false);
@@ -236,6 +270,8 @@ _makeProvider(List<String> arguments) async {
       forceCreate: hasForceFlag ?? false, addToConfig: true);
 }
 
+/// Creates an Event for Nylo projects
+/// E.g. run: `dart run nylo_framework:main make:event login_event`
 _makeEvent(List<String> arguments) async {
   parser.addFlag(helpFlag,
       abbr: 'h', help: 'e.g. make:event login_event', negatable: false);
@@ -262,6 +298,8 @@ _makeEvent(List<String> arguments) async {
       forceCreate: hasForceFlag ?? false, addToConfig: true);
 }
 
+/// Creates an API Service for Nylo projects
+/// E.g. run: `dart run nylo_framework:main make:api_service recipes`
 _makeApiService(List<String> arguments) async {
   parser.addFlag(helpFlag,
       abbr: 'h',
@@ -348,12 +386,7 @@ _makeApiService(List<String> arguments) async {
         classReCase: classReCase,
         hasForceFlag: hasForceFlag,
         baseUrlFlagValue: baseUrlFlagValue);
-    final arguments = <String>["format", "lib/app/models"];
-    print('Dart format lib/app/models');
-    print('============');
-    final process = await Process.start('dart', arguments, runInShell: false);
-    await stdout.addStream(process.stdout);
-    await stderr.addStream(process.stderr);
+    await MetroService.runProcess("dart format lib/app/models");
     exit(0);
   }
 
@@ -364,6 +397,7 @@ _makeApiService(List<String> arguments) async {
       hasForceFlag: hasForceFlag);
 }
 
+/// Creates an API Service from Postman v2 schema
 _makePostmanApiService(
     {required dynamic json,
     required Map<String, dynamic> postmanGlobalVars,
@@ -460,6 +494,11 @@ _makePostmanApiService(
             case "raw":
               {
                 if (body["raw"] is String) {
+                  String? rawString =
+                      _replacePostmanStringVars(postmanGlobalVars, body["raw"]);
+                  if (rawString == null || rawString == "") {
+                    continue;
+                  }
                   dynamic jsonRaw = jsonDecode(_replacePostmanStringVars(
                       postmanGlobalVars, body["raw"]));
                   if (jsonRaw is Map<String, dynamic>) {
@@ -600,16 +639,14 @@ _makePostmanApiService(
           return "";
         }
         RegExp reg = RegExp(
-            r'final Map<Type, BaseApiService> apiDecoders = {([\w\W\n\r\s:(),\/\/]+)};');
-        String temp = """
-final Map<Type, BaseApiService> apiDecoders = {${reg.allMatches(file).map((e) => e.group(1)).toList()[0]}
+            r'final Map<Type, BaseApiService> apiDecoders = \{([^}]*)\};');
+        String temp =
+            """final Map<Type, BaseApiService> apiDecoders = {${reg.allMatches(file).map((e) => e.group(1)).toList()[0]}
   $apiServiceName: $apiServiceName(),
-};
-  """;
+};""";
 
         return file.replaceFirst(
-          RegExp(
-              r'final Map<Type, BaseApiService> apiDecoders = {[\w\W\n\r\s:(),\/\/]+(};)'),
+          RegExp(r'final Map<Type, BaseApiService> apiDecoders = \{([^}]*)\};'),
           temp,
         );
       });
@@ -638,6 +675,8 @@ _createApiService(ReCase classReCase,
       forceCreate: hasForceFlag ?? false, addToConfig: true);
 }
 
+/// Creates a Theme for Nylo projects
+/// E.g. run: `dart run nylo_framework:main make:theme bright_theme`
 _makeTheme(List<String> arguments) async {
   parser.addFlag(helpFlag,
       abbr: 'h', help: 'e.g. make:theme bright_theme', negatable: false);
@@ -673,6 +712,8 @@ _makeTheme(List<String> arguments) async {
   await MetroService.addToTheme(classReCase.snakeCase);
 }
 
+/// Creates a Controller for Nylo projects
+/// E.g. run: `dart run nylo_framework:main make:controller home_controller`
 _makeController(List<String> arguments) async {
   parser.addFlag(helpFlag,
       abbr: 'h',
