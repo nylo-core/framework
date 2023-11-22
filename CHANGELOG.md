@@ -1,3 +1,11 @@
+## [5.9.0] - 2023-11-22
+
+* New ability to create dio Interceptors using Metro. E.g. `metro make:interceptor auth_token`
+* Update stubs for creating pages and api services
+* Small refactor to Metro class
+* Remove ny_base_networking.dart
+* Update pubspec.yaml
+
 ## [5.8.0] - 2023-11-04
 
 * Fix `make:api_service` when using Postman flag

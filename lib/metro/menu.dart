@@ -20,6 +20,7 @@ All commands:
   make:provider
   make:event
   make:api_service
+  make:interceptor
   make:theme
   make:route_guard
   make:config

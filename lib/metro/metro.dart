@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:nylo_framework/json_dart_generator/dart_code_generator.dart';
 import 'package:nylo_framework/metro/stubs/config_stub.dart';
+import 'package:nylo_framework/metro/stubs/interceptor_stub.dart';
 import 'package:nylo_framework/metro/stubs/route_guard_stub.dart';
 import 'package:nylo_support/metro/models/ny_command.dart';
 import 'package:nylo_framework/metro/stubs/api_service_stub.dart';
@@ -76,6 +77,12 @@ List<NyCommand> allCommands = [
       arguments: ["-h", "-f", "-model", "-resource"],
       category: "make",
       action: _makeApiService),
+  NyCommand(
+      name: "interceptor",
+      options: 1,
+      arguments: ["-h", "-f"],
+      category: "make",
+      action: _makeInterceptor),
   NyCommand(
       name: "theme",
       options: 1,
@@ -397,6 +404,34 @@ _makeApiService(List<String> arguments) async {
       hasForceFlag: hasForceFlag);
 }
 
+/// Creates an Interceptor for Nylo projects
+/// E.g. run: `dart run nylo_framework:main make:interceptor auth_token`
+_makeInterceptor(List<String> arguments) async {
+  parser.addFlag(helpFlag,
+      abbr: 'h', help: 'e.g. make:interceptor auth_token', negatable: false);
+  parser.addFlag(forceFlag,
+      abbr: 'f',
+      help: 'Creates a new Interceptor even if it already exists.',
+      negatable: false);
+
+  final ArgResults argResults = parser.parse(arguments);
+
+  bool? hasForceFlag = argResults[forceFlag];
+
+  MetroService.hasHelpFlag(argResults[helpFlag], parser.usage);
+
+  MetroService.checkArguments(arguments,
+      'You are missing the \'name\' of the interceptor that you want to create.\ne.g. make:interceptor auth_token');
+
+  String interceptorName =
+      argResults.arguments.first.replaceAll(RegExp(r'(_?interceptor)'), "");
+
+  ReCase classReCase = ReCase(interceptorName);
+  String stubInterceptor = interceptorStub(interceptorName: classReCase);
+  await MetroService.makeInterceptor(classReCase.snakeCase, stubInterceptor,
+      forceCreate: hasForceFlag ?? false);
+}
+
 /// Creates an API Service from Postman v2 schema
 _makePostmanApiService(
     {required dynamic json,
@@ -638,17 +673,37 @@ _makePostmanApiService(
         if (file.contains(apiServiceName)) {
           return "";
         }
-        RegExp reg = RegExp(
-            r'final Map<Type, BaseApiService> apiDecoders = \{([^}]*)\};');
-        String temp =
-            """final Map<Type, BaseApiService> apiDecoders = {${reg.allMatches(file).map((e) => e.group(1)).toList()[0]}
+
+        if (file.contains("final Map<Type, BaseApiService> apiDecoders =")) {
+          RegExp reg = RegExp(
+              r'final Map<Type, BaseApiService> apiDecoders = \{([^}]*)\};');
+          String temp =
+              """final Map<Type, NyApiService> apiDecoders = {${reg.allMatches(file).map((e) => e.group(1)).toList()[0]}
   $apiServiceName: $apiServiceName(),
 };""";
 
-        return file.replaceFirst(
-          RegExp(r'final Map<Type, BaseApiService> apiDecoders = \{([^}]*)\};'),
-          temp,
-        );
+          return file.replaceFirst(
+            RegExp(
+                r'final Map<Type, BaseApiService> apiDecoders = \{([^}]*)\};'),
+            temp,
+          );
+        }
+
+        if (file.contains("final Map<Type, NyApiService> apiDecoders =")) {
+          RegExp reg = RegExp(
+              r'final Map<Type, NyApiService> apiDecoders = \{([^}]*)\};');
+          String temp =
+              """final Map<Type, NyApiService> apiDecoders = {${reg.allMatches(file).map((e) => e.group(1)).toList()[0]}
+  $apiServiceName: $apiServiceName(),
+};""";
+
+          return file.replaceFirst(
+            RegExp(r'final Map<Type, NyApiService> apiDecoders = \{([^}]*)\};'),
+            temp,
+          );
+        }
+
+        return file;
       });
 }
 
@@ -827,7 +882,7 @@ _makePage(List<String> arguments) async {
     await MetroService.makeController(className.snakeCase, stubController,
         forceCreate: hasForceFlag ?? false);
   } else {
-    String stubPage = pageStub(pageName: classReCase);
+    String stubPage = pageStub(className: classReCase);
     await MetroService.makePage(className.snakeCase, stubPage,
         forceCreate: hasForceFlag ?? false, addToRoute: true);
   }

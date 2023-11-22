@@ -6,12 +6,12 @@ String postmanApiServiceStub(ReCase rc,
         required,
         required String imports,
         required String baseUrl}) =>
-    '''
-${baseUrl == "getEnv('API_BASE_URL')" ? "import 'package:nylo_framework/nylo_framework.dart';\n" : ""}import 'package:flutter/material.dart';
-${imports != "" ? imports + '\n' : ''}import '/app/networking/dio/base_api_service.dart';
+    '''import 'package:flutter/material.dart';
+import 'package:nylo_framework/nylo_framework.dart';
+import '/config/decoders.dart';${imports != "" ? '\n' + imports + '' : ''}
 
-class ${rc.pascalCase}ApiService extends BaseApiService {
-  ${rc.pascalCase}ApiService({BuildContext? buildContext}) : super(buildContext);
+class ${rc.pascalCase}ApiService extends NyApiService {
+  ${rc.pascalCase}ApiService({BuildContext? buildContext}) : super(buildContext, decoders: modelDecoders);
 
   @override
   String get baseUrl => $baseUrl;

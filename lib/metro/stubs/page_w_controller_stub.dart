@@ -6,14 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 import '/app/controllers/${className.snakeCase}_controller.dart';
 
-class ${className.pascalCase}Page extends NyPage<${className.pascalCase}Controller> {
+class ${className.pascalCase}Page extends NyStatefulWidget<${className.pascalCase}Controller> {
+  static const path = '/${className.paramCase}';
 
-  static String path = '/${className.paramCase}';
+  ${className.pascalCase}Page() : super(path, child: _${className.pascalCase}PageState());
+}
+
+class _${className.pascalCase}PageState extends NyState<${className.pascalCase}Page> {
 
   @override
   init() async {
-    // To update the state, 
-    // use: refreshPage(setState: () { }); 
+    super.init();
+
   }
 
   @override
