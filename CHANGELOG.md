@@ -1,3 +1,9 @@
+## [5.10.0] - 2023-11-23
+
+* Ability to set routes as the initialPage using **--initial** E.g. `metro make:page dashboard --initial`
+* Ability to set routes as the authPage using **--auth** E.g. `metro make:page dashboard --auth`
+* Update pubspec.yaml
+
 ## [5.9.0] - 2023-11-22
 
 * New ability to create dio Interceptors using Metro. E.g. `metro make:interceptor auth_token`

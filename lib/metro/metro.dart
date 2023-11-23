@@ -846,6 +846,18 @@ _makePage(List<String> arguments) async {
     negatable: false,
   );
   parser.addFlag(
+    authPageFlag,
+    abbr: 'a',
+    help: 'Creates a new page that will be the auth page',
+    negatable: false,
+  );
+  parser.addFlag(
+    initialPageFlag,
+    abbr: 'i',
+    help: 'Creates a new page that will be the initial page',
+    negatable: false,
+  );
+  parser.addFlag(
     forceFlag,
     abbr: 'f',
     help: 'Creates a new page even if it already exists.',
@@ -859,8 +871,17 @@ _makePage(List<String> arguments) async {
   bool? hasForceFlag = argResults[forceFlag];
 
   bool shouldCreateController = false;
-  if (argResults["controller"]) {
+  if (argResults[controllerFlag]) {
     shouldCreateController = true;
+  }
+
+  bool initialPage = false;
+  if (argResults[initialPageFlag]) {
+    initialPage = true;
+  }
+  bool authPage = false;
+  if (argResults[authPageFlag]) {
+    authPage = true;
   }
 
   if (argResults.arguments.first.trim() == "") {
@@ -876,7 +897,10 @@ _makePage(List<String> arguments) async {
     String stubPageAndController =
         pageWithControllerStub(className: classReCase);
     await MetroService.makePage(className.snakeCase, stubPageAndController,
-        forceCreate: hasForceFlag ?? false, addToRoute: true);
+        forceCreate: hasForceFlag ?? false,
+        addToRoute: true,
+        isInitialPage: initialPage,
+        isAuthPage: authPage);
 
     String stubController = controllerStub(controllerName: classReCase);
     await MetroService.makeController(className.snakeCase, stubController,
@@ -884,7 +908,10 @@ _makePage(List<String> arguments) async {
   } else {
     String stubPage = pageStub(className: classReCase);
     await MetroService.makePage(className.snakeCase, stubPage,
-        forceCreate: hasForceFlag ?? false, addToRoute: true);
+        forceCreate: hasForceFlag ?? false,
+        addToRoute: true,
+        isInitialPage: initialPage,
+        isAuthPage: authPage);
   }
 }
 
