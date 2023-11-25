@@ -1,3 +1,7 @@
+## [5.11.0] - 2023-11-25
+
+* Update pubspec.yaml
+
 ## [5.10.0] - 2023-11-23
 
 * Ability to set routes as the initialPage using **--initial** E.g. `metro make:page dashboard --initial`
