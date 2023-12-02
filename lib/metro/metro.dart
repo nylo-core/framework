@@ -38,7 +38,7 @@ List<NyCommand> allCommands = [
   NyCommand(
       name: "model",
       options: 1,
-      arguments: ["-h", "-f", "-s"],
+      arguments: ["-h", "-f", "-j"],
       category: "make",
       action: _makeModel),
   NyCommand(
@@ -806,22 +806,63 @@ _makeModel(List<String> arguments) async {
       abbr: 'f',
       help: 'Creates a new model even if it already exists.',
       negatable: false);
+  parser.addFlag(jsonFlag,
+      abbr: 'j',
+      help: 'Creates a new model from a JSON object.',
+      negatable: false);
 
   final ArgResults argResults = parser.parse(arguments);
 
   MetroService.checkArguments(argResults.arguments, parser.usage);
 
   bool? hasForceFlag = argResults[forceFlag];
+  bool hasJsonFlag = argResults[jsonFlag] ?? false;
   MetroService.hasHelpFlag(argResults[helpFlag], parser.usage);
 
   String className = argResults.arguments.first;
   ReCase classReCase = ReCase(className);
 
   String modelName = classReCase.pascalCase;
-  String stubModel = modelStub(modelName: modelName);
+  String stubModel = "";
+  if (hasJsonFlag) {
+    final fileName = 'nylo-model.json';
 
+    MetroConsole.writeInGreen(
+        'Input your text and press Ctrl + D to save and exit.');
+
+    // Read user input from stdin
+    final StringBuffer buffer = StringBuffer();
+    await stdin.forEach((List<int> data) {
+      buffer.write(String.fromCharCodes(data));
+    });
+
+    // Save the user's text to the file
+    final file = File(fileName);
+    await file.writeAsString(buffer.toString());
+
+    String modelData = await MetroService.loadAsset("nylo-model.json");
+
+    // delete "nylo-model.json"
+    await MetroService.runProcess("rm nylo-model.json");
+    MetroConsole.writeInBlack("\n");
+
+    DartCodeGenerator generator = DartCodeGenerator(
+      rootClassName: modelName,
+      rootClassNameWithPrefixSuffix: true,
+      classPrefix: '',
+      classSuffix: '',
+    );
+
+    stubModel = generator.generate(modelData);
+  } else {
+    stubModel = modelStub(modelName: modelName);
+  }
   await _createNyloModel(classReCase,
       stubModel: stubModel, hasForceFlag: hasForceFlag);
+  if (hasJsonFlag) {
+    await MetroService.runProcess(
+        "dart format lib/app/models/${className.snakeCase}.dart");
+  }
 }
 
 /// Creates a new Model

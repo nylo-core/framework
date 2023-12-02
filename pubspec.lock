@@ -233,10 +233,10 @@ packages:
     dependency: "direct main"
     description:
       name: nylo_support
-      sha256: "358e9de7f47df37a26297694ad70cb3825f51e0888edc0148444e9e80253bfd2"
+      sha256: "4b1209d56b5ddf0188f840c59f6b989259e4d352d35ca5743410350aa6a59473"
       url: "https://pub.dev"
     source: hosted
-    version: "5.19.0"
+    version: "5.20.0"
   page_transition:
     dependency: "direct main"
     description:
