@@ -1,3 +1,7 @@
+## [5.14.0] - 2023-12-03
+
+* Update pubspec.yaml
+
 ## [5.13.0] - 2023-12-02
 
 * Add new `--json` flag to the "make:model" command to create a model from a json string. E.g. `metro make:model user --json '{"name": "John Doe", "age": 30}'`
