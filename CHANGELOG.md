@@ -1,3 +1,7 @@
+## [5.16.0] - 2023-12-25
+
+* Update pubspec.yaml
+
 ## [5.15.0] - 2023-12-09
 
 * Export new `ny_route_history_observer.dart` file
