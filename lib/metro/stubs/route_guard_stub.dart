@@ -17,7 +17,7 @@ class ${rc.pascalCase}RouteGuard extends NyRouteGuard {
   @override
   Future<bool> canOpen(BuildContext? context, NyArgument? data) async {
     // implement your check
-    return true; // true/false
+    return true;
   }
 
   @override

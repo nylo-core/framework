@@ -1,3 +1,14 @@
+## [5.17.0] - 2024-01-01
+
+* Metro cli improvements
+  * Ability to create pages in a subfolder. E.g. `metro make:page auth/login`
+  * Ability to create models in a subfolder. E.g. `metro make:model auth/user`
+  * Ability to create controllers in a subfolder. E.g. `metro make:controller auth/login`
+  * Update `--postman` flag for API Services. Now you can run `metro make:api_service example_api_service --postman` and it will help you create an API Service from a Postman collection.
+* Update stubs
+* Add `cli_dialog` as a dependency
+* Update pubspec.yaml
+
 ## [5.16.0] - 2023-12-25
 
 * Update pubspec.yaml

@@ -16,6 +16,7 @@ String networkMethodStub({
   //$method\n${urlFullPath != null ? '  /// $urlFullPath' : ''}
   Future<${_getType(model, isList: isList, isOptional: true)}> $methodName(${_mapParams(queryParams, dataParams)}) async => await network${_getType(model, isList: isList, returnDynamic: false, addBrackets: true)}(
     ${_callBackType(headers: headerParams, method: method, path: path, queryParams: queryParams, dataParams: dataParams)}
+    ${urlFullPath != null ? 'baseUrl: "${Uri.parse(urlFullPath).origin}"' : ''}
   );
 ''';
 
@@ -92,7 +93,7 @@ String _callBackType(
     ${headers.entries.map((e) => "\"${e.key}\": '${e.value}'").toList().join(", ")}
   });
   return ${_requestType(method, path, queryParams, dataParams).substring(0, _requestType(method, path, queryParams, dataParams).length - 1)};
-  }''';
+  },''';
 }
 
 String _requestType(String method, String path,

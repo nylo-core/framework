@@ -14,7 +14,7 @@ class ${rc.pascalCase}ApiService extends NyApiService {
   ${rc.pascalCase}ApiService({BuildContext? buildContext}) : super(buildContext, decoders: modelDecoders);
 
   @override
-  String get baseUrl => $baseUrl;
+  String get baseUrl => "";
 
   $networkMethods
 }

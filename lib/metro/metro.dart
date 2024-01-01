@@ -4,10 +4,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/args.dart';
+import 'package:cli_dialog/cli_dialog.dart';
 import 'package:nylo_framework/json_dart_generator/dart_code_generator.dart';
 import 'package:nylo_framework/metro/stubs/config_stub.dart';
 import 'package:nylo_framework/metro/stubs/interceptor_stub.dart';
 import 'package:nylo_framework/metro/stubs/route_guard_stub.dart';
+import 'package:nylo_support/metro/models/metro_project_file.dart';
 import 'package:nylo_support/metro/models/ny_command.dart';
 import 'package:nylo_framework/metro/stubs/api_service_stub.dart';
 import 'package:nylo_framework/metro/stubs/controller_stub.dart';
@@ -326,7 +328,7 @@ _makeApiService(List<String> arguments) async {
     abbr: 'u',
     help: 'Provide the Base Url that should be used in the API service.',
   );
-  parser.addOption(
+  parser.addFlag(
     postmanCollectionOption,
     abbr: 'p',
     help:
@@ -353,24 +355,105 @@ _makeApiService(List<String> arguments) async {
   }
 
   // handle postman collection
-  if (argResults.options.contains(postmanCollectionOption)) {
-    String? assetName = argResults[postmanCollectionOption];
-    File file = File("public/assets/postman/$assetName");
+  if (argResults.options.contains(postmanCollectionOption) &&
+      argResults[postmanCollectionOption]) {
+    // find all files in a directory
+    final directoryPostmanCollections =
+        Directory("public/assets/postman/collections");
+    if (!(await directoryPostmanCollections.exists())) {
+      MetroConsole.writeInBlack(
+          "Your project is missing a 'public/assets/postman/collections' directory");
+      exit(1);
+    }
+    List<FileSystemEntity> filesCollections =
+        directoryPostmanCollections.listSync(recursive: false).toList();
+    List<String> fileCollectionsNames = [];
+    filesCollections.forEach((element) {
+      if (element.path.contains(".json")) {
+        fileCollectionsNames.add(element.path.split("/").last);
+      }
+    });
+
+    if (fileCollectionsNames.isEmpty) {
+      MetroConsole.writeInBlack(
+          "Your project is missing Postman collections inside the 'public/assets/postman/collections' directory");
+      exit(1);
+    }
+
+    final directoryPostmanEnvironment =
+        Directory("public/assets/postman/environments");
+    if (!(await directoryPostmanEnvironment.exists())) {
+      MetroConsole.writeInBlack(
+          "Your project is missing a 'public/assets/postman/environments' directory");
+      exit(1);
+    }
+    List<FileSystemEntity> filesEnvironment =
+        directoryPostmanEnvironment.listSync(recursive: false).toList();
+    List<String> fileEnvironmentNames = [];
+    filesEnvironment.forEach((element) {
+      if (element.path.contains(".json")) {
+        fileEnvironmentNames.add(element.path.split("/").last);
+      }
+    });
+
+    final dialogQuestions = CLI_Dialog(listQuestions: [
+      [
+        {
+          'question': 'Which Postman collection would you like to use?',
+          'options': fileCollectionsNames
+        },
+        'collection_name'
+      ],
+      [
+        {
+          'question': 'Which Postman environment would you like to use?',
+          'options': ["None", ...fileEnvironmentNames]
+        },
+        'environment_name'
+      ],
+    ]).ask();
+
+    final dynamic collectionName = dialogQuestions['collection_name'];
+    final dynamic environmentName = dialogQuestions['environment_name'];
+
+    String? assetName = collectionName;
+    File file = File("public/assets/postman/collections/$assetName");
     if ((await file.exists()) == false) {
       MetroConsole.writeInRed("Cannot locate \"$assetName\"");
       MetroConsole.writeInBlack(
-          "Add \"$assetName\" to your \"/public/assets/postman/\" directory.");
+          "Add \"$assetName\" to your \"/public/assets/postman/collections\" directory.");
       exit(0);
     }
     String fileJson = await file.readAsString();
     dynamic json = jsonDecode(fileJson);
 
-    // get root postman contents
-    File filePostman = File("postman.json");
-    if ((await filePostman.exists()) == false) {
-      MetroConsole.writeInBlack(
-          "Your project is missing a 'postman.json' file. E.g.\n" +
-              '''
+    Map<String, dynamic> postmanGlobalVars = {};
+    if (environmentName != "N") {
+      File filePostman =
+          File("public/assets/postman/environments/$environmentName");
+      if ((await filePostman.exists()) == false) {
+        MetroConsole.writeInBlack(
+            "File doesn't exist 'public/assets/postman/environments/$environmentName', please add your environment file from Postman.");
+        exit(1);
+      }
+      String jsonFilePostman = await filePostman.readAsString();
+      Map<String, dynamic> jsonDecodedPostmanEnvironment =
+          jsonDecode(jsonFilePostman);
+      List<dynamic> postmanEnvironmentValues =
+          jsonDecodedPostmanEnvironment['values'];
+      Map<String, dynamic> newObj = {};
+      postmanEnvironmentValues.forEach((value) {
+        newObj[value['key']] = value['value'];
+      });
+
+      postmanGlobalVars = newObj;
+    } else {
+      // get root postman contents
+      File filePostman = File("postman.json");
+      if ((await filePostman.exists()) == false) {
+        MetroConsole.writeInBlack(
+            "Your project is missing a 'postman.json' file. E.g.\n" +
+                '''
   {
     "global": {
       "BASE_URL": "https://nylo.dev",
@@ -378,14 +461,14 @@ _makeApiService(List<String> arguments) async {
     }
   }
   ''' +
-              "Create the file at the root of the project.");
-      exit(1);
+                "Create the file at the root of the project.");
+        exit(1);
+      }
+      String jsonFilePostman = await filePostman.readAsString();
+      Map<String, dynamic> postmanFileContents =
+          Map<String, dynamic>.from(jsonDecode(jsonFilePostman));
+      postmanGlobalVars = postmanFileContents['global'];
     }
-    String jsonFilePostman = await filePostman.readAsString();
-
-    Map<String, dynamic> postmanFileContents =
-        Map<String, dynamic>.from(jsonDecode(jsonFilePostman));
-    Map<String, dynamic> postmanGlobalVars = postmanFileContents['global'];
 
     await _makePostmanApiService(
         json: json,
@@ -394,6 +477,7 @@ _makeApiService(List<String> arguments) async {
         hasForceFlag: hasForceFlag,
         baseUrlFlagValue: baseUrlFlagValue);
     await MetroService.runProcess("dart format lib/app/models");
+    await MetroService.runProcess("dart format lib/app/networking");
     exit(0);
   }
 
@@ -595,9 +679,9 @@ _makePostmanApiService(
           }
         }
         // create model
-        await _createNyloModel(ReCase(modelName),
+        await _createNyloModel(modelName,
             stubModel: code, hasForceFlag: hasForceFlag);
-        imports.add(makeImportPathModel(ReCase(modelName).snakeCase));
+        imports.add(makeImportPathModel(modelName.snakeCase));
       }
 
       if (postmanItem["request"]["url"] == null) {
@@ -785,13 +869,13 @@ _makeController(List<String> arguments) async {
   bool? hasForceFlag = argResults[forceFlag];
   MetroService.hasHelpFlag(argResults[helpFlag], parser.usage);
 
-  String className =
-      argResults.arguments.first.replaceAll(RegExp(r'(_?controller)'), "");
-  ReCase classReCase = ReCase(className);
+  MetroProjectFile projectFile = MetroService.createMetroProjectFile(
+      argResults.arguments.first,
+      prefix: RegExp(r'(_?controller)'));
 
-  String stubController = controllerStub(controllerName: classReCase);
+  String stubController = controllerStub(controllerName: projectFile.name);
 
-  await MetroService.makeController(classReCase.snakeCase, stubController,
+  await MetroService.makeController(projectFile.name, stubController,
       forceCreate: hasForceFlag ?? false);
 }
 
@@ -819,10 +903,10 @@ _makeModel(List<String> arguments) async {
   bool hasJsonFlag = argResults[jsonFlag] ?? false;
   MetroService.hasHelpFlag(argResults[helpFlag], parser.usage);
 
-  String className = argResults.arguments.first;
-  ReCase classReCase = ReCase(className);
+  MetroProjectFile projectFile =
+      MetroService.createMetroProjectFile(argResults.arguments.first);
 
-  String modelName = classReCase.pascalCase;
+  String modelName = projectFile.name.pascalCase;
   String stubModel = "";
   if (hasJsonFlag) {
     final fileName = 'nylo-model.json';
@@ -857,19 +941,28 @@ _makeModel(List<String> arguments) async {
   } else {
     stubModel = modelStub(modelName: modelName);
   }
-  await _createNyloModel(classReCase,
-      stubModel: stubModel, hasForceFlag: hasForceFlag);
+  await _createNyloModel(projectFile.name,
+      stubModel: stubModel,
+      hasForceFlag: hasForceFlag,
+      creationPath: projectFile.creationPath);
   if (hasJsonFlag) {
+    String creationPath = (projectFile.creationPath != null
+        ? projectFile.creationPath! + "/"
+        : "");
     await MetroService.runProcess(
-        "dart format lib/app/models/${className.snakeCase}.dart");
+        "dart format lib/app/models/$creationPath${projectFile.name.snakeCase}.dart");
   }
 }
 
 /// Creates a new Model
-_createNyloModel(ReCase classReCase,
-    {required String stubModel, bool? hasForceFlag}) async {
+_createNyloModel(String classReCase,
+    {required String stubModel,
+    bool? hasForceFlag,
+    String? creationPath}) async {
   await MetroService.makeModel(classReCase.snakeCase, stubModel,
-      forceCreate: hasForceFlag ?? false, addToConfig: true);
+      forceCreate: hasForceFlag ?? false,
+      addToConfig: true,
+      creationPath: creationPath);
 }
 
 /// Creates a new Page
@@ -930,29 +1023,41 @@ _makePage(List<String> arguments) async {
     exit(1);
   }
 
-  String className =
-      argResults.arguments.first.replaceAll(RegExp(r'(_?page)'), "");
-  ReCase classReCase = ReCase(className);
+  MetroProjectFile projectFile = MetroService.createMetroProjectFile(
+      argResults.arguments.first,
+      prefix: RegExp(r'(_?page)'));
 
   if (shouldCreateController) {
-    String stubPageAndController =
-        pageWithControllerStub(className: classReCase);
-    await MetroService.makePage(className.snakeCase, stubPageAndController,
-        forceCreate: hasForceFlag ?? false,
-        addToRoute: true,
-        isInitialPage: initialPage,
-        isAuthPage: authPage);
+    String stubPageAndController = pageWithControllerStub(
+        className: projectFile.name, creationPath: projectFile.creationPath);
+    await MetroService.makePage(
+      projectFile.name,
+      stubPageAndController,
+      forceCreate: hasForceFlag ?? false,
+      addToRoute: true,
+      isInitialPage: initialPage,
+      isAuthPage: authPage,
+      creationPath: projectFile.creationPath,
+    );
 
-    String stubController = controllerStub(controllerName: classReCase);
-    await MetroService.makeController(className.snakeCase, stubController,
-        forceCreate: hasForceFlag ?? false);
+    String stubController = controllerStub(controllerName: projectFile.name);
+    await MetroService.makeController(
+      projectFile.name,
+      stubController,
+      forceCreate: hasForceFlag ?? false,
+      creationPath: projectFile.creationPath,
+    );
   } else {
-    String stubPage = pageStub(className: classReCase);
-    await MetroService.makePage(className.snakeCase, stubPage,
-        forceCreate: hasForceFlag ?? false,
-        addToRoute: true,
-        isInitialPage: initialPage,
-        isAuthPage: authPage);
+    String stubPage = pageStub(className: projectFile.name);
+    await MetroService.makePage(
+      projectFile.name,
+      stubPage,
+      forceCreate: hasForceFlag ?? false,
+      addToRoute: true,
+      isInitialPage: initialPage,
+      isAuthPage: authPage,
+      creationPath: projectFile.creationPath,
+    );
   }
 }
 
