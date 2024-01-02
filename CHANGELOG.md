@@ -1,3 +1,7 @@
+## [5.18.0] - 2024-01-01
+
+* Update pubspec.yaml
+
 ## [5.17.0] - 2024-01-01
 
 * Metro cli improvements
