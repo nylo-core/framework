@@ -1,3 +1,7 @@
+## [5.18.3] - 2024-01-03
+
+* Update pubspec.yaml
+
 ## [5.18.2] - 2024-01-03
 
 * Update stateful stub
