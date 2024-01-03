@@ -251,15 +251,15 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "5.18.1"
+    version: "5.18.2"
   nylo_support:
     dependency: transitive
     description:
       name: nylo_support
-      sha256: "8d715ae34a773e25fcc94118d0f351d952708f99ecdeb7b0f6af2f7a63c1f57e"
+      sha256: "2441d97ca6dce8be32288fecdf63a6e1bf13d9b2019b205240ea2993bc953850"
       url: "https://pub.dev"
     source: hosted
-    version: "5.25.1"
+    version: "5.26.0"
   page_transition:
     dependency: transitive
     description:

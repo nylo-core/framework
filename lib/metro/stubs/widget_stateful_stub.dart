@@ -12,7 +12,7 @@ class ${rc.pascalCase} extends StatefulWidget {
   static String state = "${rc.snakeCase}";
 
   @override
-  _${rc.pascalCase}State createState() => _${rc.pascalCase}State();
+  createState() => _${rc.pascalCase}State();
 }
 
 class _${rc.pascalCase}State extends NyState<${rc.pascalCase}> {
