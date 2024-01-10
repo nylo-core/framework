@@ -428,7 +428,7 @@ _makeApiService(List<String> arguments) async {
     dynamic json = jsonDecode(fileJson);
 
     Map<String, dynamic> postmanGlobalVars = {};
-    if (environmentName != "N") {
+    if (environmentName != "None") {
       File filePostman =
           File("public/assets/postman/environments/$environmentName");
       if ((await filePostman.exists()) == false) {

@@ -1,3 +1,7 @@
+## [5.18.5] - 2024-01-10
+
+* Fix `metro make:api_service` error when using Postman flag
+
 ## [5.18.4] - 2024-01-06
 
 * Update pubspec.yaml
