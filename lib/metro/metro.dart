@@ -680,7 +680,7 @@ _makePostmanApiService(
         }
         // create model
         await _createNyloModel(modelName,
-            stubModel: code, hasForceFlag: hasForceFlag);
+            stubModel: code, hasForceFlag: hasForceFlag, skipIfExist: true);
         imports.add(makeImportPathModel(modelName.snakeCase));
       }
 
@@ -958,11 +958,13 @@ _makeModel(List<String> arguments) async {
 _createNyloModel(String classReCase,
     {required String stubModel,
     bool? hasForceFlag,
-    String? creationPath}) async {
+    String? creationPath,
+    bool skipIfExist = false}) async {
   await MetroService.makeModel(classReCase.snakeCase, stubModel,
       forceCreate: hasForceFlag ?? false,
       addToConfig: true,
-      creationPath: creationPath);
+      creationPath: creationPath,
+      skipIfExist: skipIfExist);
 }
 
 /// Creates a new Page
