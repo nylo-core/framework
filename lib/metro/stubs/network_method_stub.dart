@@ -49,13 +49,12 @@ String _getType(String? model,
 String _mapDataParams(Map<String, dynamic> dataParams,
         {bool isOptional = false}) =>
     dataParams.entries
-        .map((e) =>
-            '"${e.key}${isOptional ? '?' : ''}": ${e.key.camelCase}')
+        .map((e) => '"${e.key}${isOptional ? '?' : ''}": ${e.key.camelCase}')
         .toList()
         .join(", ");
 
-String _mapParams(
-    Map<String, dynamic> queryParams, Map<String, dynamic> dataParams, Map<String, dynamic> pathParams) {
+String _mapParams(Map<String, dynamic> queryParams,
+    Map<String, dynamic> dataParams, Map<String, dynamic> pathParams) {
   Map<String, dynamic> params = {};
   if (queryParams.isNotEmpty) {
     params.addAll(queryParams);
@@ -86,14 +85,14 @@ String _mapParams(
       "}";
 }
 
-String _callBackType(
-    {required Map<String, dynamic> headers,
-    required String method,
-    required String path,
-    required Map<String, dynamic> queryParams,
-    required Map<String, dynamic> dataParams,
-    required Map<String, dynamic> pathParams,
-    }) {
+String _callBackType({
+  required Map<String, dynamic> headers,
+  required String method,
+  required String path,
+  required Map<String, dynamic> queryParams,
+  required Map<String, dynamic> dataParams,
+  required Map<String, dynamic> pathParams,
+}) {
   if (headers.isEmpty) {
     return "request: (request) => ${_requestType(method, path, queryParams, dataParams, pathParams)}";
   }
@@ -105,9 +104,12 @@ String _callBackType(
   },''';
 }
 
-String _requestType(String method, String path,
-    Map<String, dynamic> queryParams, Map<String, dynamic> dataParams, Map<String, dynamic> pathParams) {
-
+String _requestType(
+    String method,
+    String path,
+    Map<String, dynamic> queryParams,
+    Map<String, dynamic> dataParams,
+    Map<String, dynamic> pathParams) {
   RegExp regExp = RegExp(r':([\w_$&+,:;=?@#!]+)');
   path = path.replaceAllMapped(regExp, (match) {
     String key = match.group(1) ?? "";

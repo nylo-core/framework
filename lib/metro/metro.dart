@@ -556,7 +556,10 @@ _makePostmanApiService(
       String method = postmanItem["request"]["method"];
 
       // params
-      Map<String, dynamic> queryParams = {}, pathParams = {}, dataParams = {}, headerParams = {};
+      Map<String, dynamic> queryParams = {},
+          pathParams = {},
+          dataParams = {},
+          headerParams = {};
 
       // find header params
       if (postmanItem["request"] != null &&
@@ -575,7 +578,8 @@ _makePostmanApiService(
               continue;
             }
             if (header.containsKey('value')) {
-              value = _replacePostmanStringVars(postmanGlobalVars, header['value']);
+              value =
+                  _replacePostmanStringVars(postmanGlobalVars, header['value']);
             }
             headerParams[key] = value ?? "";
           }
@@ -723,8 +727,7 @@ _makePostmanApiService(
           queryParams: queryParams,
           dataParams: dataParams,
           headerParams: headerParams,
-          pathParams: pathParams
-      );
+          pathParams: pathParams);
       stubNetworkValue.add(createdNetworkMethodStub);
     }
   }
@@ -809,8 +812,8 @@ _makePostmanApiService(
 
 /// Replace String variables from Postman
 _replacePostmanStringVars(Map<String, dynamic> postmanGlobal, String string) =>
-    string.replaceAllMapped(RegExp(r'{{[\w_$&+,:;=?@#!]+}}', caseSensitive: false),
-        (Match match) {
+    string.replaceAllMapped(
+        RegExp(r'{{[\w_$&+,:;=?@#!]+}}', caseSensitive: false), (Match match) {
       if (match.group(0) == null) {
         return "";
       }
