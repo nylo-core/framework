@@ -556,7 +556,7 @@ _makePostmanApiService(
       String method = postmanItem["request"]["method"];
 
       // params
-      Map<String, dynamic> queryParams = {}, dataParams = {}, headerParams = {};
+      Map<String, dynamic> queryParams = {}, pathParams = {}, dataParams = {}, headerParams = {};
 
       // find header params
       if (postmanItem["request"] != null &&
@@ -575,7 +575,7 @@ _makePostmanApiService(
               continue;
             }
             if (header.containsKey('value')) {
-              value = header['value'];
+              value = _replacePostmanStringVars(postmanGlobalVars, header['value']);
             }
             headerParams[key] = value ?? "";
           }
@@ -592,7 +592,16 @@ _makePostmanApiService(
             List<Map<String, dynamic>>? queryData =
                 List<Map<String, dynamic>>.from(urlData['query']);
             queryData.forEach((element) {
-              queryParams[element['key']] = element['value'];
+              String key = element['key'];
+              queryParams[key.camelCase] = element['value'];
+            });
+          }
+          if (urlData.containsKey('variable')) {
+            List<Map<String, dynamic>>? queryData =
+                List<Map<String, dynamic>>.from(urlData['variable']);
+            queryData.forEach((element) {
+              String key = element['key'];
+              pathParams[key.camelCase] = element['value'];
             });
           }
         }
@@ -616,7 +625,7 @@ _makePostmanApiService(
                   String? rawString =
                       _replacePostmanStringVars(postmanGlobalVars, body["raw"]);
                   if (rawString == null || rawString == "") {
-                    continue;
+                    break;
                   }
                   dynamic jsonRaw = jsonDecode(_replacePostmanStringVars(
                       postmanGlobalVars, body["raw"]));
@@ -696,7 +705,12 @@ _makePostmanApiService(
           List<String>.from(postmanItem["request"]["url"]["path"]).join("/");
       String cleanPath = _replacePostmanStringVars(postmanGlobalVars, path);
 
-      ReCase fullUrlPath = ReCase(postmanItem['name']);
+      String postManName = postmanItem['name'];
+      postManName = postManName.replaceAll('\'', "");
+
+      ReCase fullUrlPath = ReCase(postManName);
+      fullUrlPath = ReCase(fullUrlPath.snakeCase);
+
       String methodName = method.toLowerCase() + fullUrlPath.pascalCase;
 
       String createdNetworkMethodStub = networkMethodStub(
@@ -704,11 +718,13 @@ _makePostmanApiService(
           method: method,
           path: "/$cleanPath",
           urlFullPath: cleanUrlRaw,
-          model: (modelName != null ? ReCase(modelName).pascalCase : null),
+          model: (modelName != null ? modelName.pascalCase : null),
           isList: (isList ?? false),
           queryParams: queryParams,
           dataParams: dataParams,
-          headerParams: headerParams);
+          headerParams: headerParams,
+          pathParams: pathParams
+      );
       stubNetworkValue.add(createdNetworkMethodStub);
     }
   }
@@ -791,18 +807,20 @@ _makePostmanApiService(
       });
 }
 
+/// Replace String variables from Postman
 _replacePostmanStringVars(Map<String, dynamic> postmanGlobal, String string) =>
-    string.replaceAllMapped(RegExp(r'\{\{[A-z_]+\}\}', caseSensitive: false),
-        (Match m) {
-      if (m.group(0) == null) {
+    string.replaceAllMapped(RegExp(r'{{[\w_$&+,:;=?@#!]+}}', caseSensitive: false),
+        (Match match) {
+      if (match.group(0) == null) {
         return "";
       }
-      String group0 = m.group(0)!;
+      String group0 = match.group(0)!;
       group0 = group0.replaceAll(RegExp(r'{{|}}'), "");
 
       return postmanGlobal[group0].toString();
     });
 
+/// Create an API Service
 _createApiService(ReCase classReCase,
     {required argResults,
     required modelFlagValue,
