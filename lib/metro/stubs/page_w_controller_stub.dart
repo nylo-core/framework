@@ -16,14 +16,22 @@ class ${className.pascalCase}Page extends NyStatefulWidget<${className.pascalCas
 
 class _${className.pascalCase}PageState extends NyState<${className.pascalCase}Page> {
 
+  /// [${className.pascalCase}Controller] controller
+  ${className.pascalCase}Controller get controller => widget.controller;
+
   @override
   init() async {
-    super.init();
 
   }
+  
+  /// Use boot if you need to load data before the view is rendered.
+  // @override
+  // boot() async {
+  //
+  // }
 
   @override
-  Widget build(BuildContext context) {
+  Widget view(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("${className.titleCase}")

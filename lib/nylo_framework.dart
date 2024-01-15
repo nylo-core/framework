@@ -42,4 +42,4 @@ export 'package:nylo_support/networking/ny_base_api_service.dart';
 export 'package:dio/dio.dart';
 
 /// Nylo version
-const String nyloVersion = 'v5.18.9';
+const String nyloVersion = 'v5.19.0';

@@ -1,3 +1,9 @@
+## [5.19.0] - 2024-01-15
+
+* Update page and controller stub to use `view` instead of `build`
+* Update the page and controller stub to include controller getter
+* Update pubspec.yaml
+
 ## [5.18.9] - 2024-01-13
 
 * Update pubspec.yaml
