@@ -1,3 +1,7 @@
+## [5.20.1] - 2024-01-18
+
+* Update README.md
+
 ## [5.20.0] - 2024-01-18
 
 * New `--bottom-nav` flag to create bottom nav pages. E.g. `metro make:page dashboard_nav --bottom-nav`
