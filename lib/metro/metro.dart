@@ -8,6 +8,7 @@ import 'package:cli_dialog/cli_dialog.dart';
 import 'package:nylo_framework/json_dart_generator/dart_code_generator.dart';
 import 'package:nylo_framework/metro/stubs/config_stub.dart';
 import 'package:nylo_framework/metro/stubs/interceptor_stub.dart';
+import 'package:nylo_framework/metro/stubs/page_bottom_nav_stub.dart';
 import 'package:nylo_framework/metro/stubs/route_guard_stub.dart';
 import 'package:nylo_support/metro/models/metro_project_file.dart';
 import 'package:nylo_support/metro/models/ny_command.dart';
@@ -47,7 +48,7 @@ List<NyCommand> allCommands = [
       name: "page",
       options: 1,
       category: "make",
-      arguments: ["-h", "-f", "-c"],
+      arguments: ["-h", "-f", "-c", "-b"],
       action: _makePage),
   NyCommand(
       name: "stateful_widget",
@@ -1021,6 +1022,13 @@ _makePage(List<String> arguments) async {
     negatable: false,
   );
 
+  parser.addFlag(
+    bottomNavFlag,
+    abbr: 'b',
+    help: 'Creates a new page with a bottom navigation bar',
+    negatable: false,
+  );
+
   final ArgResults argResults = parser.parse(arguments);
 
   MetroService.hasHelpFlag(argResults[helpFlag], parser.usage);
@@ -1044,6 +1052,38 @@ _makePage(List<String> arguments) async {
   if (argResults.arguments.first.trim() == "") {
     MetroConsole.writeInRed('You cannot create a page with an empty string');
     exit(1);
+  }
+
+  if (argResults[bottomNavFlag]) {
+    final dialogQuestions = CLI_Dialog(listQuestions: [
+      [
+        {
+          'question': 'How many tabs will the page have?',
+          'options': ["1", "2", "3", "4", "5"]
+        },
+        'bottom_tabs'
+      ],
+    ]).ask();
+
+    int bottomTabs = int.parse(dialogQuestions['bottom_tabs']);
+
+    String stubBottomNavPage = pageBottomNavStub(
+        className: argResults.arguments.first, tabCount: bottomTabs);
+
+    MetroProjectFile projectFile = MetroService.createMetroProjectFile(
+        argResults.arguments.first,
+        prefix: RegExp(r'(_?page)'));
+
+    await MetroService.makePage(
+      projectFile.name,
+      stubBottomNavPage,
+      forceCreate: hasForceFlag ?? false,
+      addToRoute: true,
+      isInitialPage: initialPage,
+      isAuthPage: authPage,
+      creationPath: projectFile.creationPath,
+    );
+    return;
   }
 
   MetroProjectFile projectFile = MetroService.createMetroProjectFile(

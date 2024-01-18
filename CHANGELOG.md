@@ -1,3 +1,9 @@
+## [5.20.0] - 2024-01-18
+
+* New `--bottom-nav` flag to create bottom nav pages. E.g. `metro make:page dashboard_nav --bottom-nav`
+* Add new stub for creating pages that use bottom navigation tabs
+* Update pubspec.yaml
+
 ## [5.19.0] - 2024-01-15
 
 * Update page and controller stub to use `view` instead of `build`
