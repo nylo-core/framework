@@ -1,3 +1,7 @@
+## [5.20.6] - 2024-01-24
+
+* Add `override` to model stub
+
 ## [5.20.5] - 2024-01-23
 
 * Update pubspec.yaml
