@@ -1,3 +1,8 @@
+## [5.20.7] - 2024-01-26
+
+* Fix postman not automatically adding the `ApiService` into the `decoders.dart` file 
+* Update pubspec.yaml
+
 ## [5.20.6] - 2024-01-24
 
 * Add `override` to model stub

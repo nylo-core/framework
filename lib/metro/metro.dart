@@ -778,6 +778,20 @@ _makePostmanApiService(
           return "";
         }
 
+        if (file.contains("final Map<Type, dynamic> apiDecoders =")) {
+          RegExp reg =
+              RegExp(r'final Map<Type, dynamic> apiDecoders = \{([^}]*)\};');
+          String temp = """
+final Map<Type, dynamic> apiDecoders = {${reg.allMatches(file).map((e) => e.group(1)).toList()[0]}
+  $apiServiceName: $apiServiceName(),
+};""";
+
+          return file.replaceFirst(
+            RegExp(r'final Map<Type, dynamic> apiDecoders = \{([^}]*)\};'),
+            temp,
+          );
+        }
+
         if (file.contains("final Map<Type, BaseApiService> apiDecoders =")) {
           RegExp reg = RegExp(
               r'final Map<Type, BaseApiService> apiDecoders = \{([^}]*)\};');

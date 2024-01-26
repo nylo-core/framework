@@ -5,10 +5,10 @@ packages:
     dependency: transitive
     description:
       name: animate_do
-      sha256: "91b3e0306ba2096c7a7e1ee1ba96f491e25e92034c215f4bf8de6a7251c4bef1"
+      sha256: cbbaa22f8e022ba905077d90e022b40bd3f0da5e72ba8c3465f203166caa952c
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.2"
+    version: "3.2.0"
   args:
     dependency: "direct main"
     description:
@@ -249,10 +249,10 @@ packages:
     dependency: "direct main"
     description:
       name: nylo_support
-      sha256: "2c55248f5742b77a17ed7cc2654623011d16e801c3ce0c19de218d575ccbf2ce"
+      sha256: d089d86ab02f166ab82595b60dfde639cc1c6dc28e28502a9dd32c4672f3680b
       url: "https://pub.dev"
     source: hosted
-    version: "5.35.1"
+    version: "5.36.0"
   page_transition:
     dependency: "direct main"
     description:
