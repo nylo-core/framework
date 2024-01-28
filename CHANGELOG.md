@@ -1,3 +1,9 @@
+## [5.20.8] - 2024-01-28
+
+* Remove `await Future.delayed(Duration(seconds: 2));` from stub
+* Update config stub
+* Update pubspec.yaml
+
 ## [5.20.7] - 2024-01-26
 
 * Fix postman not automatically adding the `ApiService` into the `decoders.dart` file 
