@@ -1,3 +1,7 @@
+## [5.20.9] - 2024-01-29
+
+* Update pubspec.yaml
+
 ## [5.20.8] - 2024-01-28
 
 * Remove `await Future.delayed(Duration(seconds: 2));` from stub
