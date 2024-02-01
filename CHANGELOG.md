@@ -1,3 +1,7 @@
+## [5.20.11] - 2024-02-01
+
+* Update page stub docs
+
 ## [5.20.10] - 2024-02-01
 
 * Update pubspec.yaml

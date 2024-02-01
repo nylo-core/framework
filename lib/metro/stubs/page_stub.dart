@@ -18,7 +18,7 @@ class _${className.pascalCase}PageState extends NyState<${className.pascalCase}P
 
   }
   
-  /// Use boot if you need to load data before the view is rendered.
+  /// Use boot if you need to load data before the [view] is rendered.
   // @override
   // boot() async {
   //
