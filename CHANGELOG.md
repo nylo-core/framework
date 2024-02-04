@@ -1,3 +1,7 @@
+## [5.20.15] - 2024-02-04
+
+* Update pubspec.yaml
+
 ## [5.20.14] - 2024-02-04
 
 * export `ny_language_switcher` to `nylo_framework.dart`
