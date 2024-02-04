@@ -37,9 +37,10 @@ export 'package:nylo_support/widgets/ny_pull_to_refresh.dart';
 export 'package:nylo_support/widgets/ny_switch.dart';
 export 'package:nylo_support/widgets/ny_list_view.dart';
 export 'package:nylo_support/widgets/ny_page.dart';
+export 'package:nylo_support/widgets/ny_language_switcher.dart';
 export 'package:nylo_support/networking/ny_api_service.dart';
 export 'package:nylo_support/networking/ny_base_api_service.dart';
 export 'package:dio/dio.dart';
 
 /// Nylo version
-const String nyloVersion = 'v5.20.13';
+const String nyloVersion = 'v5.20.14';
