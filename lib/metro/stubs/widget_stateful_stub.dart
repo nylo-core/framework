@@ -23,7 +23,6 @@ class _${rc.pascalCase}State extends NyState<${rc.pascalCase}> {
 
   @override
   init() async {
-    super.init();
     
   }
   

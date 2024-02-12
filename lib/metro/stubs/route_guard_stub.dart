@@ -5,11 +5,8 @@ String routeGuardStub(ReCase rc) => '''
 import 'package:flutter/material.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 
-/*
-|--------------------------------------------------------------------------
-| ${rc.pascalCase} Route Guard
-|--------------------------------------------------------------------------
-*/
+/* ${rc.pascalCase} Route Guard
+|-------------------------------------------------------------------------- */
 
 class ${rc.pascalCase}RouteGuard extends NyRouteGuard {
   ${rc.pascalCase}RouteGuard();

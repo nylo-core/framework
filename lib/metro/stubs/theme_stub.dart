@@ -9,13 +9,10 @@ import '/resources/themes/styles/color_styles.dart';
 import '/resources/themes/text_theme/default_text_theme.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 
-/*
+/* ${rc.titleCase} Theme
 |--------------------------------------------------------------------------
-| ${rc.titleCase} Theme
-|
 | Theme Config - config/app_theme.dart
-|--------------------------------------------------------------------------
-*/
+|-------------------------------------------------------------------------- */
 
 ThemeData ${rc.camelCase}Theme(ColorStyles color) {
   TextTheme ${rc.camelCase}Theme = getAppTextTheme(

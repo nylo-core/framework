@@ -5,11 +5,8 @@ String themeColorsStub(ReCase rc) => '''
 import 'package:flutter/material.dart';
 import '/resources/themes/styles/color_styles.dart';
 
-/*
-|--------------------------------------------------------------------------
-| ${rc.titleCase} Theme Colors
-|--------------------------------------------------------------------------
-*/
+/* ${rc.titleCase} Theme Colors
+|-------------------------------------------------------------------------- */
 
 class ${rc.pascalCase}ThemeColors implements ColorStyles {
   // general
