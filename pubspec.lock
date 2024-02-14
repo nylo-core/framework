@@ -257,10 +257,10 @@ packages:
     dependency: "direct main"
     description:
       name: nylo_support
-      sha256: f8fb56ec6b5725138c1312b56b417806ae1e37129ea22fc8f23f4fb83c0d2187
+      sha256: "1c27b78d4af01d47435549784f96bb40e0a00024f986852a0dda0854c45c00c1"
       url: "https://pub.dev"
     source: hosted
-    version: "5.45.0"
+    version: "5.47.0"
   page_transition:
     dependency: "direct main"
     description:

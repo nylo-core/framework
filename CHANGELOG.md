@@ -1,3 +1,7 @@
+## [5.21.1] - 2024-02-14
+
+* Update pubspec.yaml
+
 ## [5.21.0] - 2024-02-12
 
 * Tweak stubs
