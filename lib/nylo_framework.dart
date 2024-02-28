@@ -26,6 +26,7 @@ export 'package:nylo_support/events/sync_auth_to_backpack.dart';
 export 'package:nylo_support/validation/ny_validator.dart';
 export 'package:nylo_support/validation/rules.dart';
 export 'package:nylo_support/widgets/ny_future_builder.dart';
+export 'package:nylo_support/widgets/ny_rich_text.dart';
 export 'package:nylo_support/widgets/ny_text_field.dart';
 export 'package:nylo_support/router/models/nyrouter_route_guard.dart';
 export 'package:nylo_support/router/observers/ny_route_history_observer.dart';
@@ -43,4 +44,4 @@ export 'package:nylo_support/networking/ny_base_api_service.dart';
 export 'package:dio/dio.dart';
 
 /// Nylo version
-const String nyloVersion = 'v5.21.5';
+const String nyloVersion = 'v5.21.6';
