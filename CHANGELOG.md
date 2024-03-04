@@ -1,3 +1,8 @@
+## [5.21.7] - 2024-03-04
+
+* Add `skeletonizer` package
+* Update pubspec.yaml
+
 ## [5.21.6] - 2024-02-28
 
 * Update pubspec.yaml
