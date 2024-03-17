@@ -14,7 +14,7 @@ class ${rc.pascalCase}ApiService extends NyApiService {
   @override
   String get baseUrl => $baseUrl;
 
-${model.originalText != "Model" ? ''' 
+${model.originalText != "Model" ? '''
   /// Return a list of ${model.pascalCase}
   Future<List<${model.pascalCase}>?> fetchAll({dynamic query}) async {
     return await network<List<${model.pascalCase}>>(
