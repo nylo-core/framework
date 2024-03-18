@@ -1,3 +1,7 @@
+## [5.22.1] - 2024-03-18
+
+* Update pubspec.yaml
+
 ## [5.22.0] - 2024-03-17
 
 * Update config stub
