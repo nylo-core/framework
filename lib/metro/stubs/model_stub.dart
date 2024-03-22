@@ -13,7 +13,7 @@ class $modelName extends Model {
 
   @override
   toJson() {
-
+    return {};
   }
 }
 ''';

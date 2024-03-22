@@ -4,7 +4,7 @@ import 'package:recase/recase.dart';
 String themeStub(ReCase rc, {bool isDark = false}) => '''
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '/config/font.dart';
+import '/config/design.dart';
 import '/resources/themes/styles/color_styles.dart';
 import '/resources/themes/text_theme/default_text_theme.dart';
 import 'package:nylo_framework/nylo_framework.dart';
@@ -72,7 +72,7 @@ ThemeData ${rc.camelCase}Theme(ColorStyles color) {
 
 TextTheme _textTheme(ColorStyles color) {
   Color primaryContent = color.primaryContent;
-  TextTheme textTheme = TextTheme().apply(displayColor: primaryContent);
+  TextTheme textTheme = const TextTheme().apply(displayColor: primaryContent);
   return textTheme.copyWith(
       labelLarge: TextStyle(color: primaryContent.withOpacity(0.8))
   );

@@ -6,6 +6,7 @@ import 'package:nylo_framework/nylo_framework.dart';
 
 class ${rc.pascalCase}Provider implements NyProvider {
 
+  @override
   boot(Nylo nylo) async {
    
      // boot your provider
@@ -14,6 +15,7 @@ class ${rc.pascalCase}Provider implements NyProvider {
      return nylo;
   }
   
+  @override
   afterBoot(Nylo nylo) async {
    
      // Called after booting your provider

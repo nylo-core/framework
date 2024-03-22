@@ -8,7 +8,7 @@ import 'package:nylo_framework/nylo_framework.dart';
 class ${className.pascalCase}Page extends NyStatefulWidget {
   static const path = '/${className.paramCase}';
   
-  ${className.pascalCase}Page() : super(path, child: _${className.pascalCase}PageState());
+  ${className.pascalCase}Page({super.key}) : super(path, child: _${className.pascalCase}PageState());
 }
 
 class _${className.pascalCase}PageState extends NyState<${className.pascalCase}Page> {

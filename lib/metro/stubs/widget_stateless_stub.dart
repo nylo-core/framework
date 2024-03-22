@@ -5,7 +5,7 @@ String widgetStatelessStub(ReCase rc) => '''
 import 'package:flutter/material.dart';
 
 class ${rc.pascalCase} extends StatelessWidget {
-  const ${rc.pascalCase}({Key? key}) : super(key: key);
+  const ${rc.pascalCase}({super.key});
 
   @override
   Widget build(BuildContext context) {

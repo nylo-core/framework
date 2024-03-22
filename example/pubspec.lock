@@ -291,7 +291,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "5.23.0"
+    version: "5.24.0"
   nylo_support:
     dependency: transitive
     description:

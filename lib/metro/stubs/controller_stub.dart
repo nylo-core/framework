@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 
 class ${controllerName.pascalCase}Controller extends Controller {
   
+  @override
   construct(BuildContext context) {
     super.construct(context);
 

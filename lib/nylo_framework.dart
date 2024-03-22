@@ -45,4 +45,4 @@ export 'package:skeletonizer/skeletonizer.dart';
 export 'package:dio/dio.dart';
 
 /// Nylo version
-const String nyloVersion = 'v5.23.0';
+const String nyloVersion = 'v5.24.0';

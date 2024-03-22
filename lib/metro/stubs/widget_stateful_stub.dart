@@ -7,7 +7,7 @@ import 'package:nylo_framework/nylo_framework.dart';
 
 class ${rc.pascalCase} extends StatefulWidget {
   
-  ${rc.pascalCase}({Key? key}) : super(key: key);
+  const ${rc.pascalCase}({super.key});
   
   static String state = "${rc.snakeCase}";
 
