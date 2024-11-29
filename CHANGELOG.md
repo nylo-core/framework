@@ -1,3 +1,7 @@
+## [6.2.7] - 2024-11-29
+
+* Update pubspec.yaml
+
 ## [6.2.6] - 2024-11-29
 
 * Update widget stubs to use `view`
