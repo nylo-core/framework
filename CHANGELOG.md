@@ -1,3 +1,7 @@
+## [6.2.8] - 2024-12-01
+
+* Update NavigationHub stub
+
 ## [6.2.7] - 2024-11-29
 
 * Update pubspec.yaml

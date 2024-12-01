@@ -37,7 +37,7 @@ class _${rc.pascalCase}NavigationHubState extends NavigationHub<${rc.pascalCase}
         title: "Home",
         // page: HomeTab(), // create using: 'dart run nylo_framework:main make:stateful_widget home_tab'
         icon: Icon(Icons.home),
-        activeIcon: Icon(Icons.home_filled),
+        activeIcon: Icon(Icons.home),
       ),
       1: NavigationTab(
          title: "Settings",
