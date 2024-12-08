@@ -308,10 +308,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_timezone
-      sha256: ea53c61c9152f271a5e30624a624184804947b6a733ff2b64186bb2579446892
+      sha256: "6e6a0a9d0dfc049b209e01e1dee3efd5ff2ddf2375e9de86589761b244eb5a5f"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.1"
+    version: "4.0.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -419,15 +419,15 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "6.2.9"
+    version: "6.2.10"
   nylo_support:
     dependency: transitive
     description:
       name: nylo_support
-      sha256: eea1cdd4f70b772ad770fbb100aa2252a57c5a90dff8bdcec49a38c20532f2c9
+      sha256: "8c238153e59066ad494f287ebea5d5a1e53f58b36acb5461dddf4e648d2227d1"
       url: "https://pub.dev"
     source: hosted
-    version: "6.8.0"
+    version: "6.8.1"
   path:
     dependency: transitive
     description:
