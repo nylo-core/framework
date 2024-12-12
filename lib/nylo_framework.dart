@@ -49,6 +49,7 @@ export 'package:nylo_support/router/models/nyrouter_route_guard.dart';
 export 'package:nylo_support/router/observers/ny_route_history_observer.dart';
 export 'package:nylo_support/nylo.dart';
 export 'package:theme_provider/theme_provider.dart';
+export 'package:nylo_support/helpers/loading_style.dart';
 export 'package:nylo_support/router/page_transition/page_transition.dart';
 export 'package:nylo_support/widgets/event_bus/update_state.dart';
 export 'package:nylo_support/widgets/ny_pull_to_refresh.dart';
@@ -64,4 +65,4 @@ export 'package:date_field/date_field.dart';
 export 'package:dio/dio.dart';
 
 /// Nylo version
-const String nyloVersion = 'v6.2.10';
+const String nyloVersion = 'v6.3.0';
