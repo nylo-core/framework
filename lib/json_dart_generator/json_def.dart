@@ -356,7 +356,7 @@ class ValueDef {
 
       var keyList = List<ValueDef?>.from(childrenDef)
         ..addAll(other.childrenDef)
-        ..whereNotNull();
+        ..nonNulls;
 
       for (var i = 0; i < keyList.length; i++) {
         var element = keyList[i];
