@@ -1,3 +1,7 @@
+## [6.3.2] - 2024-12-13
+
+* Update pubspec.yaml
+
 ## [6.3.1] - 2024-12-12
 
 * Update pubspec.lock
