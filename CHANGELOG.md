@@ -1,3 +1,10 @@
+## [6.4.0] - 2024-12-16
+
+* Added: 
+* export 'package:nylo_support/widgets/styles/bottom_modal_sheet_style.dart'; 
+* export 'package:nylo_support/helpers/ny_color.dart'; 
+* export 'package:nylo_support/helpers/ny_text_style.dart';
+
 ## [6.3.2] - 2024-12-13
 
 * Update pubspec.yaml
