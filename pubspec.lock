@@ -109,10 +109,10 @@ packages:
     dependency: "direct main"
     description:
       name: date_field
-      sha256: "8926b9d02f3f93cb3022255d81692be201f2fcf47313ad6ea3461f47142f0cf8"
+      sha256: "921246e5e8fb8e22c82e234de48dde27f9c739071a38dac666258909fd2f7b14"
       url: "https://pub.dev"
     source: hosted
-    version: "5.3.4"
+    version: "6.0.0"
   dbus:
     dependency: transitive
     description:
@@ -433,10 +433,10 @@ packages:
     dependency: "direct main"
     description:
       name: nylo_support
-      sha256: "57c0788f8d611e72e03ab9bcf5858dca8d361d5283a67acd2f15e23d272f553c"
+      sha256: "8cf336cc88682b188c547760a9a2568a863698ff4edd5b6f7c99756533bb291a"
       url: "https://pub.dev"
     source: hosted
-    version: "6.12.0"
+    version: "6.12.1"
   path:
     dependency: transitive
     description:
