@@ -1,3 +1,7 @@
+## [6.5.1] - 2024-12-29
+
+* Update pubspec.yaml
+
 ## [6.5.0] - 2024-12-29
 
 * Update Form stub to include `init`
