@@ -15,6 +15,17 @@ class ${className.pascalCase}Form extends NyFormData {
 
   ${className.pascalCase}Form({String? name}) : super(name ?? "${className.snakeCase}");
 
+  // @override
+  // get init => () {
+  //   /// Initial data for the form
+  //   return {
+  //     "name": "Anthony",
+  //     "price": "100",
+  //     "favourite_color": "Blue",
+  //     "bio": "I am a Flutter Developer"
+  //   };
+  // };
+
   @override
   fields() => [
      Field.text("Name",
