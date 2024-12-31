@@ -1,3 +1,8 @@
+## [6.5.2] - 2024-12-31
+
+* Update copyright year 
+* Update pubspec.yaml
+
 ## [6.5.1] - 2024-12-29
 
 * Update pubspec.yaml
