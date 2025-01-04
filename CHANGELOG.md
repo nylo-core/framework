@@ -1,3 +1,8 @@
+## [6.5.3] - 2025-01-04
+
+* Update route guard stub
+* Update pubspec.yaml
+ 
 ## [6.5.2] - 2024-12-31
 
 * Update copyright year 

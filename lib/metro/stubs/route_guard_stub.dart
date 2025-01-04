@@ -13,7 +13,7 @@ class ${rc.pascalCase}RouteGuard extends NyRouteGuard {
   @override
   onRequest(PageRequest pageRequest) async {
     // example
-    // if (Auth.isAuthenticated() == false) {
+    // if ((await Auth.isAuthenticated()) == false) {
     //    return redirect(HomePage.path);
     // }
     //
