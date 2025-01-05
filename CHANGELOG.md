@@ -1,3 +1,7 @@
+## [6.5.4] - 2025-01-06
+
+* Update pubspec.yaml
+
 ## [6.5.3] - 2025-01-04
 
 * Update route guard stub
