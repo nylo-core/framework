@@ -1,3 +1,8 @@
+## [6.5.5] - 2025-01-12
+
+* Fix model stub
+* Update pubspec.yaml
+ 
 ## [6.5.4] - 2025-01-06
 
 * Update pubspec.yaml

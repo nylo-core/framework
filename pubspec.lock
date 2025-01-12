@@ -247,10 +247,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_secure_storage
-      sha256: "1913841ac4c7bf57cd2e05b717e1fbff7841b542962feff827b16525a781b3e4"
+      sha256: "9cad52d75ebc511adfae3d447d5d13da15a55a92c9410e50f67335b6d21d16ea"
       url: "https://pub.dev"
     source: hosted
-    version: "9.2.3"
+    version: "9.2.4"
   flutter_secure_storage_linux:
     dependency: transitive
     description:
@@ -433,10 +433,10 @@ packages:
     dependency: "direct main"
     description:
       name: nylo_support
-      sha256: "353a339f1891f48dc6941d40d098b46960d46243559fc52e932e76f0597d0de9"
+      sha256: "28707d9a8b3a71f820ce367e708139e3d3ac32e83e7af5c7f2d519533f78003f"
       url: "https://pub.dev"
     source: hosted
-    version: "6.14.4"
+    version: "6.15.0"
   path:
     dependency: transitive
     description:
@@ -609,10 +609,10 @@ packages:
     dependency: "direct main"
     description:
       name: skeletonizer
-      sha256: "3b202e4fa9c49b017d368fb0e570d4952bcd19972b67b2face071bdd68abbfae"
+      sha256: "0dcacc51c144af4edaf37672072156f49e47036becbc394d7c51850c5c1e884b"
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.2"
+    version: "1.4.3"
   sky_engine:
     dependency: transitive
     description: flutter

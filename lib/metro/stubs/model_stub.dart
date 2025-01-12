@@ -10,7 +10,7 @@ class ${modelName.pascalCase} extends Model {
   
   ${modelName.pascalCase}() : super(key: key);
   
-  ${modelName.pascalCase}.fromJson(data) {
+  ${modelName.pascalCase}.fromJson(data) : super(key: key) {
 
   }
 
