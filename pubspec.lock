@@ -5,10 +5,10 @@ packages:
     dependency: transitive
     description:
       name: animate_do
-      sha256: "7a3162729f0ea042f9dd84da217c5bde5472ad9cef644079929d4304a5dc4ca0"
+      sha256: "6f088c57833bfd638ecea7154e0b3a127b7f82d8a849c5f637a9430f977da711"
       url: "https://pub.dev"
     source: hosted
-    version: "3.3.4"
+    version: "3.3.6"
   app_badge_plus:
     dependency: transitive
     description:
@@ -149,10 +149,10 @@ packages:
     dependency: "direct main"
     description:
       name: error_stack
-      sha256: "9b4b685fbee04cc4a72f0791663caac5838585d32f83e15ab64f9c8957ec506b"
+      sha256: ffa61cf73940d61d501c97d14421a2ad7d3a2809fa38bb5c81ef3acee6f131a0
       url: "https://pub.dev"
     source: hosted
-    version: "1.10.1"
+    version: "1.10.2"
   fake_async:
     dependency: transitive
     description:
@@ -433,10 +433,10 @@ packages:
     dependency: "direct main"
     description:
       name: nylo_support
-      sha256: "9caed78495ccbb151fe36f73642973cb696099fa9414e00086198daee7d5b971"
+      sha256: "98d5e81e178f370bad7306e64d0f06c2212dd919ed783bd50fbce52a33dd3520"
       url: "https://pub.dev"
     source: hosted
-    version: "6.18.0"
+    version: "6.19.0"
   path:
     dependency: transitive
     description:
