@@ -5,10 +5,10 @@ packages:
     dependency: transitive
     description:
       name: animate_do
-      sha256: "6f088c57833bfd638ecea7154e0b3a127b7f82d8a849c5f637a9430f977da711"
+      sha256: b340b26b1e4fb578a192862bb31d5f5ab32c80f165d981f3c5d89d51c3272397
       url: "https://pub.dev"
     source: hosted
-    version: "3.3.6"
+    version: "4.0.0"
   app_badge_plus:
     dependency: transitive
     description:
@@ -433,10 +433,10 @@ packages:
     dependency: "direct main"
     description:
       name: nylo_support
-      sha256: fcec6528167d8ca4d0c8b3f989b1202f4ea5fdc8487826ba1517adb95574a94c
+      sha256: "493e8658292f571b66739a97dee8d82cdbe07b7b51e32434279368d6430633ee"
       url: "https://pub.dev"
     source: hosted
-    version: "6.19.1"
+    version: "6.19.2"
   path:
     dependency: transitive
     description:
