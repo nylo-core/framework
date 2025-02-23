@@ -14,7 +14,7 @@ class ${className.pascalCase}Page extends NyStatefulWidget<${className.pascalCas
   ${className.pascalCase}Page({super.key}) : super(child: () => _${className.pascalCase}PageState());
 }
 
-class _${className.pascalCase}PageState extends NyState<${className.pascalCase}Page> {
+class _${className.pascalCase}PageState extends NyPage<${className.pascalCase}Page> {
 
   /// [${className.pascalCase}Controller] controller
   ${className.pascalCase}Controller get controller => widget.controller;
