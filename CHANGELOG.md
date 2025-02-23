@@ -1,3 +1,9 @@
+## [6.5.13] - 2025-02-23
+
+* Update GitHub workflows
+* Merge PR from [rytisder](https://github.com/rytisder) to fix page_w_controller_stub.dart
+* Update pubspec.yaml
+
 ## [6.5.12] - 2025-02-10
 
 * Update pubspec.yaml

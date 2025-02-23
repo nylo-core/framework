@@ -31,6 +31,16 @@ class _${rc.pascalCase}State extends NyState<${rc.pascalCase}> {
     // e.g. to update this state from another class
     // updateState(${rc.pascalCase}.state, data: "example payload");
   }
+  
+  // @override
+  // Map<String, Function()> get stateActions => {
+  //   "clear_data": () {
+  //     ...
+  //
+  //     // Example how to invoke this action from another widget or class
+  //     // stateAction("clear_data", state: ${rc.pascalCase}.state);
+  //   },
+  // };
 
   @override
   Widget view(BuildContext context) {

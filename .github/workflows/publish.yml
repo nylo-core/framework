@@ -25,15 +25,15 @@ jobs:
         run: flutter analyze
 
       - name: Format code
-        run: dart format --fix .
+        run: dart format .
 
       - name: Check publish warnings
-        run: dart pub publish --dry-run
+        run: flutter pub publish --dry-run
 
       - name: Publish package
-        uses: k-paxian/dart-package-publisher@v1.5.1
+        uses: k-paxian/dart-package-publisher@master
         with:
-          credentialJson: ${{ secrets.CREDENTIAL_SECRET }} 
+          credentialJson: ${{ secrets.CREDENTIAL_SECRET }}
           flutter: true
           skipTests: true
 
