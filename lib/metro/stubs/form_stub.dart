@@ -3,6 +3,8 @@ import 'package:recase/recase.dart';
 /// This stub is used to create NyFormData.
 String formStub(ReCase className) => '''
 import 'package:nylo_framework/nylo_framework.dart';
+import 'package:flutter/material.dart';
+import '/resources/widgets/buttons/buttons.dart';
 
 /* ${className.pascalCase} Form
 |--------------------------------------------------------------------------
@@ -51,5 +53,10 @@ class ${className.pascalCase}Form extends NyFormData {
         style: "compact"
     ),
   ];
+  
+  // @override
+  // Widget? get submitButton => Button.primary(text: "Submit", submitForm: (this, (data) {
+  //   print(['data', data]);
+  // }));
 }
 ''';

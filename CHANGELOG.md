@@ -1,3 +1,8 @@
+## [6.6.0] - 2025-02-27
+
+* Update Form stub to include `submitButton`
+* Update pubspec.yaml
+
 ## [6.5.13] - 2025-02-23
 
 * Update GitHub workflows

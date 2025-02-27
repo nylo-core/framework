@@ -5,18 +5,18 @@ packages:
     dependency: transitive
     description:
       name: animate_do
-      sha256: "874604dbe3ffbe2303c3f3332dcc44c8fdbc60025c666df2813e8b7594bb8e20"
+      sha256: e5c8b92e8495cba5adfff17c0b017d50f46b2766226e9faaf68bc08c91aef034
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.1"
+    version: "4.2.0"
   app_badge_plus:
     dependency: transitive
     description:
       name: app_badge_plus
-      sha256: cda59a8194352e308c824af6099bd338917b17d065a3bce6818013f032099611
+      sha256: a254b58e8b0f47ab6b4a3d596b839b8a8bdc187da7dc69a6b02fa09fab5fd7c8
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.6"
+    version: "1.2.0"
   args:
     dependency: transitive
     description:
@@ -149,10 +149,10 @@ packages:
     dependency: transitive
     description:
       name: error_stack
-      sha256: ffa61cf73940d61d501c97d14421a2ad7d3a2809fa38bb5c81ef3acee6f131a0
+      sha256: ff50365afc48969e9ba3c5aab032c67d6d282be7e4a8eea9bf7fbd81d2414cc8
       url: "https://pub.dev"
     source: hosted
-    version: "1.10.2"
+    version: "1.10.3"
   fake_async:
     dependency: transitive
     description:
@@ -321,10 +321,10 @@ packages:
     dependency: transitive
     description:
       name: get_time_ago
-      sha256: "1bf7bebe32e070e2a5aa9a84ee401c88895de337e9e168e70416ec3373771243"
+      sha256: "3bf66b9de4ddf8f9f3621f384ea67fe5c861126e7102df00444e9008b5508287"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0"
+    version: "2.3.0"
   http:
     dependency: transitive
     description:
@@ -419,15 +419,15 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "6.5.13"
+    version: "6.6.0"
   nylo_support:
     dependency: transitive
     description:
       name: nylo_support
-      sha256: "73daf0b4e5be0c3e9a19a473423eeec75962056ff259c0adf23fc518c315204a"
+      sha256: "6be0333f52b24658bda8223a5748e2ac0334ecc7622b616437c97286cb64d1f4"
       url: "https://pub.dev"
     source: hosted
-    version: "6.19.3"
+    version: "6.20.0"
   path:
     dependency: transitive
     description:
