@@ -1,3 +1,7 @@
+## [6.6.1] - 2025-02-28
+
+* Update pubspec.yaml
+
 ## [6.6.0] - 2025-02-27
 
 * Update Form stub to include `submitButton`
