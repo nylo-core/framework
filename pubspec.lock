@@ -13,10 +13,10 @@ packages:
     dependency: transitive
     description:
       name: app_badge_plus
-      sha256: a254b58e8b0f47ab6b4a3d596b839b8a8bdc187da7dc69a6b02fa09fab5fd7c8
+      sha256: "3b319d12719ecd4fd2c44099f1ce1df622eff7d958f3c99776b17313bfcf25e3"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   args:
     dependency: "direct main"
     description:
@@ -247,10 +247,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_multi_formatter
-      sha256: "68274ade17e836e7de9080ad354aa4322906baee2abf49afb1f6fec99ff17aea"
+      sha256: "01e8ba4cfae4b52377d1c83e57293da24eb64696d7c2df064acc4ae97bb4a157"
       url: "https://pub.dev"
     source: hosted
-    version: "2.13.0"
+    version: "2.13.7"
   flutter_secure_storage:
     dependency: "direct main"
     description:
@@ -441,10 +441,10 @@ packages:
     dependency: "direct main"
     description:
       name: nylo_support
-      sha256: c095ee4a01860163a603079fc560e9a2d0bb9ca57342867676bcccb30a9318a0
+      sha256: "129db2690adf8b17fb602ed7478eeab0651a97eba1ecd5b0f7ddc503d7d871be"
       url: "https://pub.dev"
     source: hosted
-    version: "6.21.0"
+    version: "6.22.0"
   path:
     dependency: transitive
     description:
