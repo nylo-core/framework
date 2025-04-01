@@ -441,10 +441,10 @@ packages:
     dependency: "direct main"
     description:
       name: nylo_support
-      sha256: b9a821f580866b1898026f918a4ca0af376a32bc8958a8553d8b9b3e3eb5b9a5
+      sha256: "6c7fdb11a68b6e0fed128edfd7d7d6459db43ad35df5613a0b2387062f3641a2"
       url: "https://pub.dev"
     source: hosted
-    version: "6.22.1"
+    version: "6.23.0"
   path:
     dependency: transitive
     description:
