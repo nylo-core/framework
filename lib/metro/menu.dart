@@ -29,4 +29,5 @@ All commands:
   make:route_guard
   make:config
   make:interceptor
+  make:command
 """;

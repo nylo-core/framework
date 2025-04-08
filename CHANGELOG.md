@@ -1,3 +1,11 @@
+## [6.7.0] - 2025-04-08
+
+* Added: `make:command` to metro cli so you can create custom commands in Nylo 🚀 
+* Added: New stub for creating commands
+* Update metro cli to support custom commands
+* New ny_cli.dart file to handle custom commands
+* Update pubspec.yaml
+
 ## [6.6.5] - 2025-04-01
 
 * Update pubspec.yaml

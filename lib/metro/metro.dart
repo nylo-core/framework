@@ -4,29 +4,30 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:nylo_framework/cli_dialog/cli_dialog.dart';
-import 'package:nylo_framework/json_dart_generator/dart_code_generator.dart';
-import 'package:nylo_framework/metro/stubs/config_stub.dart';
-import 'package:nylo_framework/metro/stubs/form_stub.dart';
-import 'package:nylo_framework/metro/stubs/interceptor_stub.dart';
-import 'package:nylo_framework/metro/stubs/navigation_hub_stub.dart';
-import 'package:nylo_framework/metro/stubs/route_guard_stub.dart';
-import 'package:nylo_framework/metro/stubs/widget_state_managed_stub.dart';
+import 'package:nylo_framework/metro/stubs/custom_command_stub.dart';
+import '/cli_dialog/cli_dialog.dart';
+import '/json_dart_generator/dart_code_generator.dart';
+import '/metro/stubs/config_stub.dart';
+import '/metro/stubs/form_stub.dart';
+import '/metro/stubs/interceptor_stub.dart';
+import '/metro/stubs/navigation_hub_stub.dart';
+import '/metro/stubs/route_guard_stub.dart';
+import '/metro/stubs/widget_state_managed_stub.dart';
 import 'package:nylo_support/metro/models/metro_project_file.dart';
 import 'package:nylo_support/metro/models/ny_command.dart';
-import 'package:nylo_framework/metro/stubs/api_service_stub.dart';
-import 'package:nylo_framework/metro/stubs/controller_stub.dart';
-import 'package:nylo_framework/metro/stubs/event_stub.dart';
-import 'package:nylo_framework/metro/stubs/model_stub.dart';
-import 'package:nylo_framework/metro/stubs/network_method_stub.dart';
-import 'package:nylo_framework/metro/stubs/page_stub.dart';
-import 'package:nylo_framework/metro/stubs/page_w_controller_stub.dart';
-import 'package:nylo_framework/metro/stubs/postman_api_service_stub.dart';
-import 'package:nylo_framework/metro/stubs/provider_stub.dart';
-import 'package:nylo_framework/metro/stubs/theme_colors_stub.dart';
-import 'package:nylo_framework/metro/stubs/theme_stub.dart';
-import 'package:nylo_framework/metro/stubs/widget_stateful_stub.dart';
-import 'package:nylo_framework/metro/stubs/widget_stateless_stub.dart';
+import '/metro/stubs/api_service_stub.dart';
+import '/metro/stubs/controller_stub.dart';
+import '/metro/stubs/event_stub.dart';
+import '/metro/stubs/model_stub.dart';
+import '/metro/stubs/network_method_stub.dart';
+import '/metro/stubs/page_stub.dart';
+import '/metro/stubs/page_w_controller_stub.dart';
+import '/metro/stubs/postman_api_service_stub.dart';
+import '/metro/stubs/provider_stub.dart';
+import '/metro/stubs/theme_colors_stub.dart';
+import '/metro/stubs/theme_stub.dart';
+import '/metro/stubs/widget_stateful_stub.dart';
+import '/metro/stubs/widget_stateless_stub.dart';
 import 'package:nylo_support/metro/constants/strings.dart';
 import 'package:nylo_support/metro/metro_console.dart';
 import 'package:nylo_support/metro/metro_service.dart';
@@ -124,6 +125,12 @@ List<NyCommand> allCommands = [
       arguments: ["-h", "-f"],
       category: "make",
       action: _makeConfig),
+  NyCommand(
+      name: "command",
+      options: 1,
+      arguments: ["-h", "-f"],
+      category: "make",
+      action: _makeCommand),
 ];
 
 /// Creates a config file for Nylo projects
@@ -153,6 +160,40 @@ _makeConfig(List<String> arguments) async {
   String stubConfig = configStub(classReCase);
   await MetroService.makeConfig(classReCase.snakeCase, stubConfig,
       forceCreate: hasForceFlag ?? false);
+}
+
+/// Creates a command file for Nylo projects
+/// E.g. run: `dart run nylo_framework:main make:command OptimizeAssets`
+_makeCommand(List<String> arguments) async {
+  parser.addFlag(helpFlag,
+      abbr: 'h', help: 'e.g. make:command OptimizeAssets', negatable: false);
+  parser.addFlag(forceFlag,
+      abbr: 'f',
+      help: 'Creates a new command file even if it already exists.',
+      negatable: false);
+  parser.addOption(commandCategoryOption,
+      abbr: 'c', help: 'The category for the command.', defaultsTo: "app");
+
+  final ArgResults argResults = parser.parse(arguments);
+
+  // options
+  bool? hasForceFlag = argResults[forceFlag];
+  String categoryValue = argResults[commandCategoryOption] ?? "app";
+
+  MetroService.hasHelpFlag(argResults[helpFlag], parser.usage);
+
+  MetroService.checkArguments(arguments,
+      'You are missing the \'name\' of the command file that you want to create.\ne.g. make:command update_cocopods');
+
+  String commandName = argResults.arguments.first.snakeCase
+      .replaceAll(RegExp(r'(_?command)'), "");
+
+  ReCase classReCase = ReCase(commandName);
+
+  String stubCommand =
+      customCommandStub(customCommand: classReCase, category: categoryValue);
+  await MetroService.makeCommand(classReCase.snakeCase, stubCommand,
+      forceCreate: hasForceFlag ?? false, category: categoryValue);
 }
 
 /// Creates a config file for Nylo projects
