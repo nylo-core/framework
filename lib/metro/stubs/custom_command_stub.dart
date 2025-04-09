@@ -17,9 +17,7 @@ class _${customCommand.pascalCase}Command extends NyCustomCommand {
   _${customCommand.pascalCase}Command(super.arguments);
 
   @override
-  CommandBuilder get builder {
-    final command = CommandBuilder();
-
+  CommandBuilder builder(CommandBuilder command) {
     /// Example adding flags and options
     // command.addFlag('verbose', abbr: 'v', defaultValue: false);
     // command.addOption('version', defaultValue: '1.0.0');

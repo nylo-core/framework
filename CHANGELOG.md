@@ -1,3 +1,7 @@
+## [6.7.2] - 2025-04-09
+
+* Update command stub
+
 ## [6.7.1] - 2025-04-09
 
 * Update `builder` in NyCustomCommand class
