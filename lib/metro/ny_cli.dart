@@ -17,25 +17,35 @@ export 'package:dio/dio.dart';
 /// Base class for custom commands
 abstract class NyCustomCommand {
   /// Define the command configuration
-  CommandBuilder get builder;
+  CommandBuilder builder(CommandBuilder commandBuilder) => commandBuilder;
+
+  CommandBuilder? _builder;
 
   List<String> arguments;
 
   /// Execute the command with parsed results
   Future<void> handle(CommandResult result);
 
-  NyCustomCommand(this.arguments);
+  NyCustomCommand(this.arguments) {
+    CommandBuilder commandBuilder = CommandBuilder();
+    _builder = builder(commandBuilder);
+  }
 
   /// Run the command
   run() {
+    assert(
+      _builder != null,
+      'CommandBuilder must be initialized before running the command.',
+    );
+
     // Handle help flag
     if (arguments.contains('--help') || arguments.contains('-h')) {
       print('\nUsage:');
-      print(builder.usage);
+      print(_builder!.usage);
       return;
     }
 
-    final CommandResult result = builder.parse(arguments);
+    final CommandResult result = _builder!.parse(arguments);
     handle(result);
   }
 

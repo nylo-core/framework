@@ -427,7 +427,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "6.7.0"
+    version: "6.7.1"
   nylo_support:
     dependency: transitive
     description:

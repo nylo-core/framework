@@ -1,3 +1,7 @@
+## [6.7.1] - 2025-04-09
+
+* Update `builder` in NyCustomCommand class
+
 ## [6.7.0] - 2025-04-08
 
 * Added: `make:command` to metro cli so you can create custom commands in Nylo 🚀 
