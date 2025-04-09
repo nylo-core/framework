@@ -1,3 +1,7 @@
+## [6.7.3] - 2025-04-09
+
+* Update pubspec.yaml
+
 ## [6.7.2] - 2025-04-09
 
 * Update command stub
