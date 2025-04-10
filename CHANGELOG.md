@@ -1,3 +1,7 @@
+## [6.7.4] - 2025-04-10
+
+* Fix commands not being run using `runProcess`
+
 ## [6.7.3] - 2025-04-09
 
 * Update pubspec.yaml

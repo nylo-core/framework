@@ -590,8 +590,12 @@ _makeApiService(List<String> arguments) async {
         classReCase: classReCase,
         hasForceFlag: hasForceFlag,
         baseUrlFlagValue: baseUrlFlagValue);
-    await MetroService.runProcess("dart format lib/app/models");
-    await MetroService.runProcess("dart format lib/app/networking");
+    await Process.start("dart", ["format", "lib/app/models"],
+        mode: ProcessStartMode.inheritStdio);
+
+    await Process.start("dart", ["format", "lib/app/networking"],
+        mode: ProcessStartMode.inheritStdio);
+
     exit(0);
   }
 
@@ -1086,7 +1090,8 @@ _makeModel(List<String> arguments) async {
     String modelData = await MetroService.loadAsset("nylo-model.json");
 
     // delete "nylo-model.json"
-    await MetroService.runProcess("rm nylo-model.json");
+    Process.start("rm", [fileName],
+        runInShell: true, mode: ProcessStartMode.normal);
     MetroConsole.writeInBlack("\n");
 
     DartCodeGenerator generator = DartCodeGenerator(
@@ -1110,8 +1115,15 @@ _makeModel(List<String> arguments) async {
     String creationPath = (projectFile.creationPath != null
         ? "${projectFile.creationPath!}/"
         : "");
-    await MetroService.runProcess(
-        "dart format lib/app/models/$creationPath${projectFile.name.snakeCase}.dart");
+
+    Process.start(
+        "dart",
+        [
+          "format",
+          "lib/app/models/$creationPath${projectFile.name.snakeCase}.dart"
+        ],
+        runInShell: true,
+        mode: ProcessStartMode.normal);
   }
 }
 
