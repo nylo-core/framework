@@ -1090,7 +1090,7 @@ _makeModel(List<String> arguments) async {
     String modelData = await MetroService.loadAsset("nylo-model.json");
 
     // delete "nylo-model.json"
-    Process.start("rm", [fileName],
+    await Process.start("rm", [fileName],
         runInShell: true, mode: ProcessStartMode.normal);
     MetroConsole.writeInBlack("\n");
 
@@ -1116,7 +1116,7 @@ _makeModel(List<String> arguments) async {
         ? "${projectFile.creationPath!}/"
         : "");
 
-    Process.start(
+    await Process.start(
         "dart",
         [
           "format",

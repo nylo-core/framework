@@ -1,3 +1,7 @@
+## [6.7.5] - 2025-04-11
+
+* Small refactor to metro.dart
+
 ## [6.7.4] - 2025-04-10
 
 * Fix commands not being run using `runProcess`
