@@ -1,3 +1,7 @@
+## [6.7.6] - 2025-04-11
+
+* Fix methods: `addPackage` and `addPackages`
+
 ## [6.7.5] - 2025-04-11
 
 * Small refactor to metro.dart

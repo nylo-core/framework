@@ -101,13 +101,13 @@ abstract class NyCustomCommand {
   }
 
   /// Add a package to the pubspec.yaml file
-  addPackage(String package, {String? version, bool dev = false}) {
-    MetroService.addPackage(package, dev: dev, version: version);
+  addPackage(String package, {String? version, bool dev = false}) async {
+    await MetroService.addPackage(package, dev: dev, version: version);
   }
 
   /// Add multiple packages to the pubspec.yaml file
-  addPackages(List<String> packages, {bool dev = false}) {
-    MetroService.addPackages(packages, dev: dev);
+  addPackages(List<String> packages, {bool dev = false}) async {
+    await MetroService.addPackages(packages, dev: dev);
   }
 
   /// Prints a message in blue color
