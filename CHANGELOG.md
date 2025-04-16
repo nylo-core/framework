@@ -1,3 +1,7 @@
+## [6.8.1] - 2025-04-16
+
+* Fix `runProcess` in ny_cli.dart
+ 
 ## [6.8.0] - 2025-04-16
 
 * New stub for creating `JourneyState`s in your project

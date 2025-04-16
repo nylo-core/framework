@@ -52,13 +52,8 @@ abstract class NyCustomCommand {
   /// Run a process with the given command
   runProcess(String command,
       {String? workingDirectory, bool? runInShell, bool silent = false}) async {
-    if (silent == false) {
-      // Print the command being run
-      print('Running command: $command');
-    }
-
-    // Split the command into parts
-    final List<String> parts = command.split(' ');
+    // Parse command properly handling quotes
+    final List<String> parts = _parseCommand(command);
     final String executable = parts[0];
     final List<String> args = parts.sublist(1);
 
@@ -90,14 +85,48 @@ abstract class NyCustomCommand {
       if (exitCode != 0) {
         // Print an error message if the process failed
         error('Command failed with exit code: $exitCode');
-      } else {
-        // Print a success message if the process succeeded
-        success('Command completed successfully.');
       }
     }
 
     // Return the exit code
     return exitCode;
+  }
+
+  // Helper method to parse command strings correctly handling quotes
+  List<String> _parseCommand(String command) {
+    final List<String> parts = [];
+    bool inQuotes = false;
+    String currentPart = '';
+    String quoteChar = '';
+
+    for (int i = 0; i < command.length; i++) {
+      final char = command[i];
+
+      if ((char == '"' || char == "'") && (i == 0 || command[i - 1] != '\\')) {
+        if (!inQuotes) {
+          inQuotes = true;
+          quoteChar = char;
+        } else if (char == quoteChar) {
+          inQuotes = false;
+          quoteChar = '';
+        } else {
+          currentPart += char;
+        }
+      } else if (char == ' ' && !inQuotes) {
+        if (currentPart.isNotEmpty) {
+          parts.add(currentPart);
+          currentPart = '';
+        }
+      } else {
+        currentPart += char;
+      }
+    }
+
+    if (currentPart.isNotEmpty) {
+      parts.add(currentPart);
+    }
+
+    return parts;
   }
 
   /// Add a package to the pubspec.yaml file
