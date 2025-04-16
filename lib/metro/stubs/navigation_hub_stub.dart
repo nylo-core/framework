@@ -22,6 +22,7 @@ class _${rc.pascalCase}NavigationHubState extends NavigationHub<${rc.pascalCase}
   /// Layouts: 
   /// - [NavigationHubLayout.bottomNav] Bottom navigation
   /// - [NavigationHubLayout.topNav] Top navigation
+  /// - [NavigationHubLayout.journey] Journey navigation
   NavigationHubLayout? layout = NavigationHubLayout.bottomNav(
     // backgroundColor: Colors.white,
   );
@@ -32,19 +33,22 @@ class _${rc.pascalCase}NavigationHubState extends NavigationHub<${rc.pascalCase}
 
   /// Navigation pages
   _${rc.pascalCase}NavigationHubState() : super(() async {
+    /// * Creating Navigation Tabs
+    /// [Navigation Tabs] 'dart run nylo_framework:main make:stateful_widget home_tab,settings_tab'
+    /// [Journey States] 'dart run nylo_framework:main make:journey_widget welcome_tab,users_dob,users_info --parent=${rc.pascalCase}'
     return {
-      0: NavigationTab(
-        title: "Home",
-        // page: HomeTab(), // create using: 'dart run nylo_framework:main make:stateful_widget home_tab'
-        icon: Icon(Icons.home),
-        activeIcon: Icon(Icons.home),
-      ),
-      1: NavigationTab(
-         title: "Settings",
-         // page: SettingsTab(), // create using: 'dart run nylo_framework:main make:stateful_widget settings_tab'
-         icon: Icon(Icons.settings),
-         activeIcon: Icon(Icons.settings),
-      ),
+      // 0: NavigationTab(
+      //   title: "Home",
+      //   // page: HomeTab(),
+      //   icon: Icon(Icons.home),
+      //   activeIcon: Icon(Icons.home),
+      // ),
+      // 1: NavigationTab(
+      //    title: "Settings",
+      //    // page: SettingsTab(),
+      //    icon: Icon(Icons.settings),
+      //    activeIcon: Icon(Icons.settings),
+      // ),
     };
   });
 

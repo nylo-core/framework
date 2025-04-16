@@ -4,7 +4,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:nylo_framework/metro/stubs/custom_command_stub.dart';
+import '/metro/stubs/navigation_tab_state_journey.dart';
+import '/metro/stubs/custom_command_stub.dart';
 import '/cli_dialog/cli_dialog.dart';
 import '/json_dart_generator/dart_code_generator.dart';
 import '/metro/stubs/config_stub.dart';
@@ -59,6 +60,12 @@ List<NyCommand> allCommands = [
       arguments: ["-h", "-f"],
       category: "make",
       action: _makeStatefulWidget),
+  NyCommand(
+      name: "journey_widget",
+      options: 1,
+      arguments: ["-h", "-f"],
+      category: "make",
+      action: _makeJourneyWidget),
   NyCommand(
       name: "stateless_widget",
       options: 1,
@@ -246,15 +253,101 @@ _makeStatefulWidget(List<String> arguments) async {
   MetroService.checkArguments(arguments,
       'You are missing the \'name\' of the stateful widget that you want to create.\ne.g. make:stateful_widget my_new_widget');
 
-  String widgetName = argResults.arguments.first.snakeCase
-      .replaceAll(RegExp(r'(_?widget)'), "");
+  final String? firstArgument = argResults.arguments.first;
+  if (firstArgument?.contains(",") ?? false) {
+    List<String> argumentsList = firstArgument!.split(",");
+    for (var argument in argumentsList) {
+      // create stateful widget for each argument
+      String widgetName =
+          argument.snakeCase.replaceAll(RegExp(r'(_?widget)'), "");
 
-  ReCase classReCase = ReCase(widgetName);
+      ReCase classReCase = ReCase(widgetName);
 
-  String stubStatefulWidget = widgetStatefulStub(classReCase);
-  await MetroService.makeStatefulWidget(
-      classReCase.snakeCase, stubStatefulWidget,
-      forceCreate: hasForceFlag ?? false);
+      String stubStatefulWidget = widgetStatefulStub(classReCase);
+      await MetroService.makeStatefulWidget(
+          classReCase.snakeCase, stubStatefulWidget,
+          forceCreate: hasForceFlag ?? false);
+    }
+  } else {
+    // create stateful widget for the first argument
+    String widgetName =
+        firstArgument!.snakeCase.replaceAll(RegExp(r'(_?widget)'), "");
+
+    ReCase classReCase = ReCase(widgetName);
+
+    String stubStatefulWidget = widgetStatefulStub(classReCase);
+    await MetroService.makeStatefulWidget(
+        classReCase.snakeCase, stubStatefulWidget,
+        forceCreate: hasForceFlag ?? false);
+  }
+}
+
+/// Creates a Journey Widget file for Nylo projects
+/// E.g. run: `dart run nylo_framework:main make:journey_widget welcome_tab,users_dob,users_info --parent=Onboarding`
+_makeJourneyWidget(List<String> arguments) async {
+  parser.addFlag(helpFlag,
+      abbr: 'h',
+      help: 'e.g. make:journey_widget welcome_tab,users_dob,users_info',
+      negatable: false);
+  parser.addFlag(forceFlag,
+      abbr: 'f',
+      help: 'Creates a new journey widget even if it already exists.',
+      negatable: false);
+  parser.addOption(parentOption,
+      abbr: 'p', help: 'The parent navigation hub for the journey widget.');
+
+  final ArgResults argResults = parser.parse(arguments);
+
+  bool? hasForceFlag = argResults[forceFlag];
+  String? parentNavigationHub = argResults[parentOption];
+
+  if (parentNavigationHub == null) {
+    MetroConsole.writeInRed(
+        "You must provide a parent navigation hub for the journey widget.\ne.g. make:journey_widget welcome_tab --parent=Onboarding");
+    exit(1);
+  }
+
+  ReCase parentReCase = ReCase(parentNavigationHub);
+  // remove NavigationHub if it exists
+  if (parentReCase.snakeCase.contains("navigation_hub")) {
+    parentReCase = ReCase(
+        parentReCase.snakeCase.replaceAll(RegExp(r'(_?navigation_hub)'), ""));
+  }
+
+  MetroService.hasHelpFlag(argResults[helpFlag], parser.usage);
+
+  MetroService.checkArguments(arguments,
+      'You are missing the \'name\' of the journey widget that you want to create.\ne.g. make:journey_widget my_new_widget');
+
+  final String? firstArgument = argResults.arguments.first;
+  if (firstArgument?.contains(",") ?? false) {
+    List<String> argumentsList = firstArgument!.split(",");
+    for (var argument in argumentsList) {
+      // create journey widget for each argument
+      String widgetName =
+          argument.snakeCase.replaceAll(RegExp(r'(_?widget)'), "");
+
+      ReCase classReCase = ReCase(widgetName);
+
+      String stubStatefulWidget = navigationTabJourneyStateStub(classReCase,
+          parentNavigationHub: parentReCase);
+      await MetroService.makeJourneyWidget(
+          classReCase.snakeCase, stubStatefulWidget,
+          forceCreate: hasForceFlag ?? false);
+    }
+  } else {
+    // create journey widget for the first argument
+    String widgetName =
+        firstArgument!.snakeCase.replaceAll(RegExp(r'(_?widget)'), "");
+
+    ReCase classReCase = ReCase(widgetName);
+
+    String stubStatefulWidget = navigationTabJourneyStateStub(classReCase,
+        parentNavigationHub: parentReCase);
+    await MetroService.makeJourneyWidget(
+        classReCase.snakeCase, stubStatefulWidget,
+        forceCreate: hasForceFlag ?? false);
+  }
 }
 
 /// Creates a State Managed Widget file for Nylo projects
@@ -338,14 +431,33 @@ _makeStatelessWidget(List<String> arguments) async {
   MetroService.checkArguments(arguments,
       'You are missing the \'name\' of the widget that you want to create.\ne.g. make:stateless_widget my_new_widget');
 
-  String widgetName = argResults.arguments.first.snakeCase
-      .replaceAll(RegExp(r'(_?widget)'), "");
-  ReCase classReCase = ReCase(widgetName);
+  final String? firstArgument = argResults.arguments.first;
+  if (firstArgument?.contains(",") ?? false) {
+    List<String> argumentsList = firstArgument!.split(",");
+    for (var argument in argumentsList) {
+      // create stateless widget for each argument
+      String widgetName =
+          argument.snakeCase.replaceAll(RegExp(r'(_?widget)'), "");
 
-  String stubStatelessWidget = widgetStatelessStub(classReCase);
-  await MetroService.makeStatelessWidget(
-      classReCase.snakeCase, stubStatelessWidget,
-      forceCreate: hasForceFlag ?? false);
+      ReCase classReCase = ReCase(widgetName);
+
+      String stubStatelessWidget = widgetStatelessStub(classReCase);
+      await MetroService.makeStatelessWidget(
+          classReCase.snakeCase, stubStatelessWidget,
+          forceCreate: hasForceFlag ?? false);
+    }
+  } else {
+    // create stateless widget for the first argument
+    String widgetName =
+        firstArgument!.snakeCase.replaceAll(RegExp(r'(_?widget)'), "");
+
+    ReCase classReCase = ReCase(widgetName);
+
+    String stubStatelessWidget = widgetStatelessStub(classReCase);
+    await MetroService.makeStatelessWidget(
+        classReCase.snakeCase, stubStatelessWidget,
+        forceCreate: hasForceFlag ?? false);
+  }
 }
 
 /// Creates a Route Guard for Nylo projects

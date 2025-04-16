@@ -1,3 +1,11 @@
+## [6.8.0] - 2025-04-16
+
+* New stub for creating `JourneyState`s in your project
+* Update `navigation_hub` stub
+* Ability to create multiple `stateful_widget`s at once using Metro. E.g. `metro make:stateful_widget home,settings`
+* Ability to create multiple `stateless_widget`s at once using Metro. E.g. `metro make:stateless_widget home,settings`
+* pubspec.yaml updates
+
 ## [6.7.6] - 2025-04-11
 
 * Fix methods: `addPackage` and `addPackages`
