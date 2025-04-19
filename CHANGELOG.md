@@ -1,3 +1,7 @@
+## [6.8.2] - 2025-04-19
+
+* pubspec.yaml updates
+
 ## [6.8.1] - 2025-04-16
 
 * Fix `runProcess` in ny_cli.dart
