@@ -1,3 +1,8 @@
+## [6.8.5] - 2025-05-02
+
+* Fix: postman imports
+* pubspec.yaml updates
+
 ## [6.8.4] - 2025-04-30
 
 * pubspec.yaml updates

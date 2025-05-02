@@ -897,7 +897,12 @@ _makePostmanApiService(
       }
 
       if (responseBody != null && modelName != null) {
-        dynamic jsonResponseBody = jsonDecode(responseBody);
+        dynamic jsonResponseBody;
+        try {
+          jsonResponseBody = jsonDecode(responseBody);
+        } on Exception catch (_) {
+          jsonResponseBody = null;
+        }
 
         // create a model in the users directory
         var generator = DartCodeGenerator(
@@ -1006,9 +1011,10 @@ _makePostmanApiService(
           return "";
         }
 
-        if (file.contains("final Map<Type, dynamic> apiDecoders =")) {
-          RegExp reg =
-              RegExp(r'final Map<Type, dynamic> apiDecoders = \{([^}]*)\};');
+        RegExp reg =
+            RegExp(r'final Map<Type, dynamic> apiDecoders = \{([^}]*)\};');
+        if (file.contains("final Map<Type, dynamic> apiDecoders =") &&
+            reg.allMatches(file).map((e) => e.group(1)).toList().isNotEmpty) {
           String temp = """
 final Map<Type, dynamic> apiDecoders = {${reg.allMatches(file).map((e) => e.group(1)).toList()[0]}
   $apiServiceName: $apiServiceName(),

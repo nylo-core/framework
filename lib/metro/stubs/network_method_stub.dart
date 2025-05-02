@@ -17,7 +17,7 @@ String networkMethodStub({
   //$method\n${urlFullPath != null ? '  /// $urlFullPath' : ''}
   Future<${_getType(model, isList: isList, isOptional: true)}> $methodName(${_mapParams(queryParams, dataParams, pathParams)}) async => await network${_getType(model, isList: isList, returnDynamic: false, addBrackets: true)}(
     ${_callBackType(headers: headerParams, method: method, path: path, queryParams: queryParams, dataParams: dataParams, pathParams: pathParams)}
-    ${urlFullPath != null ? 'baseUrl: "${Uri.parse(urlFullPath).origin}"' : ''}
+    ${urlFullPath != null ? 'baseUrl: "${Uri.tryParse(urlFullPath)?.origin}"' : ''}
   );
 ''';
 
