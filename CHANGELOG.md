@@ -1,3 +1,7 @@
+## [6.8.7] - 2025-05-23
+
+* pubspec.yaml updates
+
 ## [6.8.6] - 2025-05-08
 
 * pubspec.yaml updates
