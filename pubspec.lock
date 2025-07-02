@@ -329,10 +329,10 @@ packages:
     dependency: transitive
     description:
       name: get_time_ago
-      sha256: "1c6ccc877e480eee559987411ec5242cecc088d45fc821f0d8aec98bbf4f210e"
+      sha256: cd111914562ca2b938afbc73f715fab1f37795cc053924d08f6de59878781388
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.1"
+    version: "2.3.2"
   http:
     dependency: transitive
     description:
@@ -433,10 +433,10 @@ packages:
     dependency: "direct main"
     description:
       name: nylo_support
-      sha256: d1d81869fcfd04ed296d49003f349a1494d1a7cab74bab0e48928391df0da227
+      sha256: "6a2a28f486e2a595246b0a4d0653e1e8fd5f92a3d2d6f7ec4747e85eeef38221"
       url: "https://pub.dev"
     source: hosted
-    version: "6.31.0"
+    version: "6.32.0"
   path:
     dependency: transitive
     description:
