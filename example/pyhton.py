@@ -1,0 +1,21 @@
+
+name: nylo_framework_example
+description: Demonstrates how to use the Nylo plugin.
+
+environment:
+  sdk: '>=2.19.0 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  nylo_framework:
+    path: ../
+
+flutter:
+
+  uses-material-design: true
