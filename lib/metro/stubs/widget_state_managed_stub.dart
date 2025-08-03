@@ -26,14 +26,9 @@ class _${rc.pascalCase}State extends NyState<${rc.pascalCase}> {
     // 'stateData' will contain the current state data
   };
   
-  @override
-  stateUpdated(dynamic data) async {
-    // e.g. to update this state from another class
-    // updateState(${rc.pascalCase}.state, data: "example payload");
-  }
-  
   // @override
-  // Map<String, Function()> get stateActions => {
+  // Map<String, Function> get stateActions => {
+  //   "add_data": (myData) {},
   //   "clear_data": () {
   //     ...
   //

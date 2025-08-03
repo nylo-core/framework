@@ -1,3 +1,9 @@
+## [6.8.15] - 2025-08-04
+
+* Fix controller stub
+* Update state managed stub
+* pubspec.yaml updates
+
 ## [6.8.14] - 2025-07-18
 
 * pubspec.yaml updates
