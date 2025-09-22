@@ -202,10 +202,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_local_notifications
-      sha256: a9966c850de5e445331b854fa42df96a8020066d67f125a5964cbc6556643f68
+      sha256: "7ed76be64e8a7d01dfdf250b8434618e2a028c9dfa2a3c41dc9b531d4b3fc8a5"
       url: "https://pub.dev"
     source: hosted
-    version: "19.4.1"
+    version: "19.4.2"
   flutter_local_notifications_linux:
     dependency: transitive
     description:
@@ -226,10 +226,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_local_notifications_windows
-      sha256: ed46d7ae4ec9d19e4c8fa2badac5fe27ba87a3fe387343ce726f927af074ec98
+      sha256: "8d658f0d367c48bd420e7cf2d26655e2d1130147bca1eea917e576ca76668aaf"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.3"
   flutter_localizations:
     dependency: transitive
     description: flutter
@@ -316,10 +316,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_timezone
-      sha256: "13b2109ad75651faced4831bf262e32559e44aa549426eab8a597610d385d934"
+      sha256: ccad42fbb5d01d51d3eb281cc4428fca556cc4063c52bd9fa40f80cd93b8e649
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.1"
+    version: "5.0.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -441,10 +441,10 @@ packages:
     dependency: "direct main"
     description:
       name: nylo_support
-      sha256: e08c595e832c1543118ea665d5ee71899214cf91089eddfcfe691c1f2b828d31
+      sha256: "0fcfb272e3f9cc00f367da77baa4f5286b2acacf4c87dc26acdef8bb9ffa267d"
       url: "https://pub.dev"
     source: hosted
-    version: "6.35.1"
+    version: "6.35.2"
   path:
     dependency: transitive
     description:
