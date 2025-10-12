@@ -441,10 +441,10 @@ packages:
     dependency: "direct main"
     description:
       name: nylo_support
-      sha256: "0fcfb272e3f9cc00f367da77baa4f5286b2acacf4c87dc26acdef8bb9ffa267d"
+      sha256: e91b09c5d64ce6b65814d274cd78ad2e1ecf833643c8c3e9ec1f642a03b48f62
       url: "https://pub.dev"
     source: hosted
-    version: "6.35.2"
+    version: "6.36.0"
   path:
     dependency: transitive
     description:
@@ -814,10 +814,10 @@ packages:
     dependency: transitive
     description:
       name: win32
-      sha256: "66814138c3562338d05613a6e368ed8cfb237ad6d64a9e9334be3f309acfca03"
+      sha256: d7cb55e04cd34096cd3a79b3330245f54cb96a370a1c27adb3c84b917de8b08e
       url: "https://pub.dev"
     source: hosted
-    version: "5.14.0"
+    version: "5.15.0"
   xdg_directories:
     dependency: transitive
     description:
