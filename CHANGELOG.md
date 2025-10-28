@@ -1,3 +1,8 @@
+## [6.9.0] - 2025-10-28
+
+* Added new `makeFile` command to the ny_cli.dart file
+* pubspec.yaml updates
+
 ## [6.8.18] - 2025-10-12
 
 * pubspec.yaml updates

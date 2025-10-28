@@ -1,6 +1,7 @@
 library nylo_framework;
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:args/args.dart';
 import 'package:nylo_support/metro/metro_service.dart';
@@ -137,6 +138,29 @@ abstract class NyCustomCommand {
   /// Add multiple packages to the pubspec.yaml file
   addPackages(List<String> packages, {bool dev = false}) async {
     await MetroService.addPackages(packages, dev: dev);
+  }
+
+  /// Create a file with the given content
+  /// [overrideFile] - whether to override the file if it already exists
+  /// [fileMode] - the file mode to use when creating the file
+  /// [encoding] - the encoding to use when writing the file
+  /// [flush] - whether to flush the file after writing
+  Future<bool> makeFile(
+    String path,
+    String content, {
+    bool overrideFile = false,
+    FileMode fileMode = FileMode.write,
+    Encoding encoding = utf8,
+    bool flush = false,
+  }) async {
+    return await MetroService.createFile(
+      path,
+      content,
+      overrideFile: overrideFile,
+      fileMode: fileMode,
+      encoding: encoding,
+      flush: flush,
+    );
   }
 
   /// Prints a message in blue color
