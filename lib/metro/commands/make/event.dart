@@ -22,7 +22,8 @@ class _MakeEventCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final eventName = requireArgument(result, message: 'An event name is required');
+    final eventName =
+        requireArgument(result, message: 'An event name is required');
 
     String cleanEventName =
         eventName.snakeCase.replaceAll(RegExp(r'(_?event)'), "");

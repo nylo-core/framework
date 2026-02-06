@@ -23,7 +23,8 @@ class _MakeConfigCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final configName = requireArgument(result, message: 'A config name is required');
+    final configName =
+        requireArgument(result, message: 'A config name is required');
 
     String cleanConfigName =
         configName.snakeCase.replaceAll(RegExp(r'(_?config)'), "");

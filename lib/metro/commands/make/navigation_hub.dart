@@ -29,7 +29,8 @@ class _MakeNavigationHubCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final className = requireArgument(result, message: 'A navigation hub name is required');
+    final className =
+        requireArgument(result, message: 'A navigation hub name is required');
 
     String cleanClassName =
         className.snakeCase.replaceAll(RegExp(r'(_?page)'), "");
@@ -45,7 +46,8 @@ class _MakeNavigationHubCommand extends NyCustomCommand {
     info('Choose a layout type:');
     newLine();
     line('  1. navigation_tabs');
-    line('     Bottom navigation with persistent tabs (e.g., Home, Search, Profile)');
+    line(
+        '     Bottom navigation with persistent tabs (e.g., Home, Search, Profile)');
     line('     Best for: Main app navigation with 3-5 primary sections');
     newLine();
     line('  2. journey_states');
@@ -140,7 +142,8 @@ class _MakeNavigationHubCommand extends NyCustomCommand {
             creationPath: childCreationPath,
             folderPath: pagesPath);
       } else {
-        final stub = widgetStatefulStub(childRc, content: 'Center(child: Text("${childRc.titleCase}").bodyLarge())');
+        final stub = widgetStatefulStub(childRc,
+            content: 'Center(child: Text("${childRc.titleCase}").bodyLarge())');
         await MetroService.makeStatefulWidget(childRc.snakeCase, stub,
             forceCreate: result.hasForceFlag,
             creationPath: childCreationPath,

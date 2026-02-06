@@ -25,7 +25,8 @@ class _MakeStateManagedWidgetCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final widgetName = requireArgument(result, message: 'A widget name is required');
+    final widgetName =
+        requireArgument(result, message: 'A widget name is required');
 
     String cleanWidgetName =
         widgetName.snakeCase.replaceAll(RegExp(r'(_?widget)'), "");

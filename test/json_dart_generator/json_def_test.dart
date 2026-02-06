@@ -64,7 +64,12 @@ void main() {
       test('returns summarized structure', () {
         final jsonDef = JsonDef(
           rootClassName: 'Test',
-          jsonData: {'items': [{'id': 1}, {'id': 2}]},
+          jsonData: {
+            'items': [
+              {'id': 1},
+              {'id': 2}
+            ]
+          },
           rootClassNameWithPrefixSuffix: true,
         );
 

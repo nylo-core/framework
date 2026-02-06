@@ -33,7 +33,8 @@ void main() {
         message: 'Internal server error',
       );
 
-      expect(exception.toString(), equals('ApiException: 500 - Internal server error'));
+      expect(exception.toString(),
+          equals('ApiException: 500 - Internal server error'));
     });
 
     test('implements Exception', () {
@@ -53,7 +54,8 @@ void main() {
     test('toString returns formatted message', () {
       final exception = TimeoutException('Connection timed out');
 
-      expect(exception.toString(), equals('TimeoutException: Connection timed out'));
+      expect(exception.toString(),
+          equals('TimeoutException: Connection timed out'));
     });
 
     test('implements Exception', () {
@@ -93,7 +95,8 @@ void main() {
     test('toString returns formatted message', () {
       final exception = RequestCancelledException('Cancelled');
 
-      expect(exception.toString(), equals('RequestCancelledException: Cancelled'));
+      expect(
+          exception.toString(), equals('RequestCancelledException: Cancelled'));
     });
 
     test('implements Exception', () {

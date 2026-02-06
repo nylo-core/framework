@@ -27,7 +27,8 @@ class _MakeCommandCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final commandName = requireArgument(result, message: 'A command name is required');
+    final commandName =
+        requireArgument(result, message: 'A command name is required');
     final String categoryValue =
         result.getString("category", defaultValue: "app")!;
 

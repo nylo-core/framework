@@ -25,7 +25,8 @@ class _MakeStatefulWidgetCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final firstArgument = requireArgument(result, message: 'A widget name is required');
+    final firstArgument =
+        requireArgument(result, message: 'A widget name is required');
 
     if (firstArgument.contains(",")) {
       // Handle comma-separated widget names

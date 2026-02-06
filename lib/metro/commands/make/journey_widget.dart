@@ -31,7 +31,8 @@ class _MakeJourneyWidgetCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final firstArgument = requireArgument(result, message: 'A journey widget name is required');
+    final firstArgument =
+        requireArgument(result, message: 'A journey widget name is required');
     final String parentNavigationHub = result.getString("parent") ?? "";
 
     if ((parentNavigationHub).isEmpty) {

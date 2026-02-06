@@ -27,7 +27,7 @@ void main() {
       expect(metroMenu, contains('All commands:'));
     });
 
-group('Widget Commands section', () {
+    group('Widget Commands section', () {
       test('contains section header', () {
         expect(metroMenu, contains('[Widget Commands]'));
       });

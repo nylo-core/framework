@@ -200,7 +200,8 @@ void main() {
       });
 
       test('throws for invalid type name', () {
-        expect(() => ClassType.name('InvalidType'), throwsA(equals('InvalidType')));
+        expect(() => ClassType.name('InvalidType'),
+            throwsA(equals('InvalidType')));
       });
     });
 
@@ -228,7 +229,8 @@ void main() {
       });
 
       test('does not contain non-primitive types', () {
-        expect(ClassType.primitiveTypes, isNot(contains(ClassType.tListDynamic)));
+        expect(
+            ClassType.primitiveTypes, isNot(contains(ClassType.tListDynamic)));
         expect(ClassType.primitiveTypes, isNot(contains(ClassType.tDynamic)));
         expect(ClassType.primitiveTypes, isNot(contains(ClassType.tObject)));
         expect(ClassType.primitiveTypes, isNot(contains(ClassType.tNull)));

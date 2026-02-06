@@ -22,7 +22,8 @@ class _MakeFormCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final formName = requireArgument(result, message: 'A form name is required');
+    final formName =
+        requireArgument(result, message: 'A form name is required');
 
     String cleanFormName =
         formName.snakeCase.replaceAll(RegExp(r'(_?form)'), "");

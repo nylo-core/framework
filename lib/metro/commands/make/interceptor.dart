@@ -25,7 +25,8 @@ class _MakeInterceptorCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final interceptorName = requireArgument(result, message: 'An interceptor name is required');
+    final interceptorName =
+        requireArgument(result, message: 'An interceptor name is required');
 
     String cleanInterceptorName =
         interceptorName.snakeCase.replaceAll(RegExp(r'(_?interceptor)'), "");

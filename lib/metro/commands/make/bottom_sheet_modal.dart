@@ -131,7 +131,8 @@ class _MakeBottomSheetModalCommand extends NyCustomCommand {
     final staticMethod = bottomSheetModalStaticMethodStub(nameReCase);
 
     // Find the closing brace of the last class in the file
-    final classMatches = RegExp(r'class\s+\w+').allMatches(fileContent).toList();
+    final classMatches =
+        RegExp(r'class\s+\w+').allMatches(fileContent).toList();
     if (classMatches.isNotEmpty) {
       final lastClassStart = classMatches.last.start;
       int braceCount = 0;

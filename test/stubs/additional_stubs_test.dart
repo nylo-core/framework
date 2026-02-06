@@ -364,7 +364,8 @@ void main() {
     test('imports ny_cli', () {
       final stub = customCommandStub(customCommand: ReCase('example'));
 
-      expect(stub, contains("import 'package:nylo_framework/metro/ny_cli.dart'"));
+      expect(
+          stub, contains("import 'package:nylo_framework/metro/ny_cli.dart'"));
     });
   });
 }

@@ -16,19 +16,19 @@ class _MakeControllerCommand extends NyCustomCommand {
     command.addFlag("help",
         abbr: "h", help: "Used to make new controllers e.g. home_controller");
     command.addFlag("force",
-        abbr: "f",
-        help: "Creates a new controller even if it already exists.");
+        abbr: "f", help: "Creates a new controller even if it already exists.");
 
     return command;
   }
 
   @override
   Future<void> handle(CommandResult result) async {
-    String controllerName = requireArgument(result, message: 'A controller name is required');
+    String controllerName =
+        requireArgument(result, message: 'A controller name is required');
 
     // Remove Controller suffix if present (case-insensitive) to avoid duplication
-    controllerName =
-        controllerName.replaceAll(RegExp(r'controller$', caseSensitive: false), '');
+    controllerName = controllerName.replaceAll(
+        RegExp(r'controller$', caseSensitive: false), '');
 
     MetroProjectFile projectFile = MetroService.createMetroProjectFile(
         controllerName,

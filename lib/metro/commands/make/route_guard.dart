@@ -25,7 +25,8 @@ class _MakeRouteGuardCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final routeGuardName = requireArgument(result, message: 'A route guard name is required');
+    final routeGuardName =
+        requireArgument(result, message: 'A route guard name is required');
 
     String cleanRouteGuardName =
         routeGuardName.snakeCase.replaceAll(RegExp(r'(_?route_guard)'), "");

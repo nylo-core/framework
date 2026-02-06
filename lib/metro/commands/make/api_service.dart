@@ -29,8 +29,8 @@ class _MakeApiServiceCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final apiServiceName = requireArgument(result,
-        message: 'API service name is required');
+    final apiServiceName =
+        requireArgument(result, message: 'API service name is required');
 
     String cleanApiServiceName =
         apiServiceName.snakeCase.replaceAll(RegExp(r'(_?api_service)'), "");
@@ -54,7 +54,8 @@ class _MakeApiServiceCommand extends NyCustomCommand {
       force: result.hasForceFlag,
     );
 
-    await dartFormat('$networkingPath/${classReCase.snakeCase}_api_service.dart');
+    await dartFormat(
+        '$networkingPath/${classReCase.snakeCase}_api_service.dart');
 
     info('Add the API service to your config/decoders.dart file');
   }

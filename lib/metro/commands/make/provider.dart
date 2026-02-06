@@ -24,7 +24,8 @@ class _MakeProviderCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final providerName = requireArgument(result, message: 'A provider name is required');
+    final providerName =
+        requireArgument(result, message: 'A provider name is required');
 
     String cleanProviderName =
         providerName.snakeCase.replaceAll(RegExp(r'(_?provider)'), "");
