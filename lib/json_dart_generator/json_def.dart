@@ -239,9 +239,12 @@ class ValueDef {
 
   bool isStructSame(ValueDef other, {bool debug = false}) {
     if (childrenDef is List<ValueDef> && other.childrenDef is List<ValueDef>) {
-      var thisFirst = (childrenDef as List<ValueDef>).first;
-      var otherFirst = (other.childrenDef as List<ValueDef>).first;
-      return thisFirst.isStructSame(otherFirst);
+      var thisList = childrenDef as List<ValueDef>;
+      var otherList = other.childrenDef as List<ValueDef>;
+      if (thisList.isEmpty || otherList.isEmpty) {
+        return thisList.isEmpty && otherList.isEmpty;
+      }
+      return thisList.first.isStructSame(otherList.first);
     } else if (childrenDef is Map<String, ValueDef> &&
         other.childrenDef is Map<String, ValueDef>) {
       var thisKeyList = (childrenDef as Map<String, ValueDef>).entries;
@@ -354,15 +357,16 @@ class ValueDef {
         other.type == ClassType.tListDynamic) {
       ValueDef? elementDef;
 
-      var keyList = List<ValueDef?>.from(childrenDef)
-        ..addAll(other.childrenDef)
-        ..nonNulls;
+      var keyList = (List<ValueDef?>.from(childrenDef)
+            ..addAll(other.childrenDef))
+          .nonNulls
+          .toList();
 
       for (var i = 0; i < keyList.length; i++) {
         var element = keyList[i];
 
         elementDef ??= element;
-        elementDef = elementDef!._summarizeData(element!);
+        elementDef = elementDef._summarizeData(element);
 
         listType = elementDef.type;
         if (listType == ClassType.tDynamic) {

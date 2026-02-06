@@ -7,19 +7,13 @@ import 'package:nylo_framework/nylo_framework.dart';
 class ${rc.pascalCase}Provider implements NyProvider {
 
   @override
-  boot(Nylo nylo) async {
-   
-     // boot your provider
-     // ...
-   
-     return nylo;
-  }
+  setup(Nylo nylo) async => nylo;
   
   @override
-  afterBoot(Nylo nylo) async {
-   
-     // Called after Nylo has finished booting
-     // ...
+  boot(Nylo nylo) async {
+    // This method is called after all providers are setup.
+    // You can use it to perform any additional bootstrapping tasks.
+    // ...
   }
 }
 ''';

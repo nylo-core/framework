@@ -39,13 +39,17 @@ extension DartCodeGenerator on ValueDef {
             var prefix = detectListInner(value);
             text += '$prefix ${key.lowerCamel()};';
           } else if (value.type == ClassType.tObject) {
-            late ValueDef findCustomDef;
+            ValueDef? findCustomDef;
             try {
-              findCustomDef = findCustomObject(value)!;
+              findCustomDef = findCustomObject(value);
             } catch (e) {
               print(value);
             }
-            text += '${findCustomDef.classNameFull}? ${key.lowerCamel()};';
+            if (findCustomDef != null) {
+              text += '${findCustomDef.classNameFull}? ${key.lowerCamel()};';
+            } else {
+              text += 'dynamic ${key.lowerCamel()};';
+            }
           } else {
             var typeShow = '${value.type}';
             if (!value.type.isDynamic) {
@@ -183,9 +187,11 @@ extension DartCodeGenerator on ValueDef {
               listInnerTypeShow(innerType),
             )}; \n}';
           } else if (value.type == ClassType.tObject) {
-            var findCustomDef = findCustomObject(value)!;
-            body +=
-                '${key.lowerCamel()} = json[\'$key\'] != null ?  ${findCustomDef.classNameFull}.fromJson(json[\'${value.key}\']) : null;';
+            var findCustomDef = findCustomObject(value);
+            if (findCustomDef != null) {
+              body +=
+                  '${key.lowerCamel()} = json[\'$key\'] != null ?  ${findCustomDef.classNameFull}.fromJson(json[\'$key\']) : null;';
+            }
           } else {
             body += '${key.lowerCamel()} = json[\'$key\']';
 

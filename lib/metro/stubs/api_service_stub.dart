@@ -4,7 +4,7 @@ import 'package:recase/recase.dart';
 String apiServiceStub(ReCase rc,
         {required ReCase model, required String baseUrl}) =>
     '''import 'package:flutter/material.dart';
-import '/config/decoders.dart';
+import '/bootstrap/decoders.dart';
 ${baseUrl == "getEnv('API_BASE_URL')" ? "import 'package:nylo_framework/nylo_framework.dart';" : ""}${model.originalText != 'Model' ? "\nimport '/app/models/${model.snakeCase}.dart';" : ""}
 
 class ${rc.pascalCase}ApiService extends NyApiService {
@@ -12,6 +12,12 @@ class ${rc.pascalCase}ApiService extends NyApiService {
 
   @override
   String get baseUrl => $baseUrl;
+  
+  @override
+  get interceptors => {
+    ...super.interceptors,
+    // MyCustomInterceptor: MyCustomInterceptor(),
+  };
 
 ${model.originalText != "Model" ? '''
   /// Return a list of ${model.pascalCase}

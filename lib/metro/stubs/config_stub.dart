@@ -4,9 +4,13 @@ import 'package:recase/recase.dart';
 String configStub(ReCase configName) => '''
 /* ${configName.titleCase}
 |--------------------------------------------------------------------------
-| Learn more: https://nylo.dev/docs/6.x/configuration
+| Learn more: https://nylo.dev/docs/7.x/configuration
 |-------------------------------------------------------------------------- */
 
-// ...
+final class ${configName.pascalCase}Config {
+  // Add your configuration values here
+  static final String exampleValue = "exampleValue";
 
+  // ...
+}
 ''';

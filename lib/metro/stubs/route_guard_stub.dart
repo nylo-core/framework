@@ -11,16 +11,18 @@ class ${rc.pascalCase}RouteGuard extends NyRouteGuard {
   ${rc.pascalCase}RouteGuard();
 
   @override
-  onRequest(PageRequest pageRequest) async {
+  Future<GuardResult> onBefore(RouteContext context) async {
     // example
     // if ((await Auth.isAuthenticated()) == false) {
     //    return redirect(HomePage.path);
     // }
     //
     // helpers
-    // data = will give you access to the data passed to the route
-    // context = will give you access to the BuildContext
-    return pageRequest;
+    // context.data - data passed to the route
+    // context.queryParameters - query parameters from the URL
+    // context.routeName - the route being navigated to
+    // context.context - the BuildContext
+    return next();
   }
 }
 ''';

@@ -1,27 +1,97 @@
-## [6.9.2] - 2025-12-13
+## [7.0.0] - 2026-02-06
 
-* pubspec.yaml updates
+### Added
+* **New modular command system** - All Metro CLI commands are now individual classes under `lib/metro/commands/make/`, each extending `NyCustomCommand` with a builder pattern. Commands are registered in `built_in_commands.dart` as a simple map lookup
+* **`make:bottom_sheet_modal` command** - Generate bottom sheet modal widgets with auto-registration in `bottom_sheet_modals.dart`
+* **`make:button` command** - Generate button widgets with auto-registration in the `Button` class
+* **`make:env` command** - Generate an encrypted `env.g.dart` file from your `.env` file using XOR encryption with APP_KEY. Supports `--dart-define` mode for build-time key injection
+* **`make:key` command** - Generate a secure 32-character APP_KEY for environment variable encryption
+* **New `env_stub.dart`** - Stub for generating encrypted environment configuration class with automatic type parsing and caching
+* **New `bottom_sheet_modal_stub.dart`** - Stub for generating bottom sheet modal widgets and their static registration methods
+* **New `button_stub.dart`** - Stub for generating button widgets and their static registration methods
+* **New `lib/metro/helpers/metro_helpers.dart`** - Extracted `NyJson` helper class and `createNyloModel` helper function
+* **New `lib/app/` directory** - Added app directory structure with example model
+* **Extensive new helper methods in `NyCustomCommand`**:
+  * Output helpers: `line()`, `newLine()`, `comment()`, `alert()`
+  * File system helpers: `fileExists()`, `directoryExists()`, `readFile()`, `readFileSync()`, `writeFile()`, `writeFileSync()`, `appendFile()`, `ensureDirectory()`, `deleteFile()`, `copyFile()`
+  * Environment helpers: `env()`, `isWindows`, `isMacOS`, `isLinux`, `workingDirectory`
+  * Input helpers: `ask()` (alias for prompt), `promptSecret()` for hidden input
+  * Control flow: `abort()` to exit with error
+  * Table display: `table()` with `ConsoleTable` class for formatted ASCII tables
+  * Progress bar: `progressBar()` with `ConsoleProgressBar` class
+  * String case conversion: `snakeCase()`, `camelCase()`, `pascalCase()`, `titleCase()`, `kebabCase()`, `constantCase()`
+  * Flutter project path helpers: `modelsPath`, `controllersPath`, `widgetsPath`, `pagesPath`, `commandsPath`, `configPath`, `providersPath`, `eventsPath`, `networkingPath`, `themesPath`, `projectPath()`
+  * File scaffolding: `scaffold()`, `scaffoldMany()` with `ScaffoldFile` class
+  * JSON/YAML helpers: `readJson()`, `readJsonArray()`, `writeJson()`, `appendToJsonArray()`, `readYaml()`
+  * Dart/Flutter command helpers: `dartFormat()`, `dartAnalyze()`, `flutterPubGet()`, `flutterClean()`, `flutterBuild()`, `flutterTest()`
+  * Dart file manipulation: `addImport()`, `insertBeforeClosingBrace()`, `fileContains()`, `fileContainsPattern()`
+  * Directory helpers: `listDirectory()`, `findFiles()`, `deleteDirectory()`, `copyDirectory()`
+  * Validation: `isValidDartIdentifier()`, `requireArgument()`, `cleanClassName()`, `cleanFileName()`
+  * Task runner: `runTasks()`, `runTasksWithSpinner()` with `CommandTask` class
+* **New `ConsoleTable` class** - Renders formatted ASCII tables with box-drawing characters and bold headers
+* **New `ConsoleProgressBar` class** - Displays progress bars with percentage tracking, tick/update/complete controls
+* **New `SpinnerExtension` methods** - `withProgress()` and `withProgressSync()` for processing lists with progress bars
+* **New `ScaffoldFile` class** - Data class for batch file scaffolding operations
+* **New `CommandTask` class** - Data class for task runner operations with optional stop-on-error
+* **`CommandResult.hasHelpFlag` and `hasForceFlag` convenience getters**
+* **New `flutter_local_notifications` export** in `nylo_framework.dart`
+* **New dependency: `patrol` (^4.1.0)** for testing
+* **New dependency: `yaml` (^3.1.3)** for YAML file parsing
+* **New dependency: `rename` (^3.1.0)** as dev dependency
+* **New `executables` section in pubspec.yaml** - `metro: main` for direct CLI invocation
+* **Comprehensive test suite** - New test directories: `test/commands/`, `test/console/`, `test/json_dart_generator/`, `test/metro/`, `test/stubs/` with tests for command builder, console components, spinner, JSON processing, scaffold files, menu display, stubs, and API exceptions
+* **`NyTheme` class overhaul** - New static methods: `currentId()`, `current()`, `themeData()`, `isDark()`, `colors<T>()`, `setFollowSystem()`, `isFollowingSystem()`, `getById()`, `all()`, `lightThemes()`, `darkThemes()`, `getByType()`, `setPreferredDark()`, `setPreferredLight()`, `preferredDarkId()`, `preferredLightId()`, `clearSavedTheme()`
+* **`NyTheme.set()` now supports `remember` parameter** - Sets preferred theme for system theme following
 
-## [6.9.1] - 2025-11-15
+### Changed
+* **Metro CLI entry point (`bin/main.dart`) rewritten** - Now uses direct command map lookup via `builtInCommands` instead of routing through the old `metro.dart` monolithic handler. Shows menu on no arguments, supports custom command discovery
+* **Framework exports simplified (`lib/nylo_framework.dart`)** - Replaced 18+ individual `nylo_support` exports with single `export 'package:nylo_support/ny_core.dart'` re-export
+* **`NyCustomCommand.run()` is now async** (`Future<void> run()`) and properly awaits `handle()`
+* **`NyCustomCommand` exports updated** - Now exports from `package:nylo_support/metro/ny_metro.dart` and `/metro/helpers/metro_helpers.dart` instead of multiple individual support package paths
+* **`CommandBuilder` constructor** - No longer auto-adds `--help` flag by default
+* **`CommandResult` return types made nullable** - `getString()`, `getBool()`, `getInt()` now return nullable types with nullable defaults instead of non-nullable with required defaults
+* **Provider stub updated** - `boot()` renamed to `setup()`, `afterBoot()` replaced with `boot()` (called after all providers are setup)
+* **Route guard stub updated** - `onRequest(PageRequest)` replaced with `onBefore(RouteContext)` returning `Future<GuardResult>`, with new context helpers (`context.data`, `context.queryParameters`, `context.routeName`, `context.context`)
+* **Form stub updated** - `NyFormData` renamed to `NyFormWidget`, constructor uses `super.key`, `super.submitButton`, `super.onSubmit`, `super.onFailure`. Fields use `FormCollection.fromArray()` for picker options, `validator` instead of `validate`, removed `style: "compact"`. Added static `NyFormActions` getter
+* **API service stub updated** - Import path changed from `/config/decoders.dart` to `/bootstrap/decoders.dart`, added `interceptors` getter override
+* **Config stub updated** - Now generates a `final class` with static members instead of loose comments, docs link updated to 7.x
+* **Custom command stub updated** - Simplified usage docs (removed duplicate terminal/metro instructions)
+* **Navigation hub stub rewritten** - Now accepts `layoutBuilder`, `imports`, and `navigationEntries` parameters. Layout uses `layout(BuildContext context)` method instead of property assignment. Added `initialIndex` override. Navigation pages use a synchronous map constructor `super(() => {...})` instead of async
+* **Navigation hub creation (`make:navigation_hub`)** - Now interactive: prompts for layout type (navigation_tabs or journey_states) and child names. Generates hub and child widgets under organized folder structure (`navigation_hubs/<hub>/tabs/` or `navigation_hubs/<hub>/states/`)
+* **Journey state stub improved** - New `isLastStep` parameter. Last step gets `onJourneyComplete` callback. Navigation buttons (Back/Continue) now built inline. Removed `onCannotContinue()` and `onAfterNext()` overrides. Updated to use `nextStep` instead of `onNextPressed`
+* **Model stub formatting** - Removed extra blank lines for cleaner output
+* **State managed widget stub updated** - Added static `action()` method for easier state action invocation. Updated example comments to use new `Follow.action()` pattern. Simplified `init` to synchronous
+* **Stateful widget stub updated** - `widgetStatefulStub()` now accepts optional `content` parameter
+* **`NyTheme.set()` is now async** and delegates to `NyThemeManager.instance.setTheme()` instead of `ThemeProvider`
+* **JSON dart generator fixes** - `findCustomObject()` now returns nullable `ValueDef?` with proper null checks, `isStructSame` handles empty list comparison, `_summarizeData` list merging fixed with proper `nonNulls.toList()` chain, fromJson uses correct key reference
+* **README.md** - All documentation links updated from `6.x` to `7.x`
+* **LICENSE** - Copyright year updated to 2026
+* **pubspec.yaml updates**:
+  * Repository URL updated to `7.x` branch
+  * `nylo_support` dependency changed to path reference (`path: ../support`)
+  * `skeletonizer` updated to `^2.1.2`
+  * `error_stack` updated to `^2.0.0`
+  * Added `flutter_local_notifications: ^20.0.0`
+  * Added `yaml: ^3.1.3`
+  * Added `patrol: ^4.1.0`
+  * Added `rename: ^3.1.0` (dev dependency)
+  * Added `executables` section with `metro: main`
+  * Added `uses-material-design: true`
 
-* pubspec.yaml updates
-
-## [6.9.0] - 2025-10-28
-
-* Added new `makeFile` command to the ny_cli.dart file
-* pubspec.yaml updates
-
-## [6.8.18] - 2025-10-12
-
-* pubspec.yaml updates
-
-## [6.8.17] - 2025-09-22
-
-* pubspec.yaml updates
-
-## [6.8.16] - 2025-09-06
-
-* pubspec.yaml updates
+### Removed
+* **`lib/metro/metro.dart`** - Monolithic 1,400+ line command handler replaced by modular command classes
+* **`lib/cli_dialog/` directory** - Entire CLI dialog library removed (7 files: `cli_dialog.dart`, `dialog.dart`, `keys.dart`, `list_chooser.dart`, `services.dart`, `stdin_service.dart`, `stdout_service.dart`, `xterm.dart`)
+* **`lib/metro/stubs/theme_stub.dart`** - Theme generation stub removed
+* **`lib/metro/stubs/theme_colors_stub.dart`** - Theme colors generation stub removed
+* **`lib/metro/stubs/network_method_stub.dart`** - Network method stub removed
+* **`lib/metro/stubs/postman_api_service_stub.dart`** - Postman API service stub removed
+* **`make:theme` command** - Removed from Metro CLI menu
+* **`NyCustomCommand.makeFile()` method** - Removed in favor of `scaffold()` and `writeFile()` helpers
+* **`theme_provider` dependency** - Replaced by `NyThemeManager` from nylo_support
+* **`flutter_secure_storage` dependency** - Removed from direct exports
+* **`flutter_dotenv` dependency** - Removed (replaced by encrypted env system)
+* **Individual nylo_support exports** - 18+ individual exports replaced by single `ny_core.dart` barrel export
+* **`nyloVersion` updated** from `v6.9.2` to `v7.0.0`
 
 ## [6.8.15] - 2025-08-04
 

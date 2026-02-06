@@ -18,17 +18,20 @@ All commands:
   make:state_managed_widget
   make:navigation_hub
   make:journey_widget
+  make:bottom_sheet_modal
+  make:button
   make:form
 
-[App Commands]
+[Helper Commands]
   make:model
   make:provider
   make:api_service
   make:controller
   make:event
-  make:theme
   make:route_guard
   make:config
   make:interceptor
   make:command
+  make:env
+  make:key
 """;

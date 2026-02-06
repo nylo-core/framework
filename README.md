@@ -18,24 +18,24 @@ This project is open source and MIT-licenced, we welcome any contributions. You 
 
 ## Features
 Some core features available
-* [Routing](https://nylo.dev/docs/6.x/router).
-* [Light and dark themes](https://nylo.dev/docs/6.x/themes-and-styling).
-* [Localization](https://nylo.dev/docs/6.x/localization).
-* [CLI for generating project files](https://nylo.dev/docs/6.x/metro).
-* [Elegant API Services for Networking](https://nylo.dev/docs/6.x/networking).
-* [State Management](https://nylo.dev/docs/6.x/state-management).
-* [Validation](https://nylo.dev/docs/6.x/validation).
-* [Form Handling](https://nylo.dev/docs/6.x/forms).
-* [Creating App Icons](https://nylo.dev/docs/6.x/app-icons).
-* [Project Configuration](https://nylo.dev/docs/6.x/configuration).
-* [Streamlined Project Structure](https://nylo.dev/docs/6.x/directory-structure).
+* [Routing](https://nylo.dev/docs/7.x/router).
+* [Light and dark themes](https://nylo.dev/docs/7.x/themes-and-styling).
+* [Localization](https://nylo.dev/docs/7.x/localization).
+* [CLI for generating project files](https://nylo.dev/docs/7.x/metro).
+* [Elegant API Services for Networking](https://nylo.dev/docs/7.x/networking).
+* [State Management](https://nylo.dev/docs/7.x/state-management).
+* [Validation](https://nylo.dev/docs/7.x/validation).
+* [Form Handling](https://nylo.dev/docs/7.x/forms).
+* [Creating App Icons](https://nylo.dev/docs/7.x/app-icons).
+* [Project Configuration](https://nylo.dev/docs/7.x/configuration).
+* [Streamlined Project Structure](https://nylo.dev/docs/7.x/directory-structure).
 
 ## Documentation
 
 Visit the docs on [Nylo](https://nylo.dev/docs) to view our extensive and thorough documentation. 
 
 ## Changelog
-Please see [CHANGELOG](https://github.com/nylo-core/framework/blob/5.20.0/CHANGELOG.md) for more information what has changed recently.
+Please see [CHANGELOG](https://github.com/nylo-core/framework/blob/7.x/CHANGELOG.md) for more information what has changed recently.
 
 ## Social
 * [Twitter](https://twitter.com/nylo_dev)
@@ -45,4 +45,4 @@ If you discover any security related issues, please email support@nylo.dev inste
 
 ## Licence
 
-The MIT License (MIT). Please view the [License](https://github.com/nylo-core/nylo/blob/5.20.0/LICENSE) File for more information.
+The MIT License (MIT). Please view the [License](https://github.com/nylo-core/framework/blob/7.x/LICENSE) File for more information.
