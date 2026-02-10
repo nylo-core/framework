@@ -15,7 +15,7 @@ ${imports.join('\n')}
 class ${rc.pascalCase}NavigationHub extends NyStatefulWidget with BottomNavPageControls {
   static RouteView path = ("/${rc.paramCase}", (_) => ${rc.pascalCase}NavigationHub());
   
-  ${rc.pascalCase}NavigationHub()
+  ${rc.pascalCase}NavigationHub({super.key})
       : super(
             child: () => _${rc.pascalCase}NavigationHubState(),
             stateName: path.stateName());

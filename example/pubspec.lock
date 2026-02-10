@@ -173,10 +173,10 @@ packages:
     dependency: transitive
     description:
       name: ffi
-      sha256: "289279317b4b16eb2bb7e271abccd4bf84ec9bdcbe999e278a94b804f5630418"
+      sha256: d07d37192dbf97461359c1518788f203b0c9102cfd2c35a716b823741219542c
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.4"
+    version: "2.1.5"
   file:
     dependency: transitive
     description:
@@ -443,14 +443,15 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "7.0.0"
+    version: "7.0.1"
   nylo_support:
     dependency: transitive
     description:
-      path: "../../support"
-      relative: true
-    source: path
-    version: "7.0.0"
+      name: nylo_support
+      sha256: "69c3c22a5ac40cd80de5c70f8cfcb4727bdc2085418592d5efeef7581a80837c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.1.0"
   path:
     dependency: transitive
     description:

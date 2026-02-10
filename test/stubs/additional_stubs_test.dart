@@ -35,7 +35,7 @@ void main() {
     test('contains handle method', () {
       final stub = eventStub(eventName: ReCase('test'));
 
-      expect(stub, contains('handle(dynamic event) async'));
+      expect(stub, contains('handle(dynamic data) async'));
     });
 
     test('imports nylo_framework', () {

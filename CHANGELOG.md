@@ -1,3 +1,9 @@
+## [7.0.1] - 2026-02-10
+
+### Fixed
+* Fix event stub listener parameter name from `event` to `data` for clarity
+* Add missing `{super.key}` to navigation hub stub constructor
+
 ## [7.0.0] - 2026-02-06
 
 ### Added

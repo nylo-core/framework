@@ -15,7 +15,7 @@ class ${eventName.pascalCase}Event implements NyEvent {
 class DefaultListener extends NyListener {
 
   @override
-  handle(dynamic event) async {
+  handle(dynamic data) async {
    // Handle the event
    
   }
