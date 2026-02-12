@@ -1,10 +1,12 @@
 import 'package:collection/collection.dart';
 
+/// Represents a Dart type used during JSON-to-Dart code generation.
 class ClassType {
   final String _value;
 
   const ClassType._internal(this._value);
 
+  /// Creates a [ClassType] from a type name string.
   factory ClassType.name(String typeName) {
     var find = values.firstWhereOrNull((element) => element.value == typeName);
 
@@ -15,32 +17,40 @@ class ClassType {
     return find;
   }
 
+  /// The string representation of this type.
   String get value => _value;
 
+  /// Returns true if [typeName] is a primitive Dart type.
   static bool isPrimitiveType(String typeName) {
     return primitiveTypes.map((e) => e.value).contains(typeName);
   }
 
+  /// Whether this is a primitive type (int, double, String, bool).
   bool get isPrimitive {
     return primitiveTypes.contains(this);
   }
 
+  /// Whether this represents a null type.
   bool get isNull {
     return this == ClassType.tNull;
   }
 
+  /// Whether this represents a List type.
   bool get isList {
     return this == ClassType.tListDynamic;
   }
 
+  /// Whether this represents an object/map type.
   bool get isObject {
     return this == ClassType.tObject;
   }
 
+  /// Whether this represents a dynamic type.
   bool get isDynamic {
     return this == ClassType.tDynamic;
   }
 
+  /// Returns the [ClassType] for the given runtime [value].
   static ClassType getType(dynamic value) {
     if (value == null) {
       return tNull;
@@ -101,6 +111,7 @@ class ClassType {
     }
   }
 
+  /// The set of primitive Dart types.
   static const primitiveTypes = <ClassType>[
     tInt,
     tDouble,
@@ -108,6 +119,7 @@ class ClassType {
     tBool,
   ];
 
+  /// All available class types.
   static const values = <ClassType>[
     tInt,
     tDouble,
@@ -119,13 +131,28 @@ class ClassType {
     tNull,
   ];
 
+  /// The int type.
   static const tInt = ClassType._internal(ClassType._int);
+
+  /// The double type.
   static const tDouble = ClassType._internal(ClassType._double);
+
+  /// The String type.
   static const tString = ClassType._internal(ClassType._string);
+
+  /// The bool type.
   static const tBool = ClassType._internal(ClassType._bool);
+
+  /// The List type.
   static const tListDynamic = ClassType._internal(ClassType._listDynamic);
+
+  /// The dynamic type.
   static const tDynamic = ClassType._internal(ClassType._dynamic);
+
+  /// The null type.
   static const tNull = ClassType._internal(ClassType._null);
+
+  /// The object/map type.
   static const tObject = ClassType._internal(ClassType._object);
 
   static const String _int = 'int';

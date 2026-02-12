@@ -4,7 +4,9 @@ import 'dart:io';
 import '/metro/ny_cli.dart';
 import '/metro/stubs/env_stub.dart';
 
-Future<void> main(arguments) async => await _MakeEnvCommand(arguments).run();
+/// Entry point for the make:env command.
+Future<void> main(List<String> arguments) async =>
+    await _MakeEnvCommand(arguments).run();
 
 /// Make Env Command
 ///

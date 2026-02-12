@@ -2,7 +2,9 @@ import '/metro/ny_cli.dart';
 import '/metro/stubs/form_stub.dart';
 import 'package:recase/recase.dart';
 
-Future<void> main(arguments) async => await _MakeFormCommand(arguments).run();
+/// Entry point for the make:form command.
+Future<void> main(List<String> arguments) async =>
+    await _MakeFormCommand(arguments).run();
 
 /// Make Form Command
 ///

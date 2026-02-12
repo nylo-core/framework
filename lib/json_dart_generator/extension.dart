@@ -1,7 +1,9 @@
 import 'class_type.dart';
 import 'json_def.dart';
 
+/// Extension that generates Dart class code from a [ValueDef].
 extension DartCodeGenerator on ValueDef {
+  /// Generates the Dart class source code for this value definition.
   String get classCode {
     if (childrenDef is! List && childrenDef is! Map) {
       return '';

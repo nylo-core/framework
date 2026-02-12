@@ -1,3 +1,17 @@
+## [7.0.2] - 2026-02-12
+
+### Changed
+* Add explicit return types to `NyCustomCommand` methods: `runProcess()` returns `Future<int>`, `addPackage()` and `addPackages()` return `Future<void>`, `info()`, `error()`, `success()`, and `warning()` return `void`
+* Add explicit `List<String>` parameter type to all Metro `main()` entry points and explicit `dynamic` type to `NyJson.tryDecode()`, `Test.fromJson()`
+* Update form stub init example to use `define()` and `FormCollection.from()` for field configuration
+* Bump `nylo_support` dependency from `^7.1.0` to `^7.2.0`
+* Add `lints: ^6.1.0` dev dependency and `analysis_options.yaml` with `package:lints/core.yaml`
+* Improve `NyTheme.set()` doc comments for clarity
+
+### Added
+* Comprehensive dartdoc comments across all public APIs: `NyCustomCommand`, `ConsoleSpinner`, `ConsoleTable`, `ConsoleProgressBar`, `ApiService`, exception classes, `CommandBuilder`, `CommandResult`, `ClassType`, `DartCodeGenerator`, `JsonDef`, `ValueDef`, `ListInner`, and string extension helpers
+* Library-level documentation for `nylo_framework` and Metro CLI
+
 ## [7.0.1] - 2026-02-10
 
 ### Fixed

@@ -2,7 +2,9 @@ import '/metro/ny_cli.dart';
 import '/metro/stubs/event_stub.dart';
 import 'package:recase/recase.dart';
 
-Future<void> main(arguments) async => await _MakeEventCommand(arguments).run();
+/// Entry point for the make:event command.
+Future<void> main(List<String> arguments) async =>
+    await _MakeEventCommand(arguments).run();
 
 /// Make Event Command
 ///

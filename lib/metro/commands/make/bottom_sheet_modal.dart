@@ -4,7 +4,8 @@ import '/metro/ny_cli.dart';
 import '/metro/stubs/bottom_sheet_modal_stub.dart';
 import 'package:recase/recase.dart';
 
-Future<void> main(arguments) async =>
+/// Entry point for the make:bottom_sheet_modal command.
+Future<void> main(List<String> arguments) async =>
     await _MakeBottomSheetModalCommand(arguments).run();
 
 /// Make Bottom Sheet Modal Command

@@ -2,20 +2,25 @@ import 'package:collection/collection.dart';
 import 'class_type.dart';
 import 'extension.dart';
 
+/// Callback that provides a class name prefix or suffix.
 typedef ClassNamePrefixSuffixBuilder = String? Function(
   String name,
   bool isPrefix,
 );
 
+/// Parses JSON data and generates Dart class definitions.
 class JsonDef {
+  /// The raw JSON data to generate classes from.
   final dynamic jsonData;
 
   late ValueDef _jsonStruct;
 
   late ValueDef _summarizeStruct;
 
+  /// All custom object definitions found in the JSON structure.
   List<ValueDef> get allCustomObject => _summarizeStruct.customObjects;
 
+  /// Creates a [JsonDef] from the given [jsonData].
   JsonDef({
     String? rootClassName,
     this.jsonData,
@@ -31,10 +36,12 @@ class JsonDef {
     _summarizeStruct = _jsonStruct.summarize();
   }
 
+  /// Returns a string representation of the parsed JSON structure.
   String get structString {
     return _jsonStruct.structString;
   }
 
+  /// Returns a summarized string representation of the structure.
   String get summarizeString {
     return _summarizeStruct.structString;
   }
@@ -43,6 +50,7 @@ class JsonDef {
     return _summarizeStruct.customObjectString;
   }
 
+  /// Returns the generated Dart class code.
   String get classCode {
     var code = '';
     code += _summarizeStruct.classCode;
@@ -51,13 +59,18 @@ class JsonDef {
   }
 }
 
+/// Represents the inner type of a List for code generation.
 class ListInner {
+  /// The resolved type of list elements.
   ClassType type;
 
+  /// The original type before merging.
   ClassType oriType;
 
+  /// The class name for object list elements.
   String className;
 
+  /// Creates a [ListInner] with the given [type], [oriType], and [className].
   ListInner({
     required this.type,
     required this.oriType,
@@ -65,15 +78,21 @@ class ListInner {
   });
 }
 
+/// Represents a value definition in a JSON structure for code generation.
 class ValueDef {
+  /// The resolved [ClassType] of this value.
   ClassType type;
 
+  /// The element type if this value is a list.
   ClassType? listType;
 
+  /// The root class name for code generation.
   String? rootClassName;
 
+  /// Whether to apply prefix/suffix to the root class name.
   bool rootClassNameWithPrefixSuffix;
 
+  /// Returns the inner type information for list values.
   ListInner? get listInnerType {
     if (listType == null) {
       return null;
@@ -109,8 +128,10 @@ class ValueDef {
     return findInner(this);
   }
 
+  /// Whether this is the root definition (has no parent).
   bool get isRoot => parent == null;
 
+  /// Whether the root ancestor is a list type.
   bool get isListRoot {
     var parentDef = this;
 
@@ -123,8 +144,10 @@ class ValueDef {
     return parentDef.type.isList;
   }
 
+  /// The parent definition in the JSON tree.
   ValueDef? parent;
 
+  /// The nesting depth of this definition.
   int get depth {
     return (parent?.depth ?? -1) + 1;
   }
@@ -153,14 +176,19 @@ class ValueDef {
     return key;
   }
 
+  /// The JSON key associated with this value.
   final String? key;
 
+  /// The raw JSON value.
   final dynamic value;
 
+  /// Child definitions (List or Map of [ValueDef]).
   dynamic childrenDef;
 
+  /// Callback for generating class name prefixes and suffixes.
   ClassNamePrefixSuffixBuilder? classNamePrefixSuffixBuilder;
 
+  /// The prefix applied to the generated class name.
   String get classNamePrefix =>
       classNamePrefixSuffixBuilder?.call(
         classNameNoPrefixSuffix,
@@ -168,6 +196,7 @@ class ValueDef {
       ) ??
       '';
 
+  /// The suffix applied to the generated class name.
   String get classNameSuffix =>
       classNamePrefixSuffixBuilder?.call(
         classNameNoPrefixSuffix,
@@ -175,6 +204,7 @@ class ValueDef {
       ) ??
       '';
 
+  /// Returns all nested custom object definitions.
   List<ValueDef> get customObjects {
     var objects = <ValueDef>[];
     if (depth != 0 && type == ClassType.tObject) {
@@ -230,6 +260,7 @@ class ValueDef {
     return parentDef?.customObjects ?? customObjects;
   }
 
+  /// Finds a matching custom object definition for [def].
   ValueDef? findCustomObject(ValueDef def) {
     var find = _allCustomObject.firstWhereOrNull(
       (element) => def.isStructSame(element),
@@ -237,6 +268,7 @@ class ValueDef {
     return find;
   }
 
+  /// Returns true if this definition has the same structure as [other].
   bool isStructSame(ValueDef other, {bool debug = false}) {
     if (childrenDef is List<ValueDef> && other.childrenDef is List<ValueDef>) {
       var thisList = childrenDef as List<ValueDef>;
@@ -276,6 +308,7 @@ class ValueDef {
     return false;
   }
 
+  /// Creates a copy of this definition with optional overrides.
   ValueDef copyWith(
       {ClassType? type, ClassType? listType, dynamic childrenDef}) {
     return ValueDef._(
@@ -482,6 +515,7 @@ class ValueDef {
     }
   }
 
+  /// Summarizes this definition by merging types and converting nulls.
   ValueDef summarize() {
     var def = _summarizeEntry();
 
@@ -491,6 +525,7 @@ class ValueDef {
   @override
   String toString() => structString;
 
+  /// Returns a debug string representation of this definition's structure.
   String get structString {
     var keyShow = '';
     if (key != null) {
@@ -509,6 +544,7 @@ class ValueDef {
     }
   }
 
+  /// Returns the struct string for all custom objects.
   String get customObjectString {
     var text = '';
 
@@ -524,6 +560,7 @@ class ValueDef {
     return text;
   }
 
+  /// The full generated class name including prefix and suffix.
   String get classNameFull {
     if (isRoot && !rootClassNameWithPrefixSuffix) {
       return classNameNoPrefixSuffix;
@@ -532,6 +569,7 @@ class ValueDef {
     }
   }
 
+  /// The generated class name without prefix or suffix.
   String get classNameNoPrefixSuffix {
     if (isRoot) {
       return rootClassName ?? 'Root';
@@ -551,7 +589,9 @@ class ValueDef {
   }
 }
 
+/// String case conversion helpers for code generation.
 extension StringExtension on String {
+  /// Converts this string to UpperCamelCase.
   String upperCamel() {
     String capitalize(Match match) {
       var text = match[0];
@@ -574,6 +614,7 @@ extension StringExtension on String {
     );
   }
 
+  /// Converts this string to lowerCamelCase.
   String lowerCamel() {
     var upper = upperCamel();
     return '${upper[0].toLowerCase()}${upper.substring(1)}';

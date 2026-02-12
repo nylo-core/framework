@@ -4,14 +4,15 @@ import '/metro/ny_cli.dart';
 import '/metro/stubs/navigation_tab_state_journey.dart';
 import 'package:recase/recase.dart';
 
-Future<void> main(arguments) async =>
+/// Entry point for the make:journey_widget command.
+Future<void> main(List<String> arguments) async =>
     await _MakeJourneyWidgetCommand(arguments).run();
 
 /// Make Journey Widget Command
 ///
 /// Usage:
 ///   [From Terminal] metro make:journey_widget welcome_tab --parent=Onboarding
-/// Generates journey widgets inside /resources/pages/navigation_hubs/<parent_snake>/states.
+/// Generates journey widgets inside /resources/pages/navigation_hubs/`<parent_snake>`/states.
 class _MakeJourneyWidgetCommand extends NyCustomCommand {
   _MakeJourneyWidgetCommand(super.arguments);
 

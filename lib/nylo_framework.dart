@@ -1,3 +1,7 @@
+/// The Nylo Framework - a micro-framework for Flutter.
+///
+/// Provides tools for building Flutter applications including routing,
+/// networking, themes, storage, CLI scaffolding, and more.
 library nylo_framework;
 
 // Nylo Core
@@ -11,4 +15,4 @@ export 'package:date_field/date_field.dart';
 export 'package:dio/dio.dart';
 
 /// Nylo version
-const String nyloVersion = 'v7.0.1';
+const String nyloVersion = 'v7.0.2';

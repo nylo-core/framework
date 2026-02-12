@@ -2,7 +2,8 @@ import '/metro/ny_cli.dart';
 import '/metro/stubs/widget_state_managed_stub.dart';
 import 'package:recase/recase.dart';
 
-Future<void> main(arguments) async =>
+/// Entry point for the make:state_managed_widget command.
+Future<void> main(List<String> arguments) async =>
     await _MakeStateManagedWidgetCommand(arguments).run();
 
 /// Make State Managed Widget Command

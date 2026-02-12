@@ -5,7 +5,9 @@ import '/metro/stubs/model_stub.dart';
 import '/json_dart_generator/dart_code_generator.dart';
 import 'package:recase/recase.dart';
 
-Future<void> main(arguments) async => await _MakeModelCommand(arguments).run();
+/// Entry point for the make:model command.
+Future<void> main(List<String> arguments) async =>
+    await _MakeModelCommand(arguments).run();
 
 /// Make Model Command
 ///

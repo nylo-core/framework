@@ -4,7 +4,8 @@ import '/metro/stubs/navigation_tab_state_journey.dart';
 import '/metro/stubs/widget_stateful_stub.dart';
 import 'package:recase/recase.dart';
 
-Future<void> main(arguments) async =>
+/// Entry point for the make:navigation_hub command.
+Future<void> main(List<String> arguments) async =>
     await _MakeNavigationHubCommand(arguments).run();
 
 /// Make Navigation Hub Command
@@ -12,7 +13,7 @@ Future<void> main(arguments) async =>
 /// Usage:
 ///   [From Terminal] metro make:navigation_hub
 /// Prompts for layout (navigation tabs or journey states) and generates
-/// hub + child widgets under /resources/pages/navigation_hubs/<hub>/.
+/// hub + child widgets under /resources/pages/navigation_hubs/`<hub>`/.
 class _MakeNavigationHubCommand extends NyCustomCommand {
   _MakeNavigationHubCommand(super.arguments);
 

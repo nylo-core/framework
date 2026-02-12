@@ -3,7 +3,9 @@ import 'dart:math';
 
 import '/metro/ny_cli.dart';
 
-Future<void> main(arguments) async => await _MakeKeyCommand(arguments).run();
+/// Entry point for the make:key command.
+Future<void> main(List<String> arguments) async =>
+    await _MakeKeyCommand(arguments).run();
 
 /// Make Key Command
 ///

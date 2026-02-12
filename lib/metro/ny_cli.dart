@@ -1,3 +1,6 @@
+/// Metro CLI - Nylo's command-line companion for scaffolding Flutter apps.
+///
+/// Provides the base classes and utilities for creating custom Metro commands.
 library nylo_framework;
 
 import 'dart:async';
@@ -20,11 +23,13 @@ abstract class NyCustomCommand {
 
   CommandBuilder? _builder;
 
+  /// The command-line arguments passed to the command.
   List<String> arguments;
 
   /// Execute the command with parsed results
   Future<void> handle(CommandResult result);
 
+  /// Creates a new command with the given [arguments].
   NyCustomCommand(this.arguments) {
     CommandBuilder commandBuilder = CommandBuilder();
     _builder = builder(commandBuilder);
@@ -49,7 +54,7 @@ abstract class NyCustomCommand {
   }
 
   /// Run a process with the given command
-  runProcess(String command,
+  Future<int> runProcess(String command,
       {String? workingDirectory, bool? runInShell, bool silent = false}) async {
     // Parse command properly handling quotes
     final List<String> parts = _parseCommand(command);
@@ -129,35 +134,36 @@ abstract class NyCustomCommand {
   }
 
   /// Add a package to the pubspec.yaml file
-  addPackage(String package, {String? version, bool dev = false}) async {
+  Future<void> addPackage(String package,
+      {String? version, bool dev = false}) async {
     await MetroService.addPackage(package, dev: dev, version: version);
   }
 
   /// Add multiple packages to the pubspec.yaml file
-  addPackages(List<String> packages, {bool dev = false}) async {
+  Future<void> addPackages(List<String> packages, {bool dev = false}) async {
     await MetroService.addPackages(packages, dev: dev);
   }
 
   /// Prints a message in blue color
-  info(String message) {
+  void info(String message) {
     // Print info message in blue
     print('\x1B[34m$message\x1B[0m');
   }
 
   /// Prints a message in red color
-  error(String message) {
+  void error(String message) {
     // Print error message in red
     print('\x1B[31m$message\x1B[0m');
   }
 
   /// Prints a message in green color
-  success(String message) {
+  void success(String message) {
     // Print success message in green
     print('\x1B[32m$message\x1B[0m');
   }
 
   /// Prints a message in yellow color
-  warning(String message) {
+  void warning(String message) {
     // Print warning message in yellow
     print('\x1B[33m$message\x1B[0m');
   }
@@ -289,8 +295,9 @@ abstract class NyCustomCommand {
     }
   }
 
-  /// sleep for a specified number of seconds
-  /// [optional] microseconds
+  /// Sleeps for a specified number of [seconds].
+  ///
+  /// Optionally accepts [microseconds] for finer control.
   Future<void> sleep(int seconds, [int microseconds = 0]) async {
     await Future.delayed(Duration(
       seconds: seconds,
@@ -1059,6 +1066,7 @@ class ConsoleSpinner {
   int _currentFrame = 0;
   String? _previousLine;
 
+  /// Creates a [ConsoleSpinner] with the given initial [_message].
   ConsoleSpinner(this._message);
 
   /// Start the spinner with an optional message
@@ -1117,11 +1125,15 @@ class ConsoleSpinner {
   }
 }
 
-/// A class that renders a formatted ASCII table in the console
+/// A class that renders a formatted ASCII table in the console.
 class ConsoleTable {
+  /// The column headers for the table.
   final List<String> headers;
+
+  /// The data rows to display.
   final List<List<String>> rows;
 
+  /// Creates a [ConsoleTable] with the given [headers] and [rows].
   ConsoleTable({required this.headers, required this.rows});
 
   /// Render the table to stdout
@@ -1192,14 +1204,18 @@ class ConsoleTable {
   }
 }
 
-/// A class that displays a progress bar in the console
+/// A class that displays a progress bar in the console.
 class ConsoleProgressBar {
+  /// The total number of steps.
   final int total;
+
+  /// Optional message displayed alongside the progress bar.
   String? message;
   int _current = 0;
   bool _started = false;
   final int _barWidth;
 
+  /// Creates a [ConsoleProgressBar] with the given [total] steps.
   ConsoleProgressBar({
     required this.total,
     this.message,
@@ -1352,10 +1368,11 @@ extension SpinnerExtension on NyCustomCommand {
   }
 }
 
-/// API Service that wraps Dio
+/// A simple API service that wraps Dio for making HTTP requests.
 class ApiService {
   final Dio _dio;
 
+  /// Creates an [ApiService] with an optional custom [dio] instance.
   ApiService({Dio? dio}) : _dio = dio ?? Dio() {
     // Configure dio instance with defaults
     _dio.options.connectTimeout = Duration(seconds: 30);
@@ -1534,55 +1551,78 @@ class ApiService {
   }
 }
 
-/// Custom exception classes
+/// Exception thrown when an API request fails.
 class ApiException implements Exception {
+  /// The HTTP status code.
   final int code;
+
+  /// A description of the error.
   final String message;
+
+  /// Optional response data.
   final dynamic data;
 
+  /// Creates an [ApiException] with the given [code], [message], and optional [data].
   ApiException({required this.code, required this.message, this.data});
 
   @override
   String toString() => 'ApiException: $code - $message';
 }
 
+/// Exception thrown when a request times out.
 class TimeoutException implements Exception {
+  /// A description of the timeout.
   final String message;
+
+  /// Creates a [TimeoutException] with the given [message].
   TimeoutException(this.message);
 
   @override
   String toString() => 'TimeoutException: $message';
 }
 
+/// Exception thrown when a network error occurs.
 class NetworkException implements Exception {
+  /// A description of the error.
   final String message;
+
+  /// Creates a [NetworkException] with the given [message].
   NetworkException(this.message);
 
   @override
   String toString() => 'NetworkException: $message';
 }
 
+/// Exception thrown when a request is cancelled.
 class RequestCancelledException implements Exception {
+  /// A description of the cancellation.
   final String message;
+
+  /// Creates a [RequestCancelledException] with the given [message].
   RequestCancelledException(this.message);
 
   @override
   String toString() => 'RequestCancelledException: $message';
 }
 
+/// Exception thrown when an unknown error occurs.
 class UnknownException implements Exception {
+  /// A description of the error.
   final String message;
+
+  /// Creates an [UnknownException] with the given [message].
   UnknownException(this.message);
 
   @override
   String toString() => 'UnknownException: $message';
 }
 
-/// A fluent wrapper around ArgParser to make command definitions more readable
+/// A fluent wrapper around [ArgParser] to make command definitions more readable.
 class CommandBuilder {
   final ArgParser _parser = ArgParser();
   final Map<String, dynamic> _defaults = {};
 
+  /// Creates a new [CommandBuilder].
   CommandBuilder() {}
 
   /// Add an option (--option or -o)
@@ -1636,11 +1676,12 @@ class CommandBuilder {
   String get usage => _parser.usage;
 }
 
-/// Wrapper around ArgResults with convenient accessors
+/// Wrapper around [ArgResults] with convenient typed accessors.
 class CommandResult {
   final ArgResults _results;
   final Map<String, dynamic> _defaults;
 
+  /// Creates a [CommandResult] from parsed [_results] and [_defaults].
   CommandResult(this._results, this._defaults);
 
   /// Check if help flag is set

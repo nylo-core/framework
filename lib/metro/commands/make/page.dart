@@ -4,7 +4,9 @@ import '/metro/stubs/page_w_controller_stub.dart';
 import '/metro/stubs/controller_stub.dart';
 import 'package:recase/recase.dart';
 
-Future<void> main(arguments) async => await _MakePageCommand(arguments).run();
+/// Entry point for the make:page command.
+Future<void> main(List<String> arguments) async =>
+    await _MakePageCommand(arguments).run();
 
 /// Make Page Command
 ///

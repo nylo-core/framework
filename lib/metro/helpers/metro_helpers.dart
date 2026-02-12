@@ -4,7 +4,8 @@ import 'package:recase/recase.dart';
 
 /// Helper to encode and decode JSON data
 class NyJson {
-  static dynamic tryDecode(data) {
+  /// Attempts to decode [data] as JSON, returning null on failure.
+  static dynamic tryDecode(dynamic data) {
     try {
       return jsonDecode(data);
     } catch (e) {

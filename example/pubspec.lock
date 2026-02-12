@@ -448,10 +448,10 @@ packages:
     dependency: transitive
     description:
       name: nylo_support
-      sha256: "69c3c22a5ac40cd80de5c70f8cfcb4727bdc2085418592d5efeef7581a80837c"
+      sha256: f02e44c3dac87e8974c7e664b11e6d6670116d9be50d6865387c2300d4aed065
       url: "https://pub.dev"
     source: hosted
-    version: "7.1.0"
+    version: "7.2.0"
   path:
     dependency: transitive
     description:

@@ -26,9 +26,10 @@ import 'package:nylo_support/themes/ny_themes.dart';
 /// NyTheme.setPreferredDark('dark_amoled');
 /// ```
 class NyTheme {
-  /// Changes the current theme to the new [theme]
-  /// standard light [themeName] (id is "light_theme")
-  /// standard dark [themeName] (id is "dark_theme")
+  /// Changes the current theme.
+  ///
+  /// Standard light theme id is "light_theme".
+  /// Standard dark theme id is "dark_theme".
   ///
   /// [remember] - If true, sets this theme as the preferred theme for its type
   ///              (light or dark). This is used when following system theme.

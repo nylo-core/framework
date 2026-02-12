@@ -2,7 +2,8 @@ import '/metro/ny_cli.dart';
 import '/metro/stubs/custom_command_stub.dart';
 import 'package:recase/recase.dart';
 
-Future<void> main(arguments) async =>
+/// Entry point for the make:command command.
+Future<void> main(List<String> arguments) async =>
     await _MakeCommandCommand(arguments).run();
 
 /// Make Command Command

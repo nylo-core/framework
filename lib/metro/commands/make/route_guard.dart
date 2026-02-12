@@ -2,7 +2,8 @@ import '/metro/ny_cli.dart';
 import '/metro/stubs/route_guard_stub.dart';
 import 'package:recase/recase.dart';
 
-Future<void> main(arguments) async =>
+/// Entry point for the make:route_guard command.
+Future<void> main(List<String> arguments) async =>
     await _MakeRouteGuardCommand(arguments).run();
 
 /// Make Route Guard Command

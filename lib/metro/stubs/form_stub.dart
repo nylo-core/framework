@@ -17,12 +17,11 @@ class ${className.pascalCase}Form extends NyFormWidget {
 
   // @override
   // get init => () {
-  //   /// Initial data for the form
   //   return {
   //     "name": "Anthony",
-  //     "price": "100",
-  //     "favourite_color": "Blue",
-  //     "bio": "I am a Flutter Developer"
+  //     "price": define(value: "100"),
+  //     "favourite_color": define(value: "Blue", options: FormCollection.from(["Red", "Blue", "Green"])),
+  //     "bio": "I am a Flutter Developer",
   //   };
   // };
 

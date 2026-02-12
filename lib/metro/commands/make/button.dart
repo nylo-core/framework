@@ -4,7 +4,9 @@ import '/metro/ny_cli.dart';
 import '/metro/stubs/button_stub.dart';
 import 'package:recase/recase.dart';
 
-Future<void> main(arguments) async => await _MakeButtonCommand(arguments).run();
+/// Entry point for the make:button command.
+Future<void> main(List<String> arguments) async =>
+    await _MakeButtonCommand(arguments).run();
 
 /// Make Button Command
 ///

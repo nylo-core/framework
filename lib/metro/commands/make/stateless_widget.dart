@@ -2,7 +2,8 @@ import '/metro/ny_cli.dart';
 import '/metro/stubs/widget_stateless_stub.dart';
 import 'package:recase/recase.dart';
 
-Future<void> main(arguments) async =>
+/// Entry point for the make:stateless_widget command.
+Future<void> main(List<String> arguments) async =>
     await _MakeStatelessWidgetCommand(arguments).run();
 
 /// Make Stateless Widget Command

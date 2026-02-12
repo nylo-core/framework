@@ -2,7 +2,8 @@ import '/metro/ny_cli.dart';
 import '/metro/stubs/interceptor_stub.dart';
 import 'package:recase/recase.dart';
 
-Future<void> main(arguments) async =>
+/// Entry point for the make:interceptor command.
+Future<void> main(List<String> arguments) async =>
     await _MakeInterceptorCommand(arguments).run();
 
 /// Make Interceptor Command

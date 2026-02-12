@@ -3,16 +3,21 @@ import 'dart:io';
 
 import 'json_def.dart';
 
-/// [DartCodeGenerator] code
+/// Generates Dart model classes from raw JSON strings.
 class DartCodeGenerator {
+  /// The name of the root class to generate.
   final String? rootClassName;
 
+  /// Whether to apply prefix/suffix to the root class name.
   final bool rootClassNameWithPrefixSuffix;
 
+  /// Optional prefix for generated class names.
   final String? classPrefix;
 
+  /// Optional suffix for generated class names.
   final String? classSuffix;
 
+  /// Creates a [DartCodeGenerator] with optional naming configuration.
   DartCodeGenerator({
     this.rootClassName,
     this.rootClassNameWithPrefixSuffix = true,
@@ -20,6 +25,7 @@ class DartCodeGenerator {
     this.classSuffix,
   });
 
+  /// Generates Dart class code from a [rawJson] string.
   String generate(String rawJson) {
     dynamic jsonData;
     try {

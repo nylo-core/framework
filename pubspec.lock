@@ -398,13 +398,13 @@ packages:
     source: hosted
     version: "3.0.2"
   lints:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: lints
-      sha256: a5e2b223cb7c9c8efdc663ef484fdd95bb243bff242ef5b13e26883547fce9a0
+      sha256: "12f842a479589fea194fe5c5a3095abc7be0c1f2ddfa9a0e76aed1dbd26a87df"
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.0"
+    version: "6.1.0"
   logger:
     dependency: transitive
     description:
@@ -465,10 +465,10 @@ packages:
     dependency: "direct main"
     description:
       name: nylo_support
-      sha256: "69c3c22a5ac40cd80de5c70f8cfcb4727bdc2085418592d5efeef7581a80837c"
+      sha256: f02e44c3dac87e8974c7e664b11e6d6670116d9be50d6865387c2300d4aed065
       url: "https://pub.dev"
     source: hosted
-    version: "7.1.0"
+    version: "7.2.0"
   path:
     dependency: transitive
     description:

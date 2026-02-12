@@ -2,7 +2,9 @@ import '/metro/ny_cli.dart';
 import '/metro/stubs/config_stub.dart';
 import 'package:recase/recase.dart';
 
-Future<void> main(arguments) async => await _MakeConfigCommand(arguments).run();
+/// Entry point for the make:config command.
+Future<void> main(List<String> arguments) async =>
+    await _MakeConfigCommand(arguments).run();
 
 /// Make Config Command
 ///

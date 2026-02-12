@@ -1,7 +1,8 @@
 import '/metro/ny_cli.dart';
 import '/metro/stubs/controller_stub.dart';
 
-Future<void> main(arguments) async =>
+/// Entry point for the make:controller command.
+Future<void> main(List<String> arguments) async =>
     await _MakeControllerCommand(arguments).run();
 
 /// Make Controller Command

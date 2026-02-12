@@ -2,7 +2,8 @@ import '/metro/ny_cli.dart';
 import '/metro/stubs/api_service_stub.dart';
 import 'package:recase/recase.dart';
 
-Future<void> main(arguments) async =>
+/// Entry point for the make:api_service command.
+Future<void> main(List<String> arguments) async =>
     await _MakeApiServiceCommand(arguments).run();
 
 /// Make API Service Command
