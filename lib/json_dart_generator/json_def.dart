@@ -46,6 +46,7 @@ class JsonDef {
     return _summarizeStruct.structString;
   }
 
+  /// Returns the generated Dart code string for all custom objects.
   String get customObjectString {
     return _summarizeStruct.customObjectString;
   }

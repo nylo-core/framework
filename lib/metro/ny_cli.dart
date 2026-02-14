@@ -1,7 +1,7 @@
 /// Metro CLI - Nylo's command-line companion for scaffolding Flutter apps.
 ///
 /// Provides the base classes and utilities for creating custom Metro commands.
-library nylo_framework;
+library nylo_framework.metro;
 
 import 'dart:async';
 import 'dart:convert';

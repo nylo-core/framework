@@ -1,3 +1,12 @@
+## [7.0.3] - 2026-02-14
+
+### Changed
+* Bump `nylo_support` dependency from `^7.2.0` to `^7.3.0`
+* Refine Metro CLI library directive to `library nylo_framework.metro` for clearer sub-library naming
+
+### Added
+* Dartdoc comment for `JsonDef.customObjectString` getter
+
 ## [7.0.2] - 2026-02-12
 
 ### Changed
