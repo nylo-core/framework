@@ -1,3 +1,12 @@
+## [7.0.7] - 2026-02-23
+
+### Changed
+* Simplify API service stub constructor by removing `BuildContext` parameter -- generated API services now use a no-argument constructor with `super(decoders: modelDecoders)`
+* Remove `package:flutter/material.dart` import from API service stub since `BuildContext` is no longer needed
+
+### Fixed
+* Fix malformed import statement in API service stub (duplicate `import '` prefix)
+
 ## [7.0.6] - 2026-02-21
 
 ### Changed
