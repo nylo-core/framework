@@ -1,3 +1,13 @@
+## [7.0.10] - 2026-03-04
+
+### Changed
+* Bump `nylo_support` dependency from `^7.7.0` to `^7.8.1`
+* Bump `skeletonizer` dependency from `^2.1.2` to `^2.1.3`
+* Bump `flutter_local_notifications` dependency from `^20.0.0` to `^20.1.0`
+* Bump `dio` dependency from `^5.9.0` to `^5.9.2`
+* Bump `error_stack` dependency from `^2.0.0` to `^2.0.1`
+* Bump `patrol` dependency from `^4.1.0` to `^4.1.1`
+
 ## [7.0.9] - 2026-03-01
 
 ### Changed

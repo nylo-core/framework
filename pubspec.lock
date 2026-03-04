@@ -5,10 +5,10 @@ packages:
     dependency: transitive
     description:
       name: app_badge_plus
-      sha256: "152c22866f4b6d0d4eb3c8fe6916a77bbc0e3939da11b51cce38a4a26738dd60"
+      sha256: ce3d8fdfcf39a1552cc8dea499ee3b4a86273ccf04c8de29e7960c739b045ae6
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.6"
+    version: "1.2.7"
   args:
     dependency: "direct main"
     description:
@@ -133,10 +133,10 @@ packages:
     dependency: "direct main"
     description:
       name: dio
-      sha256: b9d46faecab38fc8cc286f80bc4d61a3bb5d4ac49e51ed877b4d6706efe57b25
+      sha256: aff32c08f92787a557dd5c0145ac91536481831a01b4648136373cddb0e64f8c
       url: "https://pub.dev"
     source: hosted
-    version: "5.9.1"
+    version: "5.9.2"
   dio_web_adapter:
     dependency: transitive
     description:
@@ -165,10 +165,10 @@ packages:
     dependency: "direct main"
     description:
       name: error_stack
-      sha256: "02f703387181273fbb2e0760fa80ecb950e89dde214e0cd8aa53d6b92161bf67"
+      sha256: "0974c7b4b13d99523718959eaf9f8e425f014ef8b4883aef0123cf91f1c95ec1"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.1"
   fake_async:
     dependency: transitive
     description:
@@ -505,10 +505,10 @@ packages:
     dependency: "direct main"
     description:
       name: nylo_support
-      sha256: b5b2e6cb48bc80396a9212594a82b7596269a41372051f678c5441f781c44a3b
+      sha256: "365d848d3aa7b383c896f0632763286d9dde87df8d1bd779195b8f874a1f8dba"
       url: "https://pub.dev"
     source: hosted
-    version: "7.7.0"
+    version: "7.8.1"
   objective_c:
     dependency: transitive
     description:
@@ -878,10 +878,10 @@ packages:
     dependency: transitive
     description:
       name: uuid
-      sha256: a11b666489b1954e01d992f3d601b1804a33937b5a8fe677bd26b8a9f96f96e8
+      sha256: "1fef9e8e11e2991bb773070d4656b7bd5d850967a2456cfc83cf47925ba79489"
       url: "https://pub.dev"
     source: hosted
-    version: "4.5.2"
+    version: "4.5.3"
   vector_math:
     dependency: transitive
     description:
