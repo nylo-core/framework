@@ -505,10 +505,10 @@ packages:
     dependency: "direct main"
     description:
       name: nylo_support
-      sha256: "365d848d3aa7b383c896f0632763286d9dde87df8d1bd779195b8f874a1f8dba"
+      sha256: "4d6d924dbeb71d64d73b99f601443ff10b67713a610fa6e847701c450b926202"
       url: "https://pub.dev"
     source: hosted
-    version: "7.8.1"
+    version: "7.9.0"
   objective_c:
     dependency: transitive
     description:
@@ -577,10 +577,10 @@ packages:
     dependency: "direct main"
     description:
       name: patrol
-      sha256: "0688a00e0fda2e42f102863bbac969b7b5ea836d4dc365b750e0e5aed59d34b0"
+      sha256: c46dd59eeaca0b78419815e1d8a83a742b83a24666e21a586fc9f67c3cd08b60
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.1"
+    version: "4.2.0"
   patrol_finders:
     dependency: transitive
     description:
@@ -593,10 +593,10 @@ packages:
     dependency: transitive
     description:
       name: patrol_log
-      sha256: "26af8e1a8bbea313c82664d4eff1cace4fc8acbc2893799dd67fe4c5d3fa47df"
+      sha256: b3bd2862c15bd6b163763d7d2a80ae07c24af6da07d62d202798ceea327045d7
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.0"
+    version: "0.7.1"
   petitparser:
     dependency: transitive
     description:
