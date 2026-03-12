@@ -1,3 +1,9 @@
+## [7.0.14] - 2026-03-12
+
+### Changed
+* Bump `nylo_support` dependency from `^7.10.0` to `^7.11.1`
+* Bump `flutter_local_notifications` dependency from `^20.1.0` to `^21.0.0`
+
 ## [7.0.13] - 2026-03-09
 
 ### Changed
