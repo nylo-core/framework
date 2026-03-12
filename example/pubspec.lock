@@ -483,15 +483,15 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "7.0.13"
+    version: "7.0.14"
   nylo_support:
     dependency: transitive
     description:
       name: nylo_support
-      sha256: b4a57bdb4ada30103d376392c2dcefb10e533a8784eaf9003c5c2bb240bb25ae
+      sha256: "022ddd09886a2b7a7ea5a07cd4f3e912e2011aa19996bbd9bb464f0b4094eb20"
       url: "https://pub.dev"
     source: hosted
-    version: "7.11.1"
+    version: "7.11.2"
   objective_c:
     dependency: transitive
     description:
