@@ -27,13 +27,19 @@ class _MakeEventCommand extends NyCustomCommand {
     final eventName =
         requireArgument(result, message: 'An event name is required');
 
+    MetroProjectFile projectFile = MetroService.createMetroProjectFile(
+        eventName,
+        prefix: RegExp(r'(_?event)'));
+
     String cleanEventName =
-        eventName.snakeCase.replaceAll(RegExp(r'(_?event)'), "");
+        projectFile.name.snakeCase.replaceAll(RegExp(r'(_?event)'), "");
 
     ReCase classReCase = ReCase(cleanEventName);
 
     String stubEvent = eventStub(eventName: classReCase);
     await MetroService.makeEvent(classReCase.snakeCase, stubEvent,
-        forceCreate: result.hasForceFlag, addToConfig: true);
+        forceCreate: result.hasForceFlag,
+        addToConfig: true,
+        creationPath: projectFile.creationPath);
   }
 }

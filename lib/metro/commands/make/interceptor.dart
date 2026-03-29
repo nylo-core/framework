@@ -29,13 +29,18 @@ class _MakeInterceptorCommand extends NyCustomCommand {
     final interceptorName =
         requireArgument(result, message: 'An interceptor name is required');
 
+    MetroProjectFile projectFile = MetroService.createMetroProjectFile(
+        interceptorName,
+        prefix: RegExp(r'(_?interceptor)'));
+
     String cleanInterceptorName =
-        interceptorName.snakeCase.replaceAll(RegExp(r'(_?interceptor)'), "");
+        projectFile.name.snakeCase.replaceAll(RegExp(r'(_?interceptor)'), "");
 
     ReCase classReCase = ReCase(cleanInterceptorName);
 
     String stubInterceptor = interceptorStub(interceptorName: classReCase);
     await MetroService.makeInterceptor(classReCase.snakeCase, stubInterceptor,
-        forceCreate: result.hasForceFlag);
+        forceCreate: result.hasForceFlag,
+        creationPath: projectFile.creationPath);
   }
 }

@@ -29,13 +29,18 @@ class _MakeRouteGuardCommand extends NyCustomCommand {
     final routeGuardName =
         requireArgument(result, message: 'A route guard name is required');
 
+    MetroProjectFile projectFile = MetroService.createMetroProjectFile(
+        routeGuardName,
+        prefix: RegExp(r'(_?route_guard)'));
+
     String cleanRouteGuardName =
-        routeGuardName.snakeCase.replaceAll(RegExp(r'(_?route_guard)'), "");
+        projectFile.name.snakeCase.replaceAll(RegExp(r'(_?route_guard)'), "");
 
     ReCase classReCase = ReCase(cleanRouteGuardName);
 
     String stubRouteGuard = routeGuardStub(classReCase);
     await MetroService.makeRouteGuard(classReCase.snakeCase, stubRouteGuard,
-        forceCreate: result.hasForceFlag);
+        forceCreate: result.hasForceFlag,
+        creationPath: projectFile.creationPath);
   }
 }

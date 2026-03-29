@@ -1,3 +1,13 @@
+## [7.1.0] - 2026-03-29
+
+### Added
+* Subdirectory support for all `make:*` Metro commands — users can now specify paths like `make:stateless_widget login/BrandPanel` to organize generated files into subdirectories
+* Tests for subdirectory parsing, stub generation, and file path creation across all make commands
+
+### Changed
+* Bump `nylo_support` dependency from `^7.11.2` to `^7.12.0`
+* Bump `patrol` dependency from `^4.3.0` to `^4.5.0`
+
 ## [7.0.15] - 2026-03-12
 
 ### Changed

@@ -28,13 +28,18 @@ class _MakeConfigCommand extends NyCustomCommand {
     final configName =
         requireArgument(result, message: 'A config name is required');
 
+    MetroProjectFile projectFile = MetroService.createMetroProjectFile(
+        configName,
+        prefix: RegExp(r'(_?config)'));
+
     String cleanConfigName =
-        configName.snakeCase.replaceAll(RegExp(r'(_?config)'), "");
+        projectFile.name.snakeCase.replaceAll(RegExp(r'(_?config)'), "");
 
     ReCase classReCase = ReCase(cleanConfigName);
 
     String stubConfig = configStub(classReCase);
     await MetroService.makeConfig(classReCase.snakeCase, stubConfig,
-        forceCreate: result.hasForceFlag);
+        forceCreate: result.hasForceFlag,
+        creationPath: projectFile.creationPath);
   }
 }

@@ -42,14 +42,18 @@ class _MakeStatefulWidgetCommand extends NyCustomCommand {
 
   Future<void> _createStatefulWidget(
       String widgetName, bool hasForceFlag) async {
+    MetroProjectFile projectFile = MetroService.createMetroProjectFile(
+        widgetName,
+        prefix: RegExp(r'(_?widget)'));
+
     String cleanWidgetName =
-        widgetName.snakeCase.replaceAll(RegExp(r'(_?widget)'), "");
+        projectFile.name.snakeCase.replaceAll(RegExp(r'(_?widget)'), "");
 
     ReCase classReCase = ReCase(cleanWidgetName);
 
     String stubStatefulWidget = widgetStatefulStub(classReCase);
     await MetroService.makeStatefulWidget(
         classReCase.snakeCase, stubStatefulWidget,
-        forceCreate: hasForceFlag);
+        forceCreate: hasForceFlag, creationPath: projectFile.creationPath);
   }
 }

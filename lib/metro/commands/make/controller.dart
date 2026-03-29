@@ -40,6 +40,7 @@ class _MakeControllerCommand extends NyCustomCommand {
             projectFile.name.replaceAll(RegExp(r'(_?controller)'), ""));
 
     await MetroService.makeController(projectFile.name, stubController,
-        forceCreate: result.hasForceFlag);
+        forceCreate: result.hasForceFlag,
+        creationPath: projectFile.creationPath);
   }
 }

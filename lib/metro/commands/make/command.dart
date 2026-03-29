@@ -33,14 +33,20 @@ class _MakeCommandCommand extends NyCustomCommand {
     final String categoryValue =
         result.getString("category", defaultValue: "app")!;
 
+    MetroProjectFile projectFile = MetroService.createMetroProjectFile(
+        commandName,
+        prefix: RegExp(r'(_?command)'));
+
     String cleanCommandName =
-        commandName.snakeCase.replaceAll(RegExp(r'(_?command)'), "");
+        projectFile.name.snakeCase.replaceAll(RegExp(r'(_?command)'), "");
 
     ReCase classReCase = ReCase(cleanCommandName);
 
     String stubCommand =
         customCommandStub(customCommand: classReCase, category: categoryValue);
     await MetroService.makeCommand(classReCase.snakeCase, stubCommand,
-        forceCreate: result.hasForceFlag, category: categoryValue);
+        forceCreate: result.hasForceFlag,
+        category: categoryValue,
+        creationPath: projectFile.creationPath);
   }
 }

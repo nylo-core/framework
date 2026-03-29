@@ -28,13 +28,19 @@ class _MakeProviderCommand extends NyCustomCommand {
     final providerName =
         requireArgument(result, message: 'A provider name is required');
 
+    MetroProjectFile projectFile = MetroService.createMetroProjectFile(
+        providerName,
+        prefix: RegExp(r'(_?provider)'));
+
     String cleanProviderName =
-        providerName.snakeCase.replaceAll(RegExp(r'(_?provider)'), "");
+        projectFile.name.snakeCase.replaceAll(RegExp(r'(_?provider)'), "");
 
     ReCase classReCase = ReCase(cleanProviderName);
 
     String stubProvider = providerStub(classReCase);
     await MetroService.makeProvider(classReCase.snakeCase, stubProvider,
-        forceCreate: result.hasForceFlag, addToConfig: true);
+        forceCreate: result.hasForceFlag,
+        addToConfig: true,
+        creationPath: projectFile.creationPath);
   }
 }

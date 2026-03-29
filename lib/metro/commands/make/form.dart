@@ -27,13 +27,17 @@ class _MakeFormCommand extends NyCustomCommand {
     final formName =
         requireArgument(result, message: 'A form name is required');
 
+    MetroProjectFile projectFile = MetroService.createMetroProjectFile(formName,
+        prefix: RegExp(r'(_?form)'));
+
     String cleanFormName =
-        formName.snakeCase.replaceAll(RegExp(r'(_?form)'), "");
+        projectFile.name.snakeCase.replaceAll(RegExp(r'(_?form)'), "");
 
     ReCase classReCase = ReCase(cleanFormName);
 
     String stubForm = formStub(classReCase);
     await MetroService.makeForm(classReCase.snakeCase, stubForm,
-        forceCreate: result.hasForceFlag);
+        forceCreate: result.hasForceFlag,
+        creationPath: projectFile.creationPath);
   }
 }
