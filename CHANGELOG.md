@@ -1,3 +1,8 @@
+## [7.1.1] - 2026-03-29
+
+### Changed
+* Page stub now sets `stateManaged` to `false` by default for newly scaffolded pages
+
 ## [7.1.0] - 2026-03-29
 
 ### Added
