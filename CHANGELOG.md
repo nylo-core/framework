@@ -1,3 +1,8 @@
+## [7.1.5] - 2026-04-06
+
+### Changed
+* Remove `--force` flag from `make:env` command, now always overwrites existing `env.g.dart`
+
 ## [7.1.4] - 2026-04-03
 
 ### Changed

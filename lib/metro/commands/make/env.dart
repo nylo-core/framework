@@ -25,8 +25,6 @@ class _MakeEnvCommand extends NyCustomCommand {
     command.addFlag("help",
         abbr: "h",
         help: 'Generates an encrypted env.g.dart file from your .env file');
-    command.addFlag("force",
-        abbr: "f", help: "Overwrites existing env.g.dart if present.");
     command.addOption("file",
         abbr: "e", help: "The .env file to read from.", defaultValue: ".env");
     command.addFlag("dart-define",
@@ -39,7 +37,6 @@ class _MakeEnvCommand extends NyCustomCommand {
   @override
   Future<void> handle(CommandResult result) async {
     final String envFileName = result.getString("file", defaultValue: ".env")!;
-    final hasForceFlag = result.hasForceFlag;
     final bool? useDartDefine = result.getBool("dart-define");
 
     final envFile = File(envFileName);
@@ -50,13 +47,6 @@ class _MakeEnvCommand extends NyCustomCommand {
     if (!await envFile.exists()) {
       error('File not found: $envFileName');
       info('Create a .env file first or specify a different file with --file');
-      return;
-    }
-
-    // Check if output file exists and force flag is not set
-    if (await outputFile.exists() && !hasForceFlag) {
-      warning('$outputPath already exists.');
-      info('Use --force to overwrite the existing file.');
       return;
     }
 
