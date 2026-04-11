@@ -1,3 +1,9 @@
+## [7.1.6] - 2026-04-11
+
+### Changed
+* Remove `--force` flag from `make:key` command, now always overwrites existing APP_KEY
+* Page with controller stub now sets `stateManaged` to `false` by default
+
 ## [7.1.5] - 2026-04-06
 
 ### Changed

@@ -24,6 +24,9 @@ class _${className.pascalCase}PageState extends NyPage<${className.pascalCase}Pa
 
   };
   
+  @override
+  bool get stateManaged => false;
+  
  @override
   Widget view(BuildContext context) {
     return Scaffold(
