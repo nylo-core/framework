@@ -5,10 +5,10 @@ packages:
     dependency: transitive
     description:
       name: app_badge_plus
-      sha256: "81130fe6150ce2a1f12af4bb7d6f646496d284d5f87f2c121af8258a453bbb3f"
+      sha256: dab607342bbf73b33a532e384117ccb13efbaabadb6058c40fd74d743b0ef1ab
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.8"
+    version: "1.2.9"
   args:
     dependency: transitive
     description:
@@ -499,15 +499,15 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "7.1.7"
+    version: "7.1.8"
   nylo_support:
     dependency: transitive
     description:
       name: nylo_support
-      sha256: de71cf5ef81c3943dca90dc275ce230d1884b8aa5ebfb2b655adb45d829e9954
+      sha256: "7ba4dd4165380f3972f6507d31d093599a3be8283a82e525eeece13d5e264c81"
       url: "https://pub.dev"
     source: hosted
-    version: "7.19.0"
+    version: "7.20.0"
   objective_c:
     dependency: transitive
     description:
@@ -893,10 +893,10 @@ packages:
     dependency: transitive
     description:
       name: vm_service
-      sha256: "45caa6c5917fa127b5dbcfbd1fa60b14e583afdc08bfc96dda38886ca252eb60"
+      sha256: "046d3928e16fa4dc46e8350415661755ab759d9fc97fc21b5ab295f71e4f0499"
       url: "https://pub.dev"
     source: hosted
-    version: "15.0.2"
+    version: "15.1.0"
   web:
     dependency: transitive
     description:
