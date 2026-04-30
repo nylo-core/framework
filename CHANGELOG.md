@@ -1,3 +1,9 @@
+## [7.1.13] - 2026-04-30
+
+### Changed
+* Bump `nylo_support` dependency from `^7.22.0` to `^7.23.0`
+* Updated `make:state_managed_widget` stub to use the new `NyStateManaged` base widget, enabling multi-instance state isolation via `stateName`
+
 ## [7.1.12] - 2026-04-28
 
 ### Changed
