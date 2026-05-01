@@ -165,10 +165,10 @@ packages:
     dependency: "direct main"
     description:
       name: error_stack
-      sha256: "05efc3fdeb089c375a8dd148e40fed427d6464946a4b9c71d8fcec15259a0ca7"
+      sha256: cc842233b32979bde5a09245cff0c9f789258caca1508eb1ea77849a82e7db34
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.1"
+    version: "2.1.2"
   fake_async:
     dependency: transitive
     description:
@@ -521,10 +521,10 @@ packages:
     dependency: "direct main"
     description:
       name: nylo_support
-      sha256: a8e15032b35cce43f1d3aae3232e0fbb4975de4a1772d3064aa30fd0072f01bc
+      sha256: cf08b88164ff25f4d9b189a5a708751956d85ad190f01ade5815e707979b4735
       url: "https://pub.dev"
     source: hosted
-    version: "7.23.0"
+    version: "7.23.1"
   objective_c:
     dependency: transitive
     description:
