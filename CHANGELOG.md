@@ -1,3 +1,9 @@
+## [7.1.17] - 2026-05-10
+
+### Changed
+* Bump `nylo_support` dependency from `^7.24.1` to `^7.24.2`
+* Bump `error_stack` dependency from `^2.1.2` to `^2.1.3`
+
 ## [7.1.16] - 2026-05-10
 
 ### Changed
