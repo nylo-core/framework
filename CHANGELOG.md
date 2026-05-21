@@ -1,3 +1,13 @@
+## [7.1.18] - 2026-05-21
+
+### Added
+* New `make:deep_link_provider` Metro command to scaffold a deep link provider pre-wired for Nylo's deep-link capture
+
+### Changed
+* Bump `nylo_support` dependency from `^7.24.2` to `^7.26.0`
+* Raise minimum environment constraints to Dart `^3.10.7` and Flutter `>=3.38.4`
+* Relax `collection` dependency constraint from `^1.19.1` to `^1.18.0`
+
 ## [7.1.17] - 2026-05-10
 
 ### Changed

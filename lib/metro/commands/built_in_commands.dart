@@ -5,6 +5,7 @@ import 'make/button.dart' as make_button;
 import 'make/command.dart' as make_command;
 import 'make/config.dart' as make_config;
 import 'make/controller.dart' as make_controller;
+import 'make/deep_link_provider.dart' as make_deep_link_provider;
 import 'make/env.dart' as make_env;
 import 'make/event.dart' as make_event;
 import 'make/form.dart' as make_form;
@@ -28,6 +29,7 @@ final Map<String, Future<void> Function(List<String>)> builtInCommands = {
   'make:command': make_command.main,
   'make:config': make_config.main,
   'make:controller': make_controller.main,
+  'make:deep_link_provider': make_deep_link_provider.main,
   'make:env': make_env.main,
   'make:event': make_event.main,
   'make:form': make_form.main,
