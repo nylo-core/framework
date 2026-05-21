@@ -18,26 +18,37 @@ class _MakeModelCommand extends NyCustomCommand {
 
   @override
   CommandBuilder builder(CommandBuilder command) {
-    command.addFlag("help",
-        abbr: "h",
-        help:
-            'To create a new model, use e.g. "flutter pub run nylo_framework:main make:model user"');
-    command.addFlag("force",
-        abbr: "f", help: "Creates a new model even if it already exists.");
-    command.addFlag("json",
-        abbr: "j", help: "Creates a new model from a JSON object.");
+    command.addFlag(
+      "help",
+      abbr: "h",
+      help:
+          'To create a new model, use e.g. "flutter pub run nylo_framework:main make:model user"',
+    );
+    command.addFlag(
+      "force",
+      abbr: "f",
+      help: "Creates a new model even if it already exists.",
+    );
+    command.addFlag(
+      "json",
+      abbr: "j",
+      help: "Creates a new model from a JSON object.",
+    );
 
     return command;
   }
 
   @override
   Future<void> handle(CommandResult result) async {
-    final modelNameArg =
-        requireArgument(result, message: 'A model name is required');
+    final modelNameArg = requireArgument(
+      result,
+      message: 'A model name is required',
+    );
     final bool hasJsonFlag = result.getBool("json") ?? false;
 
-    MetroProjectFile projectFile =
-        MetroService.createMetroProjectFile(modelNameArg);
+    MetroProjectFile projectFile = MetroService.createMetroProjectFile(
+      modelNameArg,
+    );
 
     String modelName = projectFile.name.pascalCase;
     String stubModel = "";
@@ -83,14 +94,18 @@ class _MakeModelCommand extends NyCustomCommand {
       stubModel = generator.generate(modelData);
     } else {
       stubModel = modelStub(
-          modelName:
-              ReCase(modelName.snakeCase.replaceAll(RegExp(r'(_?model)'), "")));
+        modelName: ReCase(
+          modelName.snakeCase.replaceAll(RegExp(r'(_?model)'), ""),
+        ),
+      );
     }
 
-    await createNyloModel(projectFile.name,
-        stubModel: stubModel,
-        hasForceFlag: result.hasForceFlag,
-        creationPath: projectFile.creationPath);
+    await createNyloModel(
+      projectFile.name,
+      stubModel: stubModel,
+      hasForceFlag: result.hasForceFlag,
+      creationPath: projectFile.creationPath,
+    );
 
     if (hasJsonFlag) {
       String creationPath = (projectFile.creationPath != null
@@ -98,13 +113,14 @@ class _MakeModelCommand extends NyCustomCommand {
           : "");
 
       final formatProcess = await Process.start(
-          "dart",
-          [
-            "format",
-            "lib/app/models/$creationPath${projectFile.name.snakeCase}.dart"
-          ],
-          runInShell: true,
-          mode: ProcessStartMode.normal);
+        "dart",
+        [
+          "format",
+          "lib/app/models/$creationPath${projectFile.name.snakeCase}.dart",
+        ],
+        runInShell: true,
+        mode: ProcessStartMode.normal,
+      );
       await formatProcess.exitCode;
     }
   }

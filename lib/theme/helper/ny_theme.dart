@@ -36,8 +36,11 @@ class NyTheme {
   ///
   /// Note: This will automatically disable system theme following.
   /// To re-enable, call [NyTheme.setFollowSystem(true)].
-  static Future<void> set(BuildContext context,
-      {required String id, bool remember = false}) async {
+  static Future<void> set(
+    BuildContext context, {
+    required String id,
+    bool remember = false,
+  }) async {
     await NyThemeManager.instance.setTheme(id, remember: remember);
   }
 

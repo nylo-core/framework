@@ -15,14 +15,19 @@ class NyJson {
 }
 
 /// Creates a new Model file
-Future<void> createNyloModel(String classReCase,
-    {required String stubModel,
-    bool? hasForceFlag,
-    String? creationPath,
-    bool skipIfExist = false}) async {
-  await MetroService.makeModel(classReCase.snakeCase, stubModel,
-      forceCreate: hasForceFlag ?? false,
-      addToConfig: true,
-      creationPath: creationPath,
-      skipIfExist: skipIfExist);
+Future<void> createNyloModel(
+  String classReCase, {
+  required String stubModel,
+  bool? hasForceFlag,
+  String? creationPath,
+  bool skipIfExist = false,
+}) async {
+  await MetroService.makeModel(
+    classReCase.snakeCase,
+    stubModel,
+    forceCreate: hasForceFlag ?? false,
+    addToConfig: true,
+    creationPath: creationPath,
+    skipIfExist: skipIfExist,
+  );
 }

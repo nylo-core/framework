@@ -67,8 +67,8 @@ void main() {
           jsonData: {
             'items': [
               {'id': 1},
-              {'id': 2}
-            ]
+              {'id': 2},
+            ],
           },
           rootClassNameWithPrefixSuffix: true,
         );
@@ -82,7 +82,7 @@ void main() {
         final jsonDef = JsonDef(
           rootClassName: 'Parent',
           jsonData: {
-            'child': {'name': 'test'}
+            'child': {'name': 'test'},
           },
           rootClassNameWithPrefixSuffix: true,
         );
@@ -107,7 +107,7 @@ void main() {
           rootClassName: 'Root',
           jsonData: {
             'user': {'name': 'John'},
-            'address': {'city': 'NYC'}
+            'address': {'city': 'NYC'},
           },
           rootClassNameWithPrefixSuffix: true,
         );
@@ -147,7 +147,7 @@ void main() {
           rootClassName: 'Order',
           jsonData: {
             'id': 1,
-            'customer': {'name': 'John', 'email': 'john@test.com'}
+            'customer': {'name': 'John', 'email': 'john@test.com'},
           },
           rootClassNameWithPrefixSuffix: true,
         );

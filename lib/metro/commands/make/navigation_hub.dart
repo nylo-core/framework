@@ -19,22 +19,31 @@ class _MakeNavigationHubCommand extends NyCustomCommand {
 
   @override
   CommandBuilder builder(CommandBuilder command) {
-    command.addFlag("help",
-        abbr: "h", help: "e.g. make:navigation_hub nav_base_page");
-    command.addFlag("force",
-        abbr: "f",
-        help: "Creates a new navigation hub even if it already exists.");
+    command.addFlag(
+      "help",
+      abbr: "h",
+      help: "e.g. make:navigation_hub nav_base_page",
+    );
+    command.addFlag(
+      "force",
+      abbr: "f",
+      help: "Creates a new navigation hub even if it already exists.",
+    );
 
     return command;
   }
 
   @override
   Future<void> handle(CommandResult result) async {
-    final className =
-        requireArgument(result, message: 'A navigation hub name is required');
+    final className = requireArgument(
+      result,
+      message: 'A navigation hub name is required',
+    );
 
-    String cleanClassName =
-        className.snakeCase.replaceAll(RegExp(r'(_?page)'), "");
+    String cleanClassName = className.snakeCase.replaceAll(
+      RegExp(r'(_?page)'),
+      "",
+    );
 
     ReCase classReCase = ReCase(cleanClassName);
 
@@ -48,7 +57,8 @@ class _MakeNavigationHubCommand extends NyCustomCommand {
     newLine();
     line('  1. navigation_tabs');
     line(
-        '     Bottom navigation with persistent tabs (e.g., Home, Search, Profile)');
+      '     Bottom navigation with persistent tabs (e.g., Home, Search, Profile)',
+    );
     line('     Best for: Main app navigation with 3-5 primary sections');
     newLine();
     line('  2. journey_states');
@@ -56,9 +66,10 @@ class _MakeNavigationHubCommand extends NyCustomCommand {
     line('     Best for: Multi-step wizards or linear user journeys');
     newLine();
 
-    final layoutSelection = select(
-        "Select layout:", ["navigation_tabs", "journey_states"],
-        defaultOption: "navigation_tabs");
+    final layoutSelection = select("Select layout:", [
+      "navigation_tabs",
+      "journey_states",
+    ], defaultOption: "navigation_tabs");
     final isJourney = layoutSelection == "journey_states";
 
     // Context and examples for tab/state input
@@ -75,10 +86,11 @@ class _MakeNavigationHubCommand extends NyCustomCommand {
     newLine();
 
     final childrenInput = prompt(
-        isJourney
-            ? "State names (comma-separated):"
-            : "Tab names (comma-separated):",
-        defaultValue: "");
+      isJourney
+          ? "State names (comma-separated):"
+          : "Tab names (comma-separated):",
+      defaultValue: "",
+    );
     final children = childrenInput
         .split(",")
         .map((s) => s.trim())
@@ -95,8 +107,10 @@ class _MakeNavigationHubCommand extends NyCustomCommand {
     final navigationEntries = <String>[];
 
     for (int i = 0; i < children.length; i++) {
-      final cleanChildName =
-          children[i].snakeCase.replaceAll(RegExp(r'(_?widget|_?tab)'), "");
+      final cleanChildName = children[i].snakeCase.replaceAll(
+        RegExp(r'(_?widget|_?tab)'),
+        "",
+      );
       // For tabs, append "_tab" suffix; for journey states, keep as-is
       final childName = isJourney ? cleanChildName : "${cleanChildName}_tab";
       final childRc = ReCase(childName);
@@ -108,27 +122,35 @@ class _MakeNavigationHubCommand extends NyCustomCommand {
 
       if (isJourney) {
         navigationEntries.add(
-            "      $i: NavigationTab.journey(page: ${childRc.pascalCase}()),");
+          "      $i: NavigationTab.journey(page: ${childRc.pascalCase}()),",
+        );
       } else {
         navigationEntries.add(
-            "      $i: NavigationTab.tab(title: \"${titleRc.titleCase}\", page: ${childRc.pascalCase}()),");
+          "      $i: NavigationTab.tab(title: \"${titleRc.titleCase}\", page: ${childRc.pascalCase}()),",
+        );
       }
     }
 
     String navigationHub = navigationHubStub(
-        rc: classReCase,
-        layoutBuilder: layoutBuilder,
-        imports: childImports,
-        navigationEntries: navigationEntries);
+      rc: classReCase,
+      layoutBuilder: layoutBuilder,
+      imports: childImports,
+      navigationEntries: navigationEntries,
+    );
 
-    await MetroService.makeNavigationHub(classReCase.snakeCase, navigationHub,
-        forceCreate: result.hasForceFlag,
-        creationPath: hubPath,
-        folderPath: pagesPath);
+    await MetroService.makeNavigationHub(
+      classReCase.snakeCase,
+      navigationHub,
+      forceCreate: result.hasForceFlag,
+      creationPath: hubPath,
+      folderPath: pagesPath,
+    );
 
     for (final child in children) {
-      final cleanChildName =
-          child.snakeCase.replaceAll(RegExp(r'(_?widget|_?tab)'), "");
+      final cleanChildName = child.snakeCase.replaceAll(
+        RegExp(r'(_?widget|_?tab)'),
+        "",
+      );
       // For tabs, append "_tab" suffix; for journey states, keep as-is
       final childName = isJourney ? cleanChildName : "${cleanChildName}_tab";
       final childRc = ReCase(childName);
@@ -136,19 +158,30 @@ class _MakeNavigationHubCommand extends NyCustomCommand {
 
       if (isJourney) {
         final isLast = child == children.last;
-        final stub = navigationTabJourneyStateStub(childRc,
-            parentNavigationHub: classReCase, isLastStep: isLast);
-        await MetroService.makeJourneyWidget(childRc.snakeCase, stub,
-            forceCreate: result.hasForceFlag,
-            creationPath: childCreationPath,
-            folderPath: pagesPath);
+        final stub = navigationTabJourneyStateStub(
+          childRc,
+          parentNavigationHub: classReCase,
+          isLastStep: isLast,
+        );
+        await MetroService.makeJourneyWidget(
+          childRc.snakeCase,
+          stub,
+          forceCreate: result.hasForceFlag,
+          creationPath: childCreationPath,
+          folderPath: pagesPath,
+        );
       } else {
-        final stub = widgetStatefulStub(childRc,
-            content: 'Center(child: Text("${childRc.titleCase}").bodyLarge())');
-        await MetroService.makeStatefulWidget(childRc.snakeCase, stub,
-            forceCreate: result.hasForceFlag,
-            creationPath: childCreationPath,
-            folderPath: pagesPath);
+        final stub = widgetStatefulStub(
+          childRc,
+          content: 'Center(child: Text("${childRc.titleCase}").bodyLarge())',
+        );
+        await MetroService.makeStatefulWidget(
+          childRc.snakeCase,
+          stub,
+          forceCreate: result.hasForceFlag,
+          creationPath: childCreationPath,
+          folderPath: pagesPath,
+        );
       }
     }
   }

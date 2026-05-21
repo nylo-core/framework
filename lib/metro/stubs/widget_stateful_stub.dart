@@ -1,7 +1,8 @@
 import 'package:recase/recase.dart';
 
 /// This stub is used to create a Stateful Widget in the /resources/widgets/ directory.
-String widgetStatefulStub(ReCase rc, {String? content}) => '''
+String widgetStatefulStub(ReCase rc, {String? content}) =>
+    '''
 import 'package:flutter/material.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 

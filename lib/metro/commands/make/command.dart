@@ -15,38 +15,59 @@ class _MakeCommandCommand extends NyCustomCommand {
 
   @override
   CommandBuilder builder(CommandBuilder command) {
-    command.addFlag("help",
-        abbr: "h", help: "e.g. make:command OptimizeAssets");
-    command.addFlag("force",
-        abbr: "f",
-        help: "Creates a new command file even if it already exists.");
-    command.addOption("category",
-        abbr: "c", help: "The category for the command.", defaultValue: "app");
+    command.addFlag(
+      "help",
+      abbr: "h",
+      help: "e.g. make:command OptimizeAssets",
+    );
+    command.addFlag(
+      "force",
+      abbr: "f",
+      help: "Creates a new command file even if it already exists.",
+    );
+    command.addOption(
+      "category",
+      abbr: "c",
+      help: "The category for the command.",
+      defaultValue: "app",
+    );
 
     return command;
   }
 
   @override
   Future<void> handle(CommandResult result) async {
-    final commandName =
-        requireArgument(result, message: 'A command name is required');
-    final String categoryValue =
-        result.getString("category", defaultValue: "app")!;
+    final commandName = requireArgument(
+      result,
+      message: 'A command name is required',
+    );
+    final String categoryValue = result.getString(
+      "category",
+      defaultValue: "app",
+    )!;
 
     MetroProjectFile projectFile = MetroService.createMetroProjectFile(
-        commandName,
-        prefix: RegExp(r'(_?command)'));
+      commandName,
+      prefix: RegExp(r'(_?command)'),
+    );
 
-    String cleanCommandName =
-        projectFile.name.snakeCase.replaceAll(RegExp(r'(_?command)'), "");
+    String cleanCommandName = projectFile.name.snakeCase.replaceAll(
+      RegExp(r'(_?command)'),
+      "",
+    );
 
     ReCase classReCase = ReCase(cleanCommandName);
 
-    String stubCommand =
-        customCommandStub(customCommand: classReCase, category: categoryValue);
-    await MetroService.makeCommand(classReCase.snakeCase, stubCommand,
-        forceCreate: result.hasForceFlag,
-        category: categoryValue,
-        creationPath: projectFile.creationPath);
+    String stubCommand = customCommandStub(
+      customCommand: classReCase,
+      category: categoryValue,
+    );
+    await MetroService.makeCommand(
+      classReCase.snakeCase,
+      stubCommand,
+      forceCreate: result.hasForceFlag,
+      category: categoryValue,
+      creationPath: projectFile.creationPath,
+    );
   }
 }

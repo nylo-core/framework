@@ -15,32 +15,45 @@ class _MakeInterceptorCommand extends NyCustomCommand {
 
   @override
   CommandBuilder builder(CommandBuilder command) {
-    command.addFlag("help",
-        abbr: "h", help: "e.g. make:interceptor auth_token");
-    command.addFlag("force",
-        abbr: "f",
-        help: "Creates a new Interceptor even if it already exists.");
+    command.addFlag(
+      "help",
+      abbr: "h",
+      help: "e.g. make:interceptor auth_token",
+    );
+    command.addFlag(
+      "force",
+      abbr: "f",
+      help: "Creates a new Interceptor even if it already exists.",
+    );
 
     return command;
   }
 
   @override
   Future<void> handle(CommandResult result) async {
-    final interceptorName =
-        requireArgument(result, message: 'An interceptor name is required');
+    final interceptorName = requireArgument(
+      result,
+      message: 'An interceptor name is required',
+    );
 
     MetroProjectFile projectFile = MetroService.createMetroProjectFile(
-        interceptorName,
-        prefix: RegExp(r'(_?interceptor)'));
+      interceptorName,
+      prefix: RegExp(r'(_?interceptor)'),
+    );
 
-    String cleanInterceptorName =
-        projectFile.name.snakeCase.replaceAll(RegExp(r'(_?interceptor)'), "");
+    String cleanInterceptorName = projectFile.name.snakeCase.replaceAll(
+      RegExp(r'(_?interceptor)'),
+      "",
+    );
 
     ReCase classReCase = ReCase(cleanInterceptorName);
 
     String stubInterceptor = interceptorStub(interceptorName: classReCase);
-    await MetroService.makeInterceptor(classReCase.snakeCase, stubInterceptor,
-        forceCreate: result.hasForceFlag,
-        creationPath: projectFile.creationPath);
+    await MetroService.makeInterceptor(
+      classReCase.snakeCase,
+      stubInterceptor,
+      forceCreate: result.hasForceFlag,
+      creationPath: projectFile.creationPath,
+    );
   }
 }

@@ -115,75 +115,117 @@ void main() {
 
     group('mergeType', () {
       test('returns newType when oriType is null', () {
-        expect(ClassType.mergeType(null, ClassType.tString),
-            equals(ClassType.tString));
+        expect(
+          ClassType.mergeType(null, ClassType.tString),
+          equals(ClassType.tString),
+        );
       });
 
       test('returns oriType when newType is null', () {
-        expect(ClassType.mergeType(ClassType.tString, null),
-            equals(ClassType.tString));
+        expect(
+          ClassType.mergeType(ClassType.tString, null),
+          equals(ClassType.tString),
+        );
       });
 
       test('returns newType when oriType isNull', () {
-        expect(ClassType.mergeType(ClassType.tNull, ClassType.tString),
-            equals(ClassType.tString));
+        expect(
+          ClassType.mergeType(ClassType.tNull, ClassType.tString),
+          equals(ClassType.tString),
+        );
       });
 
       test('returns oriType when newType isNull', () {
-        expect(ClassType.mergeType(ClassType.tString, ClassType.tNull),
-            equals(ClassType.tString));
+        expect(
+          ClassType.mergeType(ClassType.tString, ClassType.tNull),
+          equals(ClassType.tString),
+        );
       });
 
       test('returns same type when both are equal', () {
-        expect(ClassType.mergeType(ClassType.tInt, ClassType.tInt),
-            equals(ClassType.tInt));
-        expect(ClassType.mergeType(ClassType.tString, ClassType.tString),
-            equals(ClassType.tString));
+        expect(
+          ClassType.mergeType(ClassType.tInt, ClassType.tInt),
+          equals(ClassType.tInt),
+        );
+        expect(
+          ClassType.mergeType(ClassType.tString, ClassType.tString),
+          equals(ClassType.tString),
+        );
       });
 
       test('int and double merge to double', () {
-        expect(ClassType.mergeType(ClassType.tInt, ClassType.tDouble),
-            equals(ClassType.tDouble));
-        expect(ClassType.mergeType(ClassType.tDouble, ClassType.tInt),
-            equals(ClassType.tDouble));
+        expect(
+          ClassType.mergeType(ClassType.tInt, ClassType.tDouble),
+          equals(ClassType.tDouble),
+        );
+        expect(
+          ClassType.mergeType(ClassType.tDouble, ClassType.tInt),
+          equals(ClassType.tDouble),
+        );
       });
 
       test('numeric types with bool or string merge to String', () {
-        expect(ClassType.mergeType(ClassType.tInt, ClassType.tBool),
-            equals(ClassType.tString));
-        expect(ClassType.mergeType(ClassType.tInt, ClassType.tString),
-            equals(ClassType.tString));
-        expect(ClassType.mergeType(ClassType.tDouble, ClassType.tBool),
-            equals(ClassType.tString));
-        expect(ClassType.mergeType(ClassType.tDouble, ClassType.tString),
-            equals(ClassType.tString));
+        expect(
+          ClassType.mergeType(ClassType.tInt, ClassType.tBool),
+          equals(ClassType.tString),
+        );
+        expect(
+          ClassType.mergeType(ClassType.tInt, ClassType.tString),
+          equals(ClassType.tString),
+        );
+        expect(
+          ClassType.mergeType(ClassType.tDouble, ClassType.tBool),
+          equals(ClassType.tString),
+        );
+        expect(
+          ClassType.mergeType(ClassType.tDouble, ClassType.tString),
+          equals(ClassType.tString),
+        );
       });
 
       test('bool with numeric or string types merge to String', () {
-        expect(ClassType.mergeType(ClassType.tBool, ClassType.tInt),
-            equals(ClassType.tString));
-        expect(ClassType.mergeType(ClassType.tBool, ClassType.tDouble),
-            equals(ClassType.tString));
-        expect(ClassType.mergeType(ClassType.tBool, ClassType.tString),
-            equals(ClassType.tString));
+        expect(
+          ClassType.mergeType(ClassType.tBool, ClassType.tInt),
+          equals(ClassType.tString),
+        );
+        expect(
+          ClassType.mergeType(ClassType.tBool, ClassType.tDouble),
+          equals(ClassType.tString),
+        );
+        expect(
+          ClassType.mergeType(ClassType.tBool, ClassType.tString),
+          equals(ClassType.tString),
+        );
       });
 
       test('string with primitive types merge to String', () {
-        expect(ClassType.mergeType(ClassType.tString, ClassType.tInt),
-            equals(ClassType.tString));
-        expect(ClassType.mergeType(ClassType.tString, ClassType.tDouble),
-            equals(ClassType.tString));
-        expect(ClassType.mergeType(ClassType.tString, ClassType.tBool),
-            equals(ClassType.tString));
+        expect(
+          ClassType.mergeType(ClassType.tString, ClassType.tInt),
+          equals(ClassType.tString),
+        );
+        expect(
+          ClassType.mergeType(ClassType.tString, ClassType.tDouble),
+          equals(ClassType.tString),
+        );
+        expect(
+          ClassType.mergeType(ClassType.tString, ClassType.tBool),
+          equals(ClassType.tString),
+        );
       });
 
       test('incompatible types merge to dynamic', () {
-        expect(ClassType.mergeType(ClassType.tInt, ClassType.tObject),
-            equals(ClassType.tDynamic));
-        expect(ClassType.mergeType(ClassType.tString, ClassType.tListDynamic),
-            equals(ClassType.tDynamic));
-        expect(ClassType.mergeType(ClassType.tBool, ClassType.tObject),
-            equals(ClassType.tDynamic));
+        expect(
+          ClassType.mergeType(ClassType.tInt, ClassType.tObject),
+          equals(ClassType.tDynamic),
+        );
+        expect(
+          ClassType.mergeType(ClassType.tString, ClassType.tListDynamic),
+          equals(ClassType.tDynamic),
+        );
+        expect(
+          ClassType.mergeType(ClassType.tBool, ClassType.tObject),
+          equals(ClassType.tDynamic),
+        );
       });
     });
 
@@ -200,8 +242,10 @@ void main() {
       });
 
       test('throws for invalid type name', () {
-        expect(() => ClassType.name('InvalidType'),
-            throwsA(equals('InvalidType')));
+        expect(
+          () => ClassType.name('InvalidType'),
+          throwsA(equals('InvalidType')),
+        );
       });
     });
 
@@ -230,7 +274,9 @@ void main() {
 
       test('does not contain non-primitive types', () {
         expect(
-            ClassType.primitiveTypes, isNot(contains(ClassType.tListDynamic)));
+          ClassType.primitiveTypes,
+          isNot(contains(ClassType.tListDynamic)),
+        );
         expect(ClassType.primitiveTypes, isNot(contains(ClassType.tDynamic)));
         expect(ClassType.primitiveTypes, isNot(contains(ClassType.tObject)));
         expect(ClassType.primitiveTypes, isNot(contains(ClassType.tNull)));

@@ -54,8 +54,12 @@ abstract class NyCustomCommand {
   }
 
   /// Run a process with the given command
-  Future<int> runProcess(String command,
-      {String? workingDirectory, bool? runInShell, bool silent = false}) async {
+  Future<int> runProcess(
+    String command, {
+    String? workingDirectory,
+    bool? runInShell,
+    bool silent = false,
+  }) async {
     // Parse command properly handling quotes
     final List<String> parts = _parseCommand(command);
     final String executable = parts[0];
@@ -134,8 +138,11 @@ abstract class NyCustomCommand {
   }
 
   /// Add a package to the pubspec.yaml file
-  Future<void> addPackage(String package,
-      {String? version, bool dev = false}) async {
+  Future<void> addPackage(
+    String package, {
+    String? version,
+    bool dev = false,
+  }) async {
     await MetroService.addPackage(package, dev: dev, version: version);
   }
 
@@ -216,8 +223,11 @@ abstract class NyCustomCommand {
   }
 
   /// Asks the user to select an option from a list
-  String select(String question, List<String> options,
-      {String? defaultOption}) {
+  String select(
+    String question,
+    List<String> options, {
+    String? defaultOption,
+  }) {
     info(question);
 
     for (int i = 0; i < options.length; i++) {
@@ -254,7 +264,8 @@ abstract class NyCustomCommand {
 
     print('$question');
     print(
-        'Enter the numbers of your choices (comma-separated) or "all" for all options:');
+      'Enter the numbers of your choices (comma-separated) or "all" for all options:',
+    );
 
     // Display options with numbers
     for (int i = 0; i < options.length; i++) {
@@ -299,10 +310,9 @@ abstract class NyCustomCommand {
   ///
   /// Optionally accepts [microseconds] for finer control.
   Future<void> sleep(int seconds, [int microseconds = 0]) async {
-    await Future.delayed(Duration(
-      seconds: seconds,
-      microseconds: microseconds,
-    ));
+    await Future.delayed(
+      Duration(seconds: seconds, microseconds: microseconds),
+    );
   }
 
   // ============================================
@@ -598,8 +608,10 @@ abstract class NyCustomCommand {
   }
 
   /// Create multiple files at once
-  Future<void> scaffoldMany(List<ScaffoldFile> files,
-      {bool force = false}) async {
+  Future<void> scaffoldMany(
+    List<ScaffoldFile> files, {
+    bool force = false,
+  }) async {
     for (final file in files) {
       await scaffold(
         path: file.path,
@@ -627,8 +639,11 @@ abstract class NyCustomCommand {
   }
 
   /// Write data to a JSON file
-  Future<void> writeJson(String path, dynamic data,
-      {bool pretty = true}) async {
+  Future<void> writeJson(
+    String path,
+    dynamic data, {
+    bool pretty = true,
+  }) async {
     String content;
     if (pretty) {
       content = const JsonEncoder.withIndent('  ').convert(data);
@@ -639,8 +654,11 @@ abstract class NyCustomCommand {
   }
 
   /// Append an item to a JSON array file
-  Future<void> appendToJsonArray(String path, Map<String, dynamic> item,
-      {String? uniqueKey}) async {
+  Future<void> appendToJsonArray(
+    String path,
+    Map<String, dynamic> item, {
+    String? uniqueKey,
+  }) async {
     List<dynamic> array;
 
     if (fileExists(path)) {
@@ -651,8 +669,9 @@ abstract class NyCustomCommand {
 
     // Check for duplicates if uniqueKey is provided
     if (uniqueKey != null) {
-      final exists =
-          array.any((existing) => existing[uniqueKey] == item[uniqueKey]);
+      final exists = array.any(
+        (existing) => existing[uniqueKey] == item[uniqueKey],
+      );
       if (exists) {
         comment('Item with $uniqueKey="${item[uniqueKey]}" already exists');
         return;
@@ -673,8 +692,9 @@ abstract class NyCustomCommand {
   /// Convert YamlMap to regular Map/List/scalar recursively
   dynamic _yamlToMap(dynamic yaml) {
     if (yaml is YamlMap) {
-      return yaml
-          .map((key, value) => MapEntry(key.toString(), _yamlToMap(value)));
+      return yaml.map(
+        (key, value) => MapEntry(key.toString(), _yamlToMap(value)),
+      );
     } else if (yaml is YamlList) {
       return yaml.map((e) => _yamlToMap(e)).toList();
     }
@@ -687,8 +707,11 @@ abstract class NyCustomCommand {
 
   /// Run dart format on a file or directory
   Future<int> dartFormat(String path) async {
-    return await runProcess('dart format $path',
-        runInShell: true, silent: true);
+    return await runProcess(
+      'dart format $path',
+      runInShell: true,
+      silent: true,
+    );
   }
 
   /// Run dart analyze on a path (defaults to current directory)
@@ -708,8 +731,10 @@ abstract class NyCustomCommand {
   }
 
   /// Run flutter build with a target
-  Future<int> flutterBuild(String target,
-      {List<String> args = const []}) async {
+  Future<int> flutterBuild(
+    String target, {
+    List<String> args = const [],
+  }) async {
     final argsStr = args.isNotEmpty ? ' ${args.join(' ')}' : '';
     return await runProcess('flutter build $target$argsStr', runInShell: true);
   }
@@ -746,7 +771,8 @@ abstract class NyCustomCommand {
 
     if (matches.isNotEmpty) {
       final lastImportEnd = matches.last.end;
-      content = content.substring(0, lastImportEnd) +
+      content =
+          content.substring(0, lastImportEnd) +
           '\n$importStatement' +
           content.substring(lastImportEnd);
     } else {
@@ -784,7 +810,8 @@ abstract class NyCustomCommand {
         }
       }
       if (classBraceIndex != null) {
-        content = content.substring(0, classBraceIndex) +
+        content =
+            content.substring(0, classBraceIndex) +
             '\n$code\n' +
             content.substring(classBraceIndex);
         await writeFile(filePath, content);
@@ -1057,7 +1084,7 @@ class ConsoleSpinner {
     '⠦',
     '⠧',
     '⠇',
-    '⠏'
+    '⠏',
   ];
 
   Timer? _timer;
@@ -1176,7 +1203,11 @@ class ConsoleTable {
   }
 
   void _printHorizontalBorder(
-      List<int> widths, String left, String middle, String right) {
+    List<int> widths,
+    String left,
+    String middle,
+    String right,
+  ) {
     final buffer = StringBuffer(left);
     for (int i = 0; i < widths.length; i++) {
       buffer.write('─' * (widths[i] + 2));
@@ -1188,8 +1219,11 @@ class ConsoleTable {
     print(buffer.toString());
   }
 
-  void _printRow(List<String> cells, List<int> widths,
-      {bool isHeader = false}) {
+  void _printRow(
+    List<String> cells,
+    List<int> widths, {
+    bool isHeader = false,
+  }) {
     final buffer = StringBuffer('│');
     for (int i = 0; i < widths.length; i++) {
       final cell = i < cells.length ? cells[i] : '';
@@ -1216,11 +1250,8 @@ class ConsoleProgressBar {
   final int _barWidth;
 
   /// Creates a [ConsoleProgressBar] with the given [total] steps.
-  ConsoleProgressBar({
-    required this.total,
-    this.message,
-    int barWidth = 30,
-  }) : _barWidth = barWidth;
+  ConsoleProgressBar({required this.total, this.message, int barWidth = 30})
+    : _barWidth = barWidth;
 
   /// Get the current progress value
   int get current => _current;
@@ -1275,8 +1306,9 @@ class ConsoleProgressBar {
   }
 
   void _render() {
-    final filledWidth =
-        total > 0 ? ((_current / total) * _barWidth).round() : 0;
+    final filledWidth = total > 0
+        ? ((_current / total) * _barWidth).round()
+        : 0;
     final emptyWidth = _barWidth - filledWidth;
 
     final filled = '█' * filledWidth;
@@ -1633,12 +1665,7 @@ class CommandBuilder {
     List<String>? allowed,
     String? defaultValue,
   }) {
-    _parser.addOption(
-      name,
-      abbr: abbr,
-      help: help,
-      allowed: allowed,
-    );
+    _parser.addOption(name, abbr: abbr, help: help, allowed: allowed);
 
     if (defaultValue != null) {
       _defaults[name] = defaultValue;
@@ -1654,12 +1681,7 @@ class CommandBuilder {
     String? help,
     bool defaultValue = false,
   }) {
-    _parser.addFlag(
-      name,
-      abbr: abbr,
-      help: help,
-      defaultsTo: defaultValue,
-    );
+    _parser.addFlag(name, abbr: abbr, help: help, defaultsTo: defaultValue);
 
     _defaults[name] = defaultValue;
 
@@ -1749,9 +1771,5 @@ class CommandTask {
   /// Whether to stop execution if this task fails
   final bool stopOnError;
 
-  const CommandTask(
-    this.name,
-    this.action, {
-    this.stopOnError = true,
-  });
+  const CommandTask(this.name, this.action, {this.stopOnError = true});
 }

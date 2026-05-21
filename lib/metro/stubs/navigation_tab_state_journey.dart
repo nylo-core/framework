@@ -1,8 +1,11 @@
 import 'package:recase/recase.dart';
 
 /// This stub is used to create a navigation tab Journey State widget
-String navigationTabJourneyStateStub(ReCase rc,
-        {required ReCase parentNavigationHub, bool isLastStep = false}) =>
+String navigationTabJourneyStateStub(
+  ReCase rc, {
+  required ReCase parentNavigationHub,
+  bool isLastStep = false,
+}) =>
     '''
 import 'package:flutter/material.dart';
 import '/resources/pages/navigation_hubs/${parentNavigationHub.snakeCase}/${parentNavigationHub.snakeCase}_navigation_hub.dart';

@@ -1,7 +1,8 @@
 import 'package:recase/recase.dart';
 
 /// This stub is used to create a State Managed Widget in the /resources/widgets/ directory.
-String widgetStateManagedStub(ReCase rc) => '''
+String widgetStateManagedStub(ReCase rc) =>
+    '''
 import 'package:flutter/material.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 

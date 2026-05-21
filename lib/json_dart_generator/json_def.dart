@@ -3,10 +3,8 @@ import 'class_type.dart';
 import 'extension.dart';
 
 /// Callback that provides a class name prefix or suffix.
-typedef ClassNamePrefixSuffixBuilder = String? Function(
-  String name,
-  bool isPrefix,
-);
+typedef ClassNamePrefixSuffixBuilder =
+    String? Function(String name, bool isPrefix);
 
 /// Parses JSON data and generates Dart class definitions.
 class JsonDef {
@@ -191,19 +189,11 @@ class ValueDef {
 
   /// The prefix applied to the generated class name.
   String get classNamePrefix =>
-      classNamePrefixSuffixBuilder?.call(
-        classNameNoPrefixSuffix,
-        true,
-      ) ??
-      '';
+      classNamePrefixSuffixBuilder?.call(classNameNoPrefixSuffix, true) ?? '';
 
   /// The suffix applied to the generated class name.
   String get classNameSuffix =>
-      classNamePrefixSuffixBuilder?.call(
-        classNameNoPrefixSuffix,
-        false,
-      ) ??
-      '';
+      classNamePrefixSuffixBuilder?.call(classNameNoPrefixSuffix, false) ?? '';
 
   /// Returns all nested custom object definitions.
   List<ValueDef> get customObjects {
@@ -232,8 +222,7 @@ class ValueDef {
         }
       }
     } else if (childrenDef is Map<String, ValueDef>) {
-      var childrenObject = (childrenDef as Map<String, ValueDef>)
-          .entries
+      var childrenObject = (childrenDef as Map<String, ValueDef>).entries
           .map((e) => e.value.customObjects)
           .expand((element) => element)
           .toList();
@@ -289,8 +278,9 @@ class ValueDef {
           var thisKey = element.key;
           var thisValue = element.value;
 
-          var findOther = otherKeyList
-              .firstWhereOrNull((element) => element.key == thisKey);
+          var findOther = otherKeyList.firstWhereOrNull(
+            (element) => element.key == thisKey,
+          );
 
           if (findOther != null) {
             var isSame = thisValue.isStructSame(findOther.value);
@@ -310,8 +300,11 @@ class ValueDef {
   }
 
   /// Creates a copy of this definition with optional overrides.
-  ValueDef copyWith(
-      {ClassType? type, ClassType? listType, dynamic childrenDef}) {
+  ValueDef copyWith({
+    ClassType? type,
+    ClassType? listType,
+    dynamic childrenDef,
+  }) {
     return ValueDef._(
       rootClassName: rootClassName,
       type: type ?? this.type,
@@ -362,23 +355,27 @@ class ValueDef {
     switch (type) {
       case ClassType.tListDynamic:
         childrenDef = (value as List)
-            .map((e) => ValueDef(
-                  value: e,
-                  rootClassNameWithPrefixSuffix: false,
-                  classNamePrefixSuffixBuilder: classNamePrefixSuffixBuilder,
-                ))
+            .map(
+              (e) => ValueDef(
+                value: e,
+                rootClassNameWithPrefixSuffix: false,
+                classNamePrefixSuffixBuilder: classNamePrefixSuffixBuilder,
+              ),
+            )
             .toList();
         break;
       case ClassType.tObject:
-        childrenDef =
-            (value as Map<String, dynamic>).map((key, value) => MapEntry(
-                key,
-                ValueDef(
-                  key: key,
-                  rootClassNameWithPrefixSuffix: false,
-                  value: value,
-                  classNamePrefixSuffixBuilder: classNamePrefixSuffixBuilder,
-                )));
+        childrenDef = (value as Map<String, dynamic>).map(
+          (key, value) => MapEntry(
+            key,
+            ValueDef(
+              key: key,
+              rootClassNameWithPrefixSuffix: false,
+              value: value,
+              classNamePrefixSuffixBuilder: classNamePrefixSuffixBuilder,
+            ),
+          ),
+        );
         break;
       default:
         childrenDef = value;
@@ -391,10 +388,9 @@ class ValueDef {
         other.type == ClassType.tListDynamic) {
       ValueDef? elementDef;
 
-      var keyList = (List<ValueDef?>.from(childrenDef)
-            ..addAll(other.childrenDef))
-          .nonNulls
-          .toList();
+      var keyList = (List<ValueDef?>.from(
+        childrenDef,
+      )..addAll(other.childrenDef)).nonNulls.toList();
 
       for (var i = 0; i < keyList.length; i++) {
         var element = keyList[i];
@@ -444,10 +440,7 @@ class ValueDef {
         if ((childrenDef as List).isEmpty) {
           listType = ClassType.tDynamic;
 
-          return copyWith(
-            type: type,
-            listType: listType,
-          );
+          return copyWith(type: type, listType: listType);
         } else {
           ValueDef? elementDef;
 
@@ -487,10 +480,7 @@ class ValueDef {
         var listType = def.listType!;
         if (listType.isNull || listType.isDynamic) {
           listType = ClassType.tDynamic;
-          return def.copyWith(
-            type: def.type,
-            listType: listType,
-          );
+          return def.copyWith(type: def.type, listType: listType);
         } else {
           var keyList = List<ValueDef>.from(def.childrenDef);
           for (var i = 0; i < keyList.length; i++) {

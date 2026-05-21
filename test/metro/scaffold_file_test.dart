@@ -27,10 +27,7 @@ void main() {
     });
 
     test('is a const class', () {
-      const file = ScaffoldFile(
-        path: 'test/path.dart',
-        content: 'content',
-      );
+      const file = ScaffoldFile(path: 'test/path.dart', content: 'content');
 
       expect(file, isNotNull);
     });
@@ -38,10 +35,7 @@ void main() {
 
   group('CommandTask', () {
     test('can be created with name and action', () {
-      final task = CommandTask(
-        'Run tests',
-        () async {},
-      );
+      final task = CommandTask('Run tests', () async {});
 
       expect(task.name, equals('Run tests'));
       expect(task.action, isNotNull);
@@ -60,22 +54,16 @@ void main() {
 
     test('action can be executed', () async {
       var executed = false;
-      final task = CommandTask(
-        'Test task',
-        () async {
-          executed = true;
-        },
-      );
+      final task = CommandTask('Test task', () async {
+        executed = true;
+      });
 
       await task.action();
       expect(executed, isTrue);
     });
 
     test('is a const class', () {
-      const task = CommandTask(
-        'Const task',
-        _dummyAction,
-      );
+      const task = CommandTask('Const task', _dummyAction);
 
       expect(task, isNotNull);
     });

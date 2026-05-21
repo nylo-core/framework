@@ -22,15 +22,23 @@ class _MakeEnvCommand extends NyCustomCommand {
 
   @override
   CommandBuilder builder(CommandBuilder command) {
-    command.addFlag("help",
-        abbr: "h",
-        help: 'Generates an encrypted env.g.dart file from your .env file');
-    command.addOption("file",
-        abbr: "e", help: "The .env file to read from.", defaultValue: ".env");
-    command.addFlag("dart-define",
-        abbr: "d",
-        help:
-            "Use --dart-define mode for APP_KEY injection at build time instead of runtime.");
+    command.addFlag(
+      "help",
+      abbr: "h",
+      help: 'Generates an encrypted env.g.dart file from your .env file',
+    );
+    command.addOption(
+      "file",
+      abbr: "e",
+      help: "The .env file to read from.",
+      defaultValue: ".env",
+    );
+    command.addFlag(
+      "dart-define",
+      abbr: "d",
+      help:
+          "Use --dart-define mode for APP_KEY injection at build time instead of runtime.",
+    );
     return command;
   }
 

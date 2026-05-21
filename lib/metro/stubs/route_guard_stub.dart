@@ -1,7 +1,8 @@
 import 'package:recase/recase.dart';
 
 /// This stub is used to create a Route Guard class in the /routes/guards/ directory.
-String routeGuardStub(ReCase rc) => '''
+String routeGuardStub(ReCase rc) =>
+    '''
 import 'package:nylo_framework/nylo_framework.dart';
 
 /* ${rc.pascalCase} Route Guard

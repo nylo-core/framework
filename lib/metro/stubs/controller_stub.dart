@@ -1,7 +1,8 @@
 import 'package:recase/recase.dart';
 
 /// This stub is used to create a new Controller.
-String controllerStub({required String controllerName}) => '''
+String controllerStub({required String controllerName}) =>
+    '''
 import '/app/controllers/controller.dart';
 import 'package:flutter/widgets.dart';
 

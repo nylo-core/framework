@@ -1,7 +1,8 @@
 import 'package:recase/recase.dart';
 
 /// This stub is used to create a Button Widget in the /resources/widgets/buttons/partials/ directory.
-String buttonStub(ReCase rc) => '''
+String buttonStub(ReCase rc) =>
+    '''
 import 'package:flutter/material.dart';
 import '/resources/widgets/buttons/abstract/app_button.dart';
 
@@ -57,7 +58,8 @@ class ${rc.pascalCase}Button extends StatefulAppButton {
 ''';
 
 /// This stub is used to create a static method in the Button class.
-String buttonStaticMethodStub(ReCase rc) => '''
+String buttonStaticMethodStub(ReCase rc) =>
+    '''
   /// ${rc.titleCase} button
   static Widget ${rc.camelCase}({
     required String text,

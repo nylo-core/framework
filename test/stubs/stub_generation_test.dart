@@ -39,8 +39,10 @@ void main() {
     test('imports nylo_framework', () {
       final stub = modelStub(modelName: ReCase('item'));
 
-      expect(stub,
-          contains("import 'package:nylo_framework/nylo_framework.dart'"));
+      expect(
+        stub,
+        contains("import 'package:nylo_framework/nylo_framework.dart'"),
+      );
     });
 
     test('handles single word name', () {
@@ -124,8 +126,10 @@ void main() {
     test('imports nylo_framework', () {
       final stub = pageStub(className: 'profile');
 
-      expect(stub,
-          contains("import 'package:nylo_framework/nylo_framework.dart'"));
+      expect(
+        stub,
+        contains("import 'package:nylo_framework/nylo_framework.dart'"),
+      );
     });
 
     test('has view method', () {

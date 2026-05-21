@@ -133,8 +133,10 @@ void main() {
       final builder = CommandBuilder()..addOption('name', abbr: 'n');
       final result = builder.parse([]);
 
-      expect(result.getString('name', defaultValue: 'Fallback'),
-          equals('Fallback'));
+      expect(
+        result.getString('name', defaultValue: 'Fallback'),
+        equals('Fallback'),
+      );
     });
 
     test('getBool with fallback returns fallback when flag not set', () {

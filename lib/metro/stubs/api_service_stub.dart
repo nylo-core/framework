@@ -1,8 +1,11 @@
 import 'package:recase/recase.dart';
 
 /// This stub is used to create a new API Service.
-String apiServiceStub(ReCase rc,
-        {required ReCase model, required String baseUrl}) =>
+String apiServiceStub(
+  ReCase rc, {
+  required ReCase model,
+  required String baseUrl,
+}) =>
     '''import '/bootstrap/decoders.dart';
 ${baseUrl == "getEnv('API_BASE_URL')" ? "import 'package:nylo_framework/nylo_framework.dart';" : ""}${model.originalText != 'Model' ? "\nimport '/app/models/${model.snakeCase}.dart';" : ""}
 

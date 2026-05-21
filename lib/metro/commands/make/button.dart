@@ -17,29 +17,41 @@ class _MakeButtonCommand extends NyCustomCommand {
 
   @override
   CommandBuilder builder(CommandBuilder command) {
-    command.addFlag("help",
-        abbr: "h", help: "Creates a new button widget for your project.");
-    command.addFlag("force",
-        abbr: "f", help: "Creates a new button even if it already exists.");
+    command.addFlag(
+      "help",
+      abbr: "h",
+      help: "Creates a new button widget for your project.",
+    );
+    command.addFlag(
+      "force",
+      abbr: "f",
+      help: "Creates a new button even if it already exists.",
+    );
 
     return command;
   }
 
   @override
   Future<void> handle(CommandResult result) async {
-    final buttonNameArg = requireArgument(result,
-        message: 'You cannot create a button with an empty name');
+    final buttonNameArg = requireArgument(
+      result,
+      message: 'You cannot create a button with an empty name',
+    );
 
     // Strip 'button' suffix if user included it (e.g., "PrimaryButton" -> "Primary")
-    final buttonName =
-        buttonNameArg.replaceAll(RegExp(r'button$', caseSensitive: false), '');
+    final buttonName = buttonNameArg.replaceAll(
+      RegExp(r'button$', caseSensitive: false),
+      '',
+    );
 
     MetroProjectFile projectFile = MetroService.createMetroProjectFile(
-        buttonName,
-        prefix: RegExp(r'(_?button)'));
+      buttonName,
+      prefix: RegExp(r'(_?button)'),
+    );
 
-    ReCase nameReCase =
-        ReCase(projectFile.name.replaceAll(RegExp(r'(_?button)'), ""));
+    ReCase nameReCase = ReCase(
+      projectFile.name.replaceAll(RegExp(r'(_?button)'), ""),
+    );
 
     // Create the button widget stub
     String stubButton = buttonStub(nameReCase);
@@ -102,7 +114,8 @@ class _MakeButtonCommand extends NyCustomCommand {
     final buttonClassName = '${nameReCase.pascalCase}Button';
     if (fileContent.contains(buttonClassName)) {
       MetroConsole.writeInBlack(
-          '$buttonClassName already exists in buttons.dart');
+        '$buttonClassName already exists in buttons.dart',
+      );
       return;
     }
 
@@ -116,7 +129,8 @@ class _MakeButtonCommand extends NyCustomCommand {
 
     if (matches.isNotEmpty) {
       final lastImportEnd = matches.last.end;
-      fileContent = fileContent.substring(0, lastImportEnd) +
+      fileContent =
+          fileContent.substring(0, lastImportEnd) +
           '\n$importStatement' +
           fileContent.substring(lastImportEnd);
     } else {
@@ -128,8 +142,9 @@ class _MakeButtonCommand extends NyCustomCommand {
     final staticMethod = buttonStaticMethodStub(nameReCase);
 
     // Find the closing brace of the last class in the file
-    final classMatches =
-        RegExp(r'class\s+\w+').allMatches(fileContent).toList();
+    final classMatches = RegExp(
+      r'class\s+\w+',
+    ).allMatches(fileContent).toList();
     if (classMatches.isNotEmpty) {
       final lastClassStart = classMatches.last.start;
       int braceCount = 0;
@@ -145,7 +160,8 @@ class _MakeButtonCommand extends NyCustomCommand {
         }
       }
       if (classBraceIndex != null) {
-        fileContent = fileContent.substring(0, classBraceIndex) +
+        fileContent =
+            fileContent.substring(0, classBraceIndex) +
             '\n$staticMethod' +
             fileContent.substring(classBraceIndex);
       }
@@ -154,6 +170,7 @@ class _MakeButtonCommand extends NyCustomCommand {
     // Write the updated content
     await file.writeAsString(fileContent);
     MetroConsole.writeInGreen(
-        '[Button] Added Button.${nameReCase.camelCase}() to buttons.dart');
+      '[Button] Added Button.${nameReCase.camelCase}() to buttons.dart',
+    );
   }
 }

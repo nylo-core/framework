@@ -41,8 +41,10 @@ void main() {
     test('imports nylo_framework', () {
       final stub = eventStub(eventName: ReCase('app'));
 
-      expect(stub,
-          contains("import 'package:nylo_framework/nylo_framework.dart'"));
+      expect(
+        stub,
+        contains("import 'package:nylo_framework/nylo_framework.dart'"),
+      );
     });
   });
 
@@ -68,8 +70,10 @@ void main() {
     test('imports nylo_framework', () {
       final stub = providerStub(ReCase('service'));
 
-      expect(stub,
-          contains("import 'package:nylo_framework/nylo_framework.dart'"));
+      expect(
+        stub,
+        contains("import 'package:nylo_framework/nylo_framework.dart'"),
+      );
     });
   });
 
@@ -104,8 +108,10 @@ void main() {
     test('imports nylo_framework', () {
       final stub = interceptorStub(interceptorName: ReCase('test'));
 
-      expect(stub,
-          contains("import 'package:nylo_framework/nylo_framework.dart'"));
+      expect(
+        stub,
+        contains("import 'package:nylo_framework/nylo_framework.dart'"),
+      );
     });
   });
 
@@ -126,7 +132,9 @@ void main() {
       final stub = routeGuardStub(ReCase('guest'));
 
       expect(
-          stub, contains('Future<GuardResult> onBefore(RouteContext context)'));
+        stub,
+        contains('Future<GuardResult> onBefore(RouteContext context)'),
+      );
     });
 
     test('contains next() return', () {
@@ -146,8 +154,10 @@ void main() {
     test('imports nylo_framework', () {
       final stub = routeGuardStub(ReCase('test'));
 
-      expect(stub,
-          contains("import 'package:nylo_framework/nylo_framework.dart'"));
+      expect(
+        stub,
+        contains("import 'package:nylo_framework/nylo_framework.dart'"),
+      );
     });
   });
 
@@ -183,28 +193,19 @@ void main() {
     });
 
     test('contains decrypt method', () {
-      final stub = envStub(
-        encryptedMap: {'KEY': 'value'},
-        appKey: 'key',
-      );
+      final stub = envStub(encryptedMap: {'KEY': 'value'}, appKey: 'key');
 
       expect(stub, contains('_decrypt'));
     });
 
     test('contains get method', () {
-      final stub = envStub(
-        encryptedMap: {'TEST': 'test'},
-        appKey: 'mykey',
-      );
+      final stub = envStub(encryptedMap: {'TEST': 'test'}, appKey: 'mykey');
 
       expect(stub, contains('static dynamic get(String key'));
     });
 
     test('uses dart define when specified', () {
-      final stub = envStub(
-        encryptedMap: {'VAR': 'val'},
-        useDartDefine: true,
-      );
+      final stub = envStub(encryptedMap: {'VAR': 'val'}, useDartDefine: true);
 
       expect(stub, contains('String.fromEnvironment'));
     });
@@ -245,8 +246,10 @@ void main() {
     test('imports nylo_framework', () {
       final stub = formStub(ReCase('settings'));
 
-      expect(stub,
-          contains("import 'package:nylo_framework/nylo_framework.dart'"));
+      expect(
+        stub,
+        contains("import 'package:nylo_framework/nylo_framework.dart'"),
+      );
     });
   });
 
@@ -365,7 +368,9 @@ void main() {
       final stub = customCommandStub(customCommand: ReCase('example'));
 
       expect(
-          stub, contains("import 'package:nylo_framework/metro/ny_cli.dart'"));
+        stub,
+        contains("import 'package:nylo_framework/metro/ny_cli.dart'"),
+      );
     });
   });
 }

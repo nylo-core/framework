@@ -15,32 +15,45 @@ class _MakeRouteGuardCommand extends NyCustomCommand {
 
   @override
   CommandBuilder builder(CommandBuilder command) {
-    command.addFlag("help",
-        abbr: "h", help: "e.g. make:route_guard subscription_route_guard");
-    command.addFlag("force",
-        abbr: "f",
-        help: "Creates a new route guard even if it already exists.");
+    command.addFlag(
+      "help",
+      abbr: "h",
+      help: "e.g. make:route_guard subscription_route_guard",
+    );
+    command.addFlag(
+      "force",
+      abbr: "f",
+      help: "Creates a new route guard even if it already exists.",
+    );
 
     return command;
   }
 
   @override
   Future<void> handle(CommandResult result) async {
-    final routeGuardName =
-        requireArgument(result, message: 'A route guard name is required');
+    final routeGuardName = requireArgument(
+      result,
+      message: 'A route guard name is required',
+    );
 
     MetroProjectFile projectFile = MetroService.createMetroProjectFile(
-        routeGuardName,
-        prefix: RegExp(r'(_?route_guard)'));
+      routeGuardName,
+      prefix: RegExp(r'(_?route_guard)'),
+    );
 
-    String cleanRouteGuardName =
-        projectFile.name.snakeCase.replaceAll(RegExp(r'(_?route_guard)'), "");
+    String cleanRouteGuardName = projectFile.name.snakeCase.replaceAll(
+      RegExp(r'(_?route_guard)'),
+      "",
+    );
 
     ReCase classReCase = ReCase(cleanRouteGuardName);
 
     String stubRouteGuard = routeGuardStub(classReCase);
-    await MetroService.makeRouteGuard(classReCase.snakeCase, stubRouteGuard,
-        forceCreate: result.hasForceFlag,
-        creationPath: projectFile.creationPath);
+    await MetroService.makeRouteGuard(
+      classReCase.snakeCase,
+      stubRouteGuard,
+      forceCreate: result.hasForceFlag,
+      creationPath: projectFile.creationPath,
+    );
   }
 }

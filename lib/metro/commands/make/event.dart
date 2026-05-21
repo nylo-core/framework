@@ -16,30 +16,41 @@ class _MakeEventCommand extends NyCustomCommand {
   @override
   CommandBuilder builder(CommandBuilder command) {
     command.addFlag("help", abbr: "h", help: "e.g. make:event login_event");
-    command.addFlag("force",
-        abbr: "f", help: "Creates a new event even if it already exists.");
+    command.addFlag(
+      "force",
+      abbr: "f",
+      help: "Creates a new event even if it already exists.",
+    );
 
     return command;
   }
 
   @override
   Future<void> handle(CommandResult result) async {
-    final eventName =
-        requireArgument(result, message: 'An event name is required');
+    final eventName = requireArgument(
+      result,
+      message: 'An event name is required',
+    );
 
     MetroProjectFile projectFile = MetroService.createMetroProjectFile(
-        eventName,
-        prefix: RegExp(r'(_?event)'));
+      eventName,
+      prefix: RegExp(r'(_?event)'),
+    );
 
-    String cleanEventName =
-        projectFile.name.snakeCase.replaceAll(RegExp(r'(_?event)'), "");
+    String cleanEventName = projectFile.name.snakeCase.replaceAll(
+      RegExp(r'(_?event)'),
+      "",
+    );
 
     ReCase classReCase = ReCase(cleanEventName);
 
     String stubEvent = eventStub(eventName: classReCase);
-    await MetroService.makeEvent(classReCase.snakeCase, stubEvent,
-        forceCreate: result.hasForceFlag,
-        addToConfig: true,
-        creationPath: projectFile.creationPath);
+    await MetroService.makeEvent(
+      classReCase.snakeCase,
+      stubEvent,
+      forceCreate: result.hasForceFlag,
+      addToConfig: true,
+      creationPath: projectFile.creationPath,
+    );
   }
 }

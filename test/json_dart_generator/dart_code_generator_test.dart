@@ -117,8 +117,9 @@ void main() {
 
       test('handles double values', () {
         final generator = DartCodeGenerator(rootClassName: 'Metrics');
-        final result =
-            generator.generate('{"temperature": 36.6, "ratio": 0.5}');
+        final result = generator.generate(
+          '{"temperature": 36.6, "ratio": 0.5}',
+        );
 
         expect(result, contains('double? temperature'));
         expect(result, contains('double? ratio'));

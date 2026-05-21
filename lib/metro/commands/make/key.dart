@@ -18,10 +18,17 @@ class _MakeKeyCommand extends NyCustomCommand {
 
   @override
   CommandBuilder builder(CommandBuilder command) {
-    command.addFlag("help",
-        abbr: "h", help: 'Generates a secure APP_KEY for your .env file');
-    command.addOption("file",
-        abbr: "e", help: "The .env file to update.", defaultValue: ".env");
+    command.addFlag(
+      "help",
+      abbr: "h",
+      help: 'Generates a secure APP_KEY for your .env file',
+    );
+    command.addOption(
+      "file",
+      abbr: "e",
+      help: "The .env file to update.",
+      defaultValue: ".env",
+    );
     return command;
   }
 
@@ -64,7 +71,9 @@ class _MakeKeyCommand extends NyCustomCommand {
     const charset =
         'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     final random = Random.secure();
-    return List.generate(length, (_) => charset[random.nextInt(charset.length)])
-        .join();
+    return List.generate(
+      length,
+      (_) => charset[random.nextInt(charset.length)],
+    ).join();
   }
 }

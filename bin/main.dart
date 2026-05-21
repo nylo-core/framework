@@ -31,7 +31,10 @@ void main(List<String> arguments) async {
 
   // Otherwise, try to run as custom command
   final customCommands = await MetroService.discoverCustomCommands();
-  await MetroService.runCommand(arguments,
-      allCommands: customCommands, menu: metroMenu);
+  await MetroService.runCommand(
+    arguments,
+    allCommands: customCommands,
+    menu: metroMenu,
+  );
   exit(0);
 }

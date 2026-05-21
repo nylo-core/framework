@@ -17,31 +17,41 @@ class _MakeBottomSheetModalCommand extends NyCustomCommand {
 
   @override
   CommandBuilder builder(CommandBuilder command) {
-    command.addFlag("help",
-        abbr: "h",
-        help: "Creates a new bottom sheet modal widget for your project.");
-    command.addFlag("force",
-        abbr: "f",
-        help: "Creates a new bottom sheet modal even if it already exists.");
+    command.addFlag(
+      "help",
+      abbr: "h",
+      help: "Creates a new bottom sheet modal widget for your project.",
+    );
+    command.addFlag(
+      "force",
+      abbr: "f",
+      help: "Creates a new bottom sheet modal even if it already exists.",
+    );
 
     return command;
   }
 
   @override
   Future<void> handle(CommandResult result) async {
-    final modalNameArg = requireArgument(result,
-        message: 'You cannot create a bottom sheet modal with an empty name');
+    final modalNameArg = requireArgument(
+      result,
+      message: 'You cannot create a bottom sheet modal with an empty name',
+    );
 
     // Strip 'modal' suffix if user included it (e.g., "StripeModal" -> "Stripe")
-    final modalName =
-        modalNameArg.replaceAll(RegExp(r'modal$', caseSensitive: false), '');
+    final modalName = modalNameArg.replaceAll(
+      RegExp(r'modal$', caseSensitive: false),
+      '',
+    );
 
     MetroProjectFile projectFile = MetroService.createMetroProjectFile(
-        modalName,
-        prefix: RegExp(r'(_?modal)'));
+      modalName,
+      prefix: RegExp(r'(_?modal)'),
+    );
 
-    ReCase nameReCase =
-        ReCase(projectFile.name.replaceAll(RegExp(r'(_?modal)'), ""));
+    ReCase nameReCase = ReCase(
+      projectFile.name.replaceAll(RegExp(r'(_?modal)'), ""),
+    );
 
     // Create the modal widget stub
     String stubModal = bottomSheetModalStub(nameReCase);
@@ -96,7 +106,8 @@ class _MakeBottomSheetModalCommand extends NyCustomCommand {
     final file = File(modalsFilePath);
     if (!await file.exists()) {
       MetroConsole.writeInRed(
-          'bottom_sheet_modals.dart not found at $modalsFilePath');
+        'bottom_sheet_modals.dart not found at $modalsFilePath',
+      );
       return;
     }
 
@@ -106,7 +117,8 @@ class _MakeBottomSheetModalCommand extends NyCustomCommand {
     final modalClassName = '${nameReCase.pascalCase}Modal';
     if (fileContent.contains(modalClassName)) {
       MetroConsole.writeInBlack(
-          '$modalClassName already exists in bottom_sheet_modals.dart');
+        '$modalClassName already exists in bottom_sheet_modals.dart',
+      );
       return;
     }
 
@@ -120,7 +132,8 @@ class _MakeBottomSheetModalCommand extends NyCustomCommand {
 
     if (matches.isNotEmpty) {
       final lastImportEnd = matches.last.end;
-      fileContent = fileContent.substring(0, lastImportEnd) +
+      fileContent =
+          fileContent.substring(0, lastImportEnd) +
           '\n$importStatement' +
           fileContent.substring(lastImportEnd);
     } else {
@@ -132,8 +145,9 @@ class _MakeBottomSheetModalCommand extends NyCustomCommand {
     final staticMethod = bottomSheetModalStaticMethodStub(nameReCase);
 
     // Find the closing brace of the last class in the file
-    final classMatches =
-        RegExp(r'class\s+\w+').allMatches(fileContent).toList();
+    final classMatches = RegExp(
+      r'class\s+\w+',
+    ).allMatches(fileContent).toList();
     if (classMatches.isNotEmpty) {
       final lastClassStart = classMatches.last.start;
       int braceCount = 0;
@@ -149,7 +163,8 @@ class _MakeBottomSheetModalCommand extends NyCustomCommand {
         }
       }
       if (classBraceIndex != null) {
-        fileContent = fileContent.substring(0, classBraceIndex) +
+        fileContent =
+            fileContent.substring(0, classBraceIndex) +
             '\n$staticMethod' +
             fileContent.substring(classBraceIndex);
       }
@@ -158,6 +173,7 @@ class _MakeBottomSheetModalCommand extends NyCustomCommand {
     // Write the updated content
     await file.writeAsString(fileContent);
     MetroConsole.writeInGreen(
-        '[BottomSheetModal] Added BottomSheetModal.show${nameReCase.pascalCase}() to bottom_sheet_modals.dart');
+      '[BottomSheetModal] Added BottomSheetModal.show${nameReCase.pascalCase}() to bottom_sheet_modals.dart',
+    );
   }
 }

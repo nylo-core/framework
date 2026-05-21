@@ -15,19 +15,26 @@ class _MakeStatelessWidgetCommand extends NyCustomCommand {
 
   @override
   CommandBuilder builder(CommandBuilder command) {
-    command.addFlag("help",
-        abbr: "h", help: "e.g. make:stateless_widget video_player_widget");
-    command.addFlag("force",
-        abbr: "f",
-        help: "Creates a new stateless widget even if it already exists.");
+    command.addFlag(
+      "help",
+      abbr: "h",
+      help: "e.g. make:stateless_widget video_player_widget",
+    );
+    command.addFlag(
+      "force",
+      abbr: "f",
+      help: "Creates a new stateless widget even if it already exists.",
+    );
 
     return command;
   }
 
   @override
   Future<void> handle(CommandResult result) async {
-    final firstArgument =
-        requireArgument(result, message: 'A widget name is required');
+    final firstArgument = requireArgument(
+      result,
+      message: 'A widget name is required',
+    );
 
     if (firstArgument.contains(",")) {
       // Handle comma-separated widget names
@@ -41,19 +48,27 @@ class _MakeStatelessWidgetCommand extends NyCustomCommand {
   }
 
   Future<void> _createStatelessWidget(
-      String widgetName, bool hasForceFlag) async {
+    String widgetName,
+    bool hasForceFlag,
+  ) async {
     MetroProjectFile projectFile = MetroService.createMetroProjectFile(
-        widgetName,
-        prefix: RegExp(r'(_?widget)'));
+      widgetName,
+      prefix: RegExp(r'(_?widget)'),
+    );
 
-    String cleanWidgetName =
-        projectFile.name.snakeCase.replaceAll(RegExp(r'(_?widget)'), "");
+    String cleanWidgetName = projectFile.name.snakeCase.replaceAll(
+      RegExp(r'(_?widget)'),
+      "",
+    );
 
     ReCase classReCase = ReCase(cleanWidgetName);
 
     String stubStatelessWidget = widgetStatelessStub(classReCase);
     await MetroService.makeStatelessWidget(
-        classReCase.snakeCase, stubStatelessWidget,
-        forceCreate: hasForceFlag, creationPath: projectFile.creationPath);
+      classReCase.snakeCase,
+      stubStatelessWidget,
+      forceCreate: hasForceFlag,
+      creationPath: projectFile.creationPath,
+    );
   }
 }

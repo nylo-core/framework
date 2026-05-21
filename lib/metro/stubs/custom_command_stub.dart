@@ -1,8 +1,10 @@
 import 'package:recase/recase.dart';
 
 /// This stub is used to create a new Custom Command.
-String customCommandStub(
-        {required ReCase customCommand, String category = 'app'}) =>
+String customCommandStub({
+  required ReCase customCommand,
+  String category = 'app',
+}) =>
     '''
 import 'package:nylo_framework/metro/ny_cli.dart';
 

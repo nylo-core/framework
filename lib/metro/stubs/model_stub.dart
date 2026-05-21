@@ -1,7 +1,8 @@
 import 'package:recase/recase.dart';
 
 /// This stub is used to create a new Model.
-String modelStub({required ReCase modelName}) => '''
+String modelStub({required ReCase modelName}) =>
+    '''
 import 'package:nylo_framework/nylo_framework.dart';
 
 class ${modelName.pascalCase} extends Model {

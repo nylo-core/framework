@@ -4,10 +4,7 @@ import 'package:nylo_framework/metro/ny_cli.dart';
 void main() {
   group('ApiException', () {
     test('can be created with required parameters', () {
-      final exception = ApiException(
-        code: 404,
-        message: 'Not found',
-      );
+      final exception = ApiException(code: 404, message: 'Not found');
 
       expect(exception.code, equals(404));
       expect(exception.message, equals('Not found'));
@@ -33,8 +30,10 @@ void main() {
         message: 'Internal server error',
       );
 
-      expect(exception.toString(),
-          equals('ApiException: 500 - Internal server error'));
+      expect(
+        exception.toString(),
+        equals('ApiException: 500 - Internal server error'),
+      );
     });
 
     test('implements Exception', () {
@@ -54,8 +53,10 @@ void main() {
     test('toString returns formatted message', () {
       final exception = TimeoutException('Connection timed out');
 
-      expect(exception.toString(),
-          equals('TimeoutException: Connection timed out'));
+      expect(
+        exception.toString(),
+        equals('TimeoutException: Connection timed out'),
+      );
     });
 
     test('implements Exception', () {
@@ -96,7 +97,9 @@ void main() {
       final exception = RequestCancelledException('Cancelled');
 
       expect(
-          exception.toString(), equals('RequestCancelledException: Cancelled'));
+        exception.toString(),
+        equals('RequestCancelledException: Cancelled'),
+      );
     });
 
     test('implements Exception', () {

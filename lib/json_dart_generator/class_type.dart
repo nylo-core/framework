@@ -112,12 +112,7 @@ class ClassType {
   }
 
   /// The set of primitive Dart types.
-  static const primitiveTypes = <ClassType>[
-    tInt,
-    tDouble,
-    tString,
-    tBool,
-  ];
+  static const primitiveTypes = <ClassType>[tInt, tDouble, tString, tBool];
 
   /// All available class types.
   static const values = <ClassType>[

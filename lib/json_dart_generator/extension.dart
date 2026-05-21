@@ -18,8 +18,9 @@ extension DartCodeGenerator on ValueDef {
           } else if (defListType.isPrimitive) {
             return 'List<${defListType.value}>?';
           } else if (defListType.isList) {
-            var childType =
-                detectListInner((def.childrenDef as List<ValueDef>).first);
+            var childType = detectListInner(
+              (def.childrenDef as List<ValueDef>).first,
+            );
             return 'List<$childType>?';
           } else {
             return 'List<${detectListInner((def.childrenDef as List<ValueDef>).first)}>?';
@@ -167,11 +168,8 @@ extension DartCodeGenerator on ValueDef {
         param = 'List<dynamic> json';
         var innerType = listInnerType!;
 
-        body += 'value = ${detectListInner(
-          this,
-          listInnerContent(innerType),
-          listInnerTypeShow(innerType),
-        )};';
+        body +=
+            'value = ${detectListInner(this, listInnerContent(innerType), listInnerTypeShow(innerType))};';
       } else if (childrenDef is Map<String, ValueDef>) {
         param = 'Map<String, dynamic> json';
         var keyMap = childrenDef as Map<String, ValueDef>;
@@ -183,11 +181,7 @@ extension DartCodeGenerator on ValueDef {
           if (value.type == ClassType.tListDynamic) {
             var innerType = value.listInnerType!;
             body +=
-                'if (json[\'${value.key}\'] != null) {\n ${(value.key ?? value.parentKey)!.lowerCamel()} = ${detectListInner(
-              value,
-              listInnerContent(innerType),
-              listInnerTypeShow(innerType),
-            )}; \n}';
+                'if (json[\'${value.key}\'] != null) {\n ${(value.key ?? value.parentKey)!.lowerCamel()} = ${detectListInner(value, listInnerContent(innerType), listInnerTypeShow(innerType))}; \n}';
           } else if (value.type == ClassType.tObject) {
             var findCustomDef = findCustomObject(value);
             if (findCustomDef != null) {
@@ -215,8 +209,11 @@ extension DartCodeGenerator on ValueDef {
       var body = '';
       var returnText = '';
 
-      String detectListInner(ValueDef def, String innerContent,
-          [int depth = 0]) {
+      String detectListInner(
+        ValueDef def,
+        String innerContent, [
+        int depth = 0,
+      ]) {
         String nextInner() {
           return detectListInner(
             (def.childrenDef as List<ValueDef>).first,

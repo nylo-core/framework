@@ -16,30 +16,40 @@ class _MakeConfigCommand extends NyCustomCommand {
   @override
   CommandBuilder builder(CommandBuilder command) {
     command.addFlag("help", abbr: "h", help: "e.g. make:config currencies");
-    command.addFlag("force",
-        abbr: "f",
-        help: "Creates a new config file even if it already exists.");
+    command.addFlag(
+      "force",
+      abbr: "f",
+      help: "Creates a new config file even if it already exists.",
+    );
 
     return command;
   }
 
   @override
   Future<void> handle(CommandResult result) async {
-    final configName =
-        requireArgument(result, message: 'A config name is required');
+    final configName = requireArgument(
+      result,
+      message: 'A config name is required',
+    );
 
     MetroProjectFile projectFile = MetroService.createMetroProjectFile(
-        configName,
-        prefix: RegExp(r'(_?config)'));
+      configName,
+      prefix: RegExp(r'(_?config)'),
+    );
 
-    String cleanConfigName =
-        projectFile.name.snakeCase.replaceAll(RegExp(r'(_?config)'), "");
+    String cleanConfigName = projectFile.name.snakeCase.replaceAll(
+      RegExp(r'(_?config)'),
+      "",
+    );
 
     ReCase classReCase = ReCase(cleanConfigName);
 
     String stubConfig = configStub(classReCase);
-    await MetroService.makeConfig(classReCase.snakeCase, stubConfig,
-        forceCreate: result.hasForceFlag,
-        creationPath: projectFile.creationPath);
+    await MetroService.makeConfig(
+      classReCase.snakeCase,
+      stubConfig,
+      forceCreate: result.hasForceFlag,
+      creationPath: projectFile.creationPath,
+    );
   }
 }

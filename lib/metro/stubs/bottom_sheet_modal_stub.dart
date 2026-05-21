@@ -1,7 +1,8 @@
 import 'package:recase/recase.dart';
 
 /// This stub is used to create a Bottom Sheet Modal in the /resources/widgets/bottom_sheet_modals/modals/ directory.
-String bottomSheetModalStub(ReCase rc) => '''
+String bottomSheetModalStub(ReCase rc) =>
+    '''
 import 'package:flutter/material.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 
@@ -24,7 +25,8 @@ class ${rc.pascalCase}Modal extends StatelessWidget {
 ''';
 
 /// This stub is used to create a static method in the BottomSheetModal class.
-String bottomSheetModalStaticMethodStub(ReCase rc) => '''
+String bottomSheetModalStaticMethodStub(ReCase rc) =>
+    '''
   /// Show ${rc.titleCase} modal
   static Future<void> show${rc.pascalCase}(BuildContext context) {
     return displayModal(

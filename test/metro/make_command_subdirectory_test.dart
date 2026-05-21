@@ -25,8 +25,9 @@ void main() {
   group('make:stateless_widget subdirectory support', () {
     test('parses subdirectory from widget name', () {
       final projectFile = MetroService.createMetroProjectFile(
-          'login/BrandPanel',
-          prefix: RegExp(r'(_?widget)'));
+        'login/BrandPanel',
+        prefix: RegExp(r'(_?widget)'),
+      );
 
       expect(projectFile.creationPath, 'login');
       expect(projectFile.name, 'BrandPanel');
@@ -34,11 +35,14 @@ void main() {
 
     test('generates correct stub with subdirectory path', () {
       final projectFile = MetroService.createMetroProjectFile(
-          'login/BrandPanel',
-          prefix: RegExp(r'(_?widget)'));
+        'login/BrandPanel',
+        prefix: RegExp(r'(_?widget)'),
+      );
 
-      String cleanName =
-          projectFile.name.snakeCase.replaceAll(RegExp(r'(_?widget)'), "");
+      String cleanName = projectFile.name.snakeCase.replaceAll(
+        RegExp(r'(_?widget)'),
+        "",
+      );
       ReCase classReCase = ReCase(cleanName);
 
       String stub = widgetStatelessStub(classReCase);
@@ -47,11 +51,14 @@ void main() {
 
     test('generates correct file path with subdirectory', () {
       final projectFile = MetroService.createMetroProjectFile(
-          'login/BrandPanel',
-          prefix: RegExp(r'(_?widget)'));
+        'login/BrandPanel',
+        prefix: RegExp(r'(_?widget)'),
+      );
 
-      String cleanName =
-          projectFile.name.snakeCase.replaceAll(RegExp(r'(_?widget)'), "");
+      String cleanName = projectFile.name.snakeCase.replaceAll(
+        RegExp(r'(_?widget)'),
+        "",
+      );
 
       String filePath = MetroService.createPathForDartFile(
         folderPath: widgetsFolder,
@@ -64,14 +71,18 @@ void main() {
     });
 
     test('works without subdirectory', () {
-      final projectFile = MetroService.createMetroProjectFile('BrandPanel',
-          prefix: RegExp(r'(_?widget)'));
+      final projectFile = MetroService.createMetroProjectFile(
+        'BrandPanel',
+        prefix: RegExp(r'(_?widget)'),
+      );
 
       expect(projectFile.creationPath, isNull);
       expect(projectFile.name, 'BrandPanel');
 
-      String cleanName =
-          projectFile.name.snakeCase.replaceAll(RegExp(r'(_?widget)'), "");
+      String cleanName = projectFile.name.snakeCase.replaceAll(
+        RegExp(r'(_?widget)'),
+        "",
+      );
 
       String filePath = MetroService.createPathForDartFile(
         folderPath: widgetsFolder,
@@ -85,14 +96,17 @@ void main() {
 
     test('handles deep subdirectory path', () {
       final projectFile = MetroService.createMetroProjectFile(
-          'auth/social/GoogleSignIn',
-          prefix: RegExp(r'(_?widget)'));
+        'auth/social/GoogleSignIn',
+        prefix: RegExp(r'(_?widget)'),
+      );
 
       expect(projectFile.creationPath, 'auth/social');
       expect(projectFile.name, 'GoogleSignIn');
 
-      String cleanName =
-          projectFile.name.snakeCase.replaceAll(RegExp(r'(_?widget)'), "");
+      String cleanName = projectFile.name.snakeCase.replaceAll(
+        RegExp(r'(_?widget)'),
+        "",
+      );
 
       String filePath = MetroService.createPathForDartFile(
         folderPath: widgetsFolder,
@@ -101,19 +115,24 @@ void main() {
         creationPath: projectFile.creationPath,
       );
 
-      expect(filePath,
-          'lib/resources/widgets/auth/social/google_sign_in_widget.dart');
+      expect(
+        filePath,
+        'lib/resources/widgets/auth/social/google_sign_in_widget.dart',
+      );
     });
   });
 
   group('make:stateful_widget subdirectory support', () {
     test('parses subdirectory and generates correct stub', () {
       final projectFile = MetroService.createMetroProjectFile(
-          'dashboard/StatsChart',
-          prefix: RegExp(r'(_?widget)'));
+        'dashboard/StatsChart',
+        prefix: RegExp(r'(_?widget)'),
+      );
 
-      String cleanName =
-          projectFile.name.snakeCase.replaceAll(RegExp(r'(_?widget)'), "");
+      String cleanName = projectFile.name.snakeCase.replaceAll(
+        RegExp(r'(_?widget)'),
+        "",
+      );
       ReCase classReCase = ReCase(cleanName);
 
       expect(projectFile.creationPath, 'dashboard');
@@ -124,11 +143,14 @@ void main() {
 
     test('generates correct file path with subdirectory', () {
       final projectFile = MetroService.createMetroProjectFile(
-          'dashboard/StatsChart',
-          prefix: RegExp(r'(_?widget)'));
+        'dashboard/StatsChart',
+        prefix: RegExp(r'(_?widget)'),
+      );
 
-      String cleanName =
-          projectFile.name.snakeCase.replaceAll(RegExp(r'(_?widget)'), "");
+      String cleanName = projectFile.name.snakeCase.replaceAll(
+        RegExp(r'(_?widget)'),
+        "",
+      );
 
       String filePath = MetroService.createPathForDartFile(
         folderPath: widgetsFolder,
@@ -138,44 +160,56 @@ void main() {
       );
 
       expect(
-          filePath, 'lib/resources/widgets/dashboard/stats_chart_widget.dart');
+        filePath,
+        'lib/resources/widgets/dashboard/stats_chart_widget.dart',
+      );
     });
   });
 
   group('make:state_managed_widget subdirectory support', () {
     test('parses subdirectory and generates correct stub', () {
-      final projectFile = MetroService.createMetroProjectFile('cart/CartIcon',
-          prefix: RegExp(r'(_?widget)'));
+      final projectFile = MetroService.createMetroProjectFile(
+        'cart/CartIcon',
+        prefix: RegExp(r'(_?widget)'),
+      );
 
-      String cleanName =
-          projectFile.name.snakeCase.replaceAll(RegExp(r'(_?widget)'), "");
+      String cleanName = projectFile.name.snakeCase.replaceAll(
+        RegExp(r'(_?widget)'),
+        "",
+      );
       ReCase classReCase = ReCase(cleanName);
 
       expect(projectFile.creationPath, 'cart');
 
       String stub = widgetStateManagedStub(classReCase);
-      expect(stub, contains('class CartIcon extends StatefulWidget'));
+      expect(stub, contains('class CartIcon extends NyStateManaged'));
     });
   });
 
   group('make:controller subdirectory support', () {
     test('parses subdirectory and generates correct stub', () {
       // The command strips "Controller" suffix before calling createMetroProjectFile
-      final projectFile = MetroService.createMetroProjectFile('admin/User',
-          prefix: RegExp(r'(_?controller)'));
+      final projectFile = MetroService.createMetroProjectFile(
+        'admin/User',
+        prefix: RegExp(r'(_?controller)'),
+      );
 
       expect(projectFile.creationPath, 'admin');
 
-      String cleanName =
-          projectFile.name.replaceAll(RegExp(r'(_?controller)'), "");
+      String cleanName = projectFile.name.replaceAll(
+        RegExp(r'(_?controller)'),
+        "",
+      );
       String stub = controllerStub(controllerName: cleanName);
 
       expect(stub, contains('class UserController extends Controller'));
     });
 
     test('generates correct file path with subdirectory', () {
-      final projectFile = MetroService.createMetroProjectFile('admin/User',
-          prefix: RegExp(r'(_?controller)'));
+      final projectFile = MetroService.createMetroProjectFile(
+        'admin/User',
+        prefix: RegExp(r'(_?controller)'),
+      );
 
       String filePath = MetroService.createPathForDartFile(
         folderPath: controllersFolder,
@@ -190,13 +224,17 @@ void main() {
 
   group('make:event subdirectory support', () {
     test('parses subdirectory and generates correct stub', () {
-      final projectFile = MetroService.createMetroProjectFile('auth/LoginEvent',
-          prefix: RegExp(r'(_?event)'));
+      final projectFile = MetroService.createMetroProjectFile(
+        'auth/LoginEvent',
+        prefix: RegExp(r'(_?event)'),
+      );
 
       expect(projectFile.creationPath, 'auth');
 
-      String cleanName =
-          projectFile.name.snakeCase.replaceAll(RegExp(r'(_?event)'), "");
+      String cleanName = projectFile.name.snakeCase.replaceAll(
+        RegExp(r'(_?event)'),
+        "",
+      );
       ReCase classReCase = ReCase(cleanName);
 
       String stub = eventStub(eventName: classReCase);
@@ -204,11 +242,15 @@ void main() {
     });
 
     test('generates correct file path with subdirectory', () {
-      final projectFile = MetroService.createMetroProjectFile('auth/LoginEvent',
-          prefix: RegExp(r'(_?event)'));
+      final projectFile = MetroService.createMetroProjectFile(
+        'auth/LoginEvent',
+        prefix: RegExp(r'(_?event)'),
+      );
 
-      String cleanName =
-          projectFile.name.snakeCase.replaceAll(RegExp(r'(_?event)'), "");
+      String cleanName = projectFile.name.snakeCase.replaceAll(
+        RegExp(r'(_?event)'),
+        "",
+      );
 
       String filePath = MetroService.createPathForDartFile(
         folderPath: eventsFolder,
@@ -231,13 +273,16 @@ void main() {
   group('make:provider subdirectory support', () {
     test('parses subdirectory and generates correct stub', () {
       final projectFile = MetroService.createMetroProjectFile(
-          'services/StorageProvider',
-          prefix: RegExp(r'(_?provider)'));
+        'services/StorageProvider',
+        prefix: RegExp(r'(_?provider)'),
+      );
 
       expect(projectFile.creationPath, 'services');
 
-      String cleanName =
-          projectFile.name.snakeCase.replaceAll(RegExp(r'(_?provider)'), "");
+      String cleanName = projectFile.name.snakeCase.replaceAll(
+        RegExp(r'(_?provider)'),
+        "",
+      );
       ReCase classReCase = ReCase(cleanName);
 
       String stub = providerStub(classReCase);
@@ -246,11 +291,14 @@ void main() {
 
     test('generates correct file path with subdirectory', () {
       final projectFile = MetroService.createMetroProjectFile(
-          'services/StorageProvider',
-          prefix: RegExp(r'(_?provider)'));
+        'services/StorageProvider',
+        prefix: RegExp(r'(_?provider)'),
+      );
 
-      String cleanName =
-          projectFile.name.snakeCase.replaceAll(RegExp(r'(_?provider)'), "");
+      String cleanName = projectFile.name.snakeCase.replaceAll(
+        RegExp(r'(_?provider)'),
+        "",
+      );
 
       String filePath = MetroService.createPathForDartFile(
         folderPath: providerFolder,
@@ -273,13 +321,16 @@ void main() {
   group('make:interceptor subdirectory support', () {
     test('parses subdirectory and generates correct stub', () {
       final projectFile = MetroService.createMetroProjectFile(
-          'api/AuthTokenInterceptor',
-          prefix: RegExp(r'(_?interceptor)'));
+        'api/AuthTokenInterceptor',
+        prefix: RegExp(r'(_?interceptor)'),
+      );
 
       expect(projectFile.creationPath, 'api');
 
-      String cleanName =
-          projectFile.name.snakeCase.replaceAll(RegExp(r'(_?interceptor)'), "");
+      String cleanName = projectFile.name.snakeCase.replaceAll(
+        RegExp(r'(_?interceptor)'),
+        "",
+      );
       ReCase classReCase = ReCase(cleanName);
 
       String stub = interceptorStub(interceptorName: classReCase);
@@ -288,11 +339,14 @@ void main() {
 
     test('generates correct file path with subdirectory', () {
       final projectFile = MetroService.createMetroProjectFile(
-          'api/AuthTokenInterceptor',
-          prefix: RegExp(r'(_?interceptor)'));
+        'api/AuthTokenInterceptor',
+        prefix: RegExp(r'(_?interceptor)'),
+      );
 
-      String cleanName =
-          projectFile.name.snakeCase.replaceAll(RegExp(r'(_?interceptor)'), "");
+      String cleanName = projectFile.name.snakeCase.replaceAll(
+        RegExp(r'(_?interceptor)'),
+        "",
+      );
 
       String filePath = MetroService.createPathForDartFile(
         folderPath: networkingInterceptorsFolder,
@@ -301,21 +355,26 @@ void main() {
         creationPath: projectFile.creationPath,
       );
 
-      expect(filePath,
-          'lib/app/networking/dio/interceptors/api/auth_token_interceptor.dart');
+      expect(
+        filePath,
+        'lib/app/networking/dio/interceptors/api/auth_token_interceptor.dart',
+      );
     });
   });
 
   group('make:config subdirectory support', () {
     test('parses subdirectory and generates correct stub', () {
       final projectFile = MetroService.createMetroProjectFile(
-          'settings/CurrenciesConfig',
-          prefix: RegExp(r'(_?config)'));
+        'settings/CurrenciesConfig',
+        prefix: RegExp(r'(_?config)'),
+      );
 
       expect(projectFile.creationPath, 'settings');
 
-      String cleanName =
-          projectFile.name.snakeCase.replaceAll(RegExp(r'(_?config)'), "");
+      String cleanName = projectFile.name.snakeCase.replaceAll(
+        RegExp(r'(_?config)'),
+        "",
+      );
       ReCase classReCase = ReCase(cleanName);
 
       String stub = configStub(classReCase);
@@ -324,11 +383,14 @@ void main() {
 
     test('generates correct file path with subdirectory', () {
       final projectFile = MetroService.createMetroProjectFile(
-          'settings/CurrenciesConfig',
-          prefix: RegExp(r'(_?config)'));
+        'settings/CurrenciesConfig',
+        prefix: RegExp(r'(_?config)'),
+      );
 
-      String cleanName =
-          projectFile.name.snakeCase.replaceAll(RegExp(r'(_?config)'), "");
+      String cleanName = projectFile.name.snakeCase.replaceAll(
+        RegExp(r'(_?config)'),
+        "",
+      );
 
       String filePath = MetroService.createPathForDartFile(
         folderPath: configFolder,
@@ -343,13 +405,16 @@ void main() {
   group('make:command subdirectory support', () {
     test('parses subdirectory and generates correct stub', () {
       final projectFile = MetroService.createMetroProjectFile(
-          'db/MigrateCommand',
-          prefix: RegExp(r'(_?command)'));
+        'db/MigrateCommand',
+        prefix: RegExp(r'(_?command)'),
+      );
 
       expect(projectFile.creationPath, 'db');
 
-      String cleanName =
-          projectFile.name.snakeCase.replaceAll(RegExp(r'(_?command)'), "");
+      String cleanName = projectFile.name.snakeCase.replaceAll(
+        RegExp(r'(_?command)'),
+        "",
+      );
       ReCase classReCase = ReCase(cleanName);
 
       String stub = customCommandStub(customCommand: classReCase);
@@ -358,11 +423,14 @@ void main() {
 
     test('generates correct file path with subdirectory', () {
       final projectFile = MetroService.createMetroProjectFile(
-          'db/MigrateCommand',
-          prefix: RegExp(r'(_?command)'));
+        'db/MigrateCommand',
+        prefix: RegExp(r'(_?command)'),
+      );
 
-      String cleanName =
-          projectFile.name.snakeCase.replaceAll(RegExp(r'(_?command)'), "");
+      String cleanName = projectFile.name.snakeCase.replaceAll(
+        RegExp(r'(_?command)'),
+        "",
+      );
 
       String filePath = MetroService.createPathForDartFile(
         folderPath: commandsFolder,
@@ -377,13 +445,16 @@ void main() {
   group('make:form subdirectory support', () {
     test('parses subdirectory and generates correct stub', () {
       final projectFile = MetroService.createMetroProjectFile(
-          'auth/RegisterForm',
-          prefix: RegExp(r'(_?form)'));
+        'auth/RegisterForm',
+        prefix: RegExp(r'(_?form)'),
+      );
 
       expect(projectFile.creationPath, 'auth');
 
-      String cleanName =
-          projectFile.name.snakeCase.replaceAll(RegExp(r'(_?form)'), "");
+      String cleanName = projectFile.name.snakeCase.replaceAll(
+        RegExp(r'(_?form)'),
+        "",
+      );
       ReCase classReCase = ReCase(cleanName);
 
       String stub = formStub(classReCase);
@@ -392,11 +463,14 @@ void main() {
 
     test('generates correct file path with subdirectory', () {
       final projectFile = MetroService.createMetroProjectFile(
-          'auth/RegisterForm',
-          prefix: RegExp(r'(_?form)'));
+        'auth/RegisterForm',
+        prefix: RegExp(r'(_?form)'),
+      );
 
-      String cleanName =
-          projectFile.name.snakeCase.replaceAll(RegExp(r'(_?form)'), "");
+      String cleanName = projectFile.name.snakeCase.replaceAll(
+        RegExp(r'(_?form)'),
+        "",
+      );
 
       String filePath = MetroService.createPathForDartFile(
         folderPath: formsFolder,
@@ -412,27 +486,35 @@ void main() {
   group('make:route_guard subdirectory support', () {
     test('parses subdirectory and generates correct stub', () {
       final projectFile = MetroService.createMetroProjectFile(
-          'admin/SubscriptionRouteGuard',
-          prefix: RegExp(r'(_?route_guard)'));
+        'admin/SubscriptionRouteGuard',
+        prefix: RegExp(r'(_?route_guard)'),
+      );
 
       expect(projectFile.creationPath, 'admin');
 
-      String cleanName =
-          projectFile.name.snakeCase.replaceAll(RegExp(r'(_?route_guard)'), "");
+      String cleanName = projectFile.name.snakeCase.replaceAll(
+        RegExp(r'(_?route_guard)'),
+        "",
+      );
       ReCase classReCase = ReCase(cleanName);
 
       String stub = routeGuardStub(classReCase);
       expect(
-          stub, contains('class SubscriptionRouteGuard extends NyRouteGuard'));
+        stub,
+        contains('class SubscriptionRouteGuard extends NyRouteGuard'),
+      );
     });
 
     test('generates correct file path with subdirectory', () {
       final projectFile = MetroService.createMetroProjectFile(
-          'admin/SubscriptionRouteGuard',
-          prefix: RegExp(r'(_?route_guard)'));
+        'admin/SubscriptionRouteGuard',
+        prefix: RegExp(r'(_?route_guard)'),
+      );
 
-      String cleanName =
-          projectFile.name.snakeCase.replaceAll(RegExp(r'(_?route_guard)'), "");
+      String cleanName = projectFile.name.snakeCase.replaceAll(
+        RegExp(r'(_?route_guard)'),
+        "",
+      );
 
       String filePath = MetroService.createPathForDartFile(
         folderPath: routeGuardsFolder,
@@ -451,13 +533,17 @@ void main() {
       final inputs = 'login/BrandPanel,login/LogoPanel'.split(',');
 
       for (final input in inputs) {
-        final projectFile = MetroService.createMetroProjectFile(input.trim(),
-            prefix: RegExp(r'(_?widget)'));
+        final projectFile = MetroService.createMetroProjectFile(
+          input.trim(),
+          prefix: RegExp(r'(_?widget)'),
+        );
 
         expect(projectFile.creationPath, 'login');
 
-        String cleanName =
-            projectFile.name.snakeCase.replaceAll(RegExp(r'(_?widget)'), "");
+        String cleanName = projectFile.name.snakeCase.replaceAll(
+          RegExp(r'(_?widget)'),
+          "",
+        );
         ReCase classReCase = ReCase(cleanName);
 
         String stub = widgetStatelessStub(classReCase);

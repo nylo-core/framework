@@ -1,7 +1,8 @@
 import 'package:recase/recase.dart';
 
 /// This stub is used to create an Interceptor.
-String interceptorStub({required ReCase interceptorName}) => '''
+String interceptorStub({required ReCase interceptorName}) =>
+    '''
 import 'package:nylo_framework/nylo_framework.dart';
 
 class ${interceptorName.pascalCase}Interceptor extends Interceptor {

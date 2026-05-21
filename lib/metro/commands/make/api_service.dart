@@ -15,26 +15,41 @@ class _MakeApiServiceCommand extends NyCustomCommand {
 
   @override
   CommandBuilder builder(CommandBuilder command) {
-    command.addFlag("help",
-        abbr: "h", help: "e.g. make:api_service profile_api_service");
-    command.addFlag("force",
-        abbr: "f",
-        help: "Creates a new API service even if it already exists.");
-    command.addOption("model",
-        abbr: "m", help: "The model to use for the API service.");
-    command.addOption("url",
-        abbr: "u", help: "The base URL for the API service.");
+    command.addFlag(
+      "help",
+      abbr: "h",
+      help: "e.g. make:api_service profile_api_service",
+    );
+    command.addFlag(
+      "force",
+      abbr: "f",
+      help: "Creates a new API service even if it already exists.",
+    );
+    command.addOption(
+      "model",
+      abbr: "m",
+      help: "The model to use for the API service.",
+    );
+    command.addOption(
+      "url",
+      abbr: "u",
+      help: "The base URL for the API service.",
+    );
 
     return command;
   }
 
   @override
   Future<void> handle(CommandResult result) async {
-    final apiServiceName =
-        requireArgument(result, message: 'API service name is required');
+    final apiServiceName = requireArgument(
+      result,
+      message: 'API service name is required',
+    );
 
-    String cleanApiServiceName =
-        apiServiceName.snakeCase.replaceAll(RegExp(r'(_?api_service)'), "");
+    String cleanApiServiceName = apiServiceName.snakeCase.replaceAll(
+      RegExp(r'(_?api_service)'),
+      "",
+    );
 
     ReCase classReCase = ReCase(cleanApiServiceName);
 
@@ -46,8 +61,11 @@ class _MakeApiServiceCommand extends NyCustomCommand {
     String? userUrl = result.getString("url");
     String baseUrl = userUrl != null ? '"$userUrl"' : "getEnv('API_BASE_URL')";
 
-    String stubApiService =
-        apiServiceStub(classReCase, model: modelReCase, baseUrl: baseUrl);
+    String stubApiService = apiServiceStub(
+      classReCase,
+      model: modelReCase,
+      baseUrl: baseUrl,
+    );
 
     await scaffold(
       path: '$networkingPath/${classReCase.snakeCase}_api_service.dart',
@@ -56,7 +74,8 @@ class _MakeApiServiceCommand extends NyCustomCommand {
     );
 
     await dartFormat(
-        '$networkingPath/${classReCase.snakeCase}_api_service.dart');
+      '$networkingPath/${classReCase.snakeCase}_api_service.dart',
+    );
 
     info('Add the API service to your config/decoders.dart file');
   }

@@ -1,7 +1,8 @@
 import 'package:recase/recase.dart';
 
 /// This stub is used to create a new Page.
-String pageStub({required String className}) => '''
+String pageStub({required String className}) =>
+    '''
 import 'package:flutter/material.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 

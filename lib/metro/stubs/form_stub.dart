@@ -1,7 +1,8 @@
 import 'package:recase/recase.dart';
 
 /// This stub is used to create NyFormWidget.
-String formStub(ReCase className) => '''
+String formStub(ReCase className) =>
+    '''
 import 'package:nylo_framework/nylo_framework.dart';
 
 /* ${className.pascalCase} Form

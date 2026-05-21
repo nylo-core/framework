@@ -1,8 +1,10 @@
 import 'package:recase/recase.dart';
 
 /// This stub is used to create a new Page + Controller.
-String pageWithControllerStub(
-        {required String className, String? creationPath}) =>
+String pageWithControllerStub({
+  required String className,
+  String? creationPath,
+}) =>
     '''
 import 'package:flutter/material.dart';
 import 'package:nylo_framework/nylo_framework.dart';

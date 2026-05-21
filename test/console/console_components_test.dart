@@ -81,15 +81,19 @@ void main() {
     });
 
     test('message can be set', () {
-      final progressBar =
-          ConsoleProgressBar(total: 100, message: 'Processing...');
+      final progressBar = ConsoleProgressBar(
+        total: 100,
+        message: 'Processing...',
+      );
 
       expect(progressBar.message, equals('Processing...'));
     });
 
     test('message can be updated', () {
-      final progressBar =
-          ConsoleProgressBar(total: 100, message: 'Initial message');
+      final progressBar = ConsoleProgressBar(
+        total: 100,
+        message: 'Initial message',
+      );
       progressBar.updateMessage('Updated message');
 
       expect(progressBar.message, equals('Updated message'));
@@ -110,10 +114,7 @@ void main() {
     });
 
     test('handles empty rows', () {
-      final table = ConsoleTable(
-        headers: ['Name', 'Age'],
-        rows: [],
-      );
+      final table = ConsoleTable(headers: ['Name', 'Age'], rows: []);
 
       expect(() => table.render(), returnsNormally);
     });
@@ -122,7 +123,7 @@ void main() {
       final table = ConsoleTable(
         headers: ['Column1'],
         rows: [
-          ['Value1']
+          ['Value1'],
         ],
       );
 
@@ -144,7 +145,7 @@ void main() {
       final table = ConsoleTable(
         headers: [],
         rows: [
-          ['Value']
+          ['Value'],
         ],
       );
 
