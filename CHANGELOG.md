@@ -1,3 +1,10 @@
+## [7.1.19] - 2026-05-23
+
+### Changed
+* Bump `nylo_support` dependency from `^7.26.0` to `^7.26.1`
+* Bump `collection` dependency from `^1.18.0` to `^1.19.1`
+* Bump `patrol` dependency from `^4.5.0` to `^4.6.0`
+
 ## [7.1.18] - 2026-05-21
 
 ### Added
