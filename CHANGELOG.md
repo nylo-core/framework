@@ -1,3 +1,8 @@
+## [7.1.21] - 2026-05-25
+
+### Changed
+* Updated `make:state_managed_widget` Metro stub to use the new `NyStateManaged` API with `baseState`/`id` instead of `stateName`, simplifying the generated widget
+
 ## [7.1.20] - 2026-05-23
 
 ### Changed

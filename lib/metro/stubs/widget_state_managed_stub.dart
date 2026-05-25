@@ -7,24 +7,16 @@ import 'package:flutter/material.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 
 class ${rc.pascalCase} extends NyStateManaged {
-  ${rc.pascalCase}({super.key, super.stateName})
-      : super(child: () => _${rc.pascalCase}State(stateName));
+  ${rc.pascalCase}({super.key, super.id})
+      : super(baseState: state, child: () => _${rc.pascalCase}State());
 
-  static String state = "${rc.snakeCase}";
+  static const String state = "${rc.snakeCase}";
 
-  static String _stateFor(String? state) =>
-      state == null ? ${rc.pascalCase}.state : "\${${rc.pascalCase}.state}_\$state";
-
-  static action(String action, {dynamic data, String? stateName}) {
-    return stateAction(action, data: data, state: _stateFor(stateName));
-  }
+  static action(String action, {dynamic data, String? id}) =>
+      stateAction(action, data: data, state: state, id: id);
 }
 
 class _${rc.pascalCase}State extends NyState<${rc.pascalCase}> {
-  _${rc.pascalCase}State(String? stateName) {
-    this.stateName = ${rc.pascalCase}._stateFor(stateName);
-  }
-
   @override
   get init => () {
    // initialization logic here
