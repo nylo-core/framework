@@ -1,3 +1,8 @@
+## [7.1.22] - 2026-05-27
+
+### Changed
+* Improved `make:interceptor` Metro stub: added docstrings for `onRequest`, `onResponse`, and `onError`, and replaced `super.onRequest(...)` with `handler.next(options)` so the generated interceptor passes the request through explicitly
+
 ## [7.1.21] - 2026-05-25
 
 ### Changed
