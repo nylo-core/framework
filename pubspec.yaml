@@ -1,6 +1,6 @@
 name: nylo_framework
 description: Micro-framework for Flutter that's built to simplify app development for Flutter projects.
-version: 7.1.22
+version: 7.1.23
 homepage: https://nylo.dev
 repository: https://github.com/nylo-core/framework/tree/7.x
 issue_tracker: https://github.com/nylo-core/framework/issues
@@ -16,7 +16,7 @@ environment:
   flutter: ">=3.38.4"
 
 dependencies:
-  nylo_support: ^7.26.2
+  nylo_support: ^7.27.1
   skeletonizer: ^2.1.3
   collection: ^1.19.1
   args: ^2.7.0
@@ -28,7 +28,7 @@ dependencies:
   yaml: ^3.1.3
   flutter:
     sdk: flutter
-  patrol: ^4.6.0
+  patrol: ^4.6.1
 
 dev_dependencies:
   rename: ^3.1.0

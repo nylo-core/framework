@@ -553,10 +553,10 @@ packages:
     dependency: "direct main"
     description:
       name: nylo_support
-      sha256: "41688fe1085d38c9eee283794524d5546eb0d8c92c81b13695d92cc57dbbdc34"
+      sha256: cce696c63d89680d8f1284bfb2a0c4aae58f31158e0e75065b2dafa26f0ab9d9
       url: "https://pub.dev"
     source: hosted
-    version: "7.26.2"
+    version: "7.27.1"
   objective_c:
     dependency: transitive
     description:
@@ -633,10 +633,10 @@ packages:
     dependency: "direct main"
     description:
       name: patrol
-      sha256: baebcc5e7dbd22ac6838512b7efdd432f33188ad5f3c4b3bfe00680c1bbef453
+      sha256: f43fda9425e90c0e69d2dac9e495e3a3036a22a550466365b4720fa4dd53d6ae
       url: "https://pub.dev"
     source: hosted
-    version: "4.6.0"
+    version: "4.6.1"
   patrol_finders:
     dependency: transitive
     description:
