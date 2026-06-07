@@ -1,3 +1,10 @@
+## [7.1.24] - 2026-06-08
+
+### Changed
+* Bump `nylo_support` dependency from `^7.27.1` to `^7.27.2`
+* Bump `flutter_local_notifications` dependency from `^21.0.0` to `^22.0.0`
+* Raise minimum environment constraints to Dart `^3.12.0` and Flutter `>=3.44.0`
+
 ## [7.1.23] - 2026-06-02
 
 ### Changed
