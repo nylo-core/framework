@@ -219,6 +219,52 @@ void main() {
 
       expect(stub, contains('my_secret_key'));
     });
+
+    test('escapes quotes and backslashes in the app key', () {
+      final stub = envStub(
+        encryptedMap: {'VAR': 'val'},
+        appKey: "k'e\\y",
+        useDartDefine: false,
+      );
+
+      // Emitted as a valid single-quoted literal: 'k\'e\\y'
+      expect(stub, contains("static const String _appKey = 'k\\'e\\\\y';"));
+      // The raw, literal-breaking form must not leak through.
+      expect(stub, isNot(contains("_appKey = 'k'e")));
+    });
+
+    test('annotates non-obvious local variable types', () {
+      // Keeps generated code clean under the
+      // specify_nonobvious_local_variable_types lint.
+      final stub = envStub(encryptedMap: {'KEY': 'value'}, appKey: 'key');
+
+      expect(stub, contains("import 'dart:typed_data';"));
+      expect(
+        stub,
+        contains('final Uint8List encryptedBytes = base64Decode(encrypted);'),
+      );
+      expect(
+        stub,
+        contains('final Uint8List keyBytes = utf8.encode(_appKey);'),
+      );
+      expect(
+        stub,
+        contains('final String decrypted = _decrypt(_encrypted[key]!);'),
+      );
+      expect(stub, contains('final dynamic parsed = _parseValue(decrypted);'));
+    });
+
+    test('escapes quotes and backslashes in encrypted map entries', () {
+      final stub = envStub(
+        encryptedMap: {'APP_NAME': "O'Brien\\path"},
+        appKey: 'key',
+      );
+
+      // Emitted as a valid single-quoted literal: 'O\'Brien\\path'
+      expect(stub, contains("'APP_NAME': 'O\\'Brien\\\\path',"));
+      // The raw, literal-breaking value must not appear unescaped.
+      expect(stub, isNot(contains("O'Brien")));
+    });
   });
 
   group('formStub', () {

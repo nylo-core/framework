@@ -7,7 +7,7 @@ String apiServiceStub(
   required String baseUrl,
 }) =>
     '''import '/bootstrap/decoders.dart';
-${baseUrl == "getEnv('API_BASE_URL')" ? "import 'package:nylo_framework/nylo_framework.dart';" : ""}${model.originalText != 'Model' ? "\nimport '/app/models/${model.snakeCase}.dart';" : ""}
+import 'package:nylo_framework/nylo_framework.dart';${model.originalText != 'Model' ? "\nimport '/app/models/${model.snakeCase}.dart';" : ""}
 
 class ${rc.pascalCase}ApiService extends NyApiService {
   ${rc.pascalCase}ApiService() : super(decoders: modelDecoders);

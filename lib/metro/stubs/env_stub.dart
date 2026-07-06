@@ -18,6 +18,7 @@ String envStub({
   );
   buffer.writeln('');
   buffer.writeln("import 'dart:convert';");
+  buffer.writeln("import 'dart:typed_data';");
   buffer.writeln('');
 
   // Start class
@@ -39,7 +40,9 @@ String envStub({
     buffer.writeln(
       '  /// APP_KEY for decryption (obfuscated at compile time).',
     );
-    buffer.writeln("  static const String _appKey = '$appKey';");
+    buffer.writeln(
+      "  static const String _appKey = '${_escapeSingleQuoted('$appKey')}';",
+    );
   }
   buffer.writeln('');
 
@@ -47,7 +50,9 @@ String envStub({
   buffer.writeln('  /// Encrypted environment values.');
   buffer.writeln('  static const Map<String, String> _encrypted = {');
   for (final entry in encryptedMap.entries) {
-    buffer.writeln("    '${entry.key}': '${entry.value}',");
+    buffer.writeln(
+      "    '${_escapeSingleQuoted(entry.key)}': '${_escapeSingleQuoted(entry.value)}',",
+    );
   }
   buffer.writeln('  };');
   buffer.writeln('');
@@ -60,8 +65,10 @@ String envStub({
   // XOR decrypt method
   buffer.writeln('  /// Decrypts a base64-encoded XOR-encrypted string.');
   buffer.writeln('  static String _decrypt(String encrypted) {');
-  buffer.writeln('    final encryptedBytes = base64Decode(encrypted);');
-  buffer.writeln('    final keyBytes = utf8.encode(_appKey);');
+  buffer.writeln(
+    '    final Uint8List encryptedBytes = base64Decode(encrypted);',
+  );
+  buffer.writeln('    final Uint8List keyBytes = utf8.encode(_appKey);');
   buffer.writeln('    final decryptedBytes = <int>[];');
   buffer.writeln('');
   buffer.writeln('    for (var i = 0; i < encryptedBytes.length; i++) {');
@@ -107,8 +114,8 @@ String envStub({
   buffer.writeln('    }');
   buffer.writeln('');
   buffer.writeln('    // Decrypt and parse the value');
-  buffer.writeln('    final decrypted = _decrypt(_encrypted[key]!);');
-  buffer.writeln('    final parsed = _parseValue(decrypted);');
+  buffer.writeln('    final String decrypted = _decrypt(_encrypted[key]!);');
+  buffer.writeln('    final dynamic parsed = _parseValue(decrypted);');
   buffer.writeln('');
   buffer.writeln('    // Cache the result');
   buffer.writeln('    _cache[key] = parsed;');
@@ -133,3 +140,9 @@ String envStub({
 
   return buffer.toString();
 }
+
+/// Escapes [value] for safe interpolation inside a single-quoted Dart string
+/// literal. Backslashes are escaped first, then single quotes, so a key or value
+/// containing `'` or `\` cannot break the generated `env.g.dart`.
+String _escapeSingleQuoted(String value) =>
+    value.replaceAll('\\', '\\\\').replaceAll("'", "\\'");

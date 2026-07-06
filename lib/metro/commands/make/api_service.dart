@@ -46,12 +46,7 @@ class _MakeApiServiceCommand extends NyCustomCommand {
       message: 'API service name is required',
     );
 
-    String cleanApiServiceName = apiServiceName.snakeCase.replaceAll(
-      RegExp(r'(_?api_service)'),
-      "",
-    );
-
-    ReCase classReCase = ReCase(cleanApiServiceName);
+    ReCase classReCase = ReCase(cleanApiServiceName(apiServiceName));
 
     // Get model option or default to 'Model'
     String modelName = result.getString("model") ?? "Model";
@@ -77,6 +72,25 @@ class _MakeApiServiceCommand extends NyCustomCommand {
       '$networkingPath/${classReCase.snakeCase}_api_service.dart',
     );
 
-    info('Add the API service to your config/decoders.dart file');
+    info('Add the API service to your bootstrap/decoders.dart file');
   }
+}
+
+/// Strips a trailing API service suffix from [rawName] and returns the resource
+/// name in snake_case.
+///
+/// The suffix is matched case-insensitively so acronym spellings such as
+/// `APIService` (which `snakeCase` would split into `a_p_i_service`) are handled
+/// correctly and don't leave the class name doubled (e.g. `APIServiceApiService`).
+/// When the input is nothing but the suffix (e.g. `APIService`), it falls back
+/// to `api` so a non-empty name is always produced.
+String cleanApiServiceName(String rawName) {
+  String stripped = rawName.replaceFirst(
+    RegExp(r'[-_ ]?api[-_ ]?service$', caseSensitive: false),
+    "",
+  );
+  if (stripped.trim().isEmpty) {
+    return "api";
+  }
+  return ReCase(stripped).snakeCase;
 }

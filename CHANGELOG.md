@@ -1,3 +1,17 @@
+## [7.1.25] - 2026-07-06
+
+### Fixed
+* `make:api_service` — acronym-spelled names (e.g. `PaymentsAPIService`) no longer produce a doubled `ApiServiceApiService` class name; the suffix is now stripped case-insensitively and falls back to `api` for suffix-only input
+* Generated API service now always imports `package:nylo_framework/nylo_framework.dart` (previously omitted when a custom `--url` was supplied, breaking the `NyApiService` reference)
+* Generated `env.g.dart` now escapes single quotes and backslashes in keys and values, so secrets containing `'` or `\` can't break the generated Dart string literal
+
+### Changed
+* `make:api_service` info hint now points to `bootstrap/decoders.dart` (was `config/decoders.dart`)
+* Generated `env.g.dart` adds explicit local variable type annotations and a `dart:typed_data` import (satisfies the `specify_nonobvious_local_variable_types` lint)
+* Bump `nylo_support` dependency from `^7.27.2` to `^7.27.3`
+* Bump `flutter_local_notifications` dependency from `^22.0.0` to `^22.0.1`
+* Bump `dio` dependency from `^5.9.2` to `^5.10.0`
+
 ## [7.1.24] - 2026-06-08
 
 ### Changed
