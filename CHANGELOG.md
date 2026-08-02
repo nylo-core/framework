@@ -1,3 +1,12 @@
+## [7.1.26] - 2026-08-02
+
+### Changed
+* Bump `nylo_support` dependency from `^7.27.3` to `^7.27.4`
+* Bump `flutter_local_notifications` dependency from `^22.0.1` to `^22.2.0`
+* Bump `dio` dependency from `^5.10.0` to `^5.11.0`
+* Bump `error_stack` dependency from `^2.1.4` to `^2.1.5`
+* Bump `patrol` dependency from `^4.6.1` to `^4.8.0`
+
 ## [7.1.25] - 2026-07-06
 
 ### Fixed
