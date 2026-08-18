@@ -1,3 +1,11 @@
+## [7.1.27] - 2026-08-18
+
+### Changed
+* `patrol` is now a dev dependency (was a regular dependency) and bumped from `^4.8.0` to `^4.9.0` — consumer apps no longer pull in patrol transitively; add it to your own `dev_dependencies` if your tests use it
+* Bump `nylo_support` dependency from `^7.27.4` to `^7.27.5`
+* Bump `flutter_local_notifications` dependency from `^22.2.0` to `^22.3.0`
+* Analyzer now excludes `build/` and platform folders (`android/`, `ios/`, `web/`, `windows/`, `macos/`, `linux/`) in `analysis_options.yaml`
+
 ## [7.1.26] - 2026-08-02
 
 ### Changed
