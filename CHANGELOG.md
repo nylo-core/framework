@@ -1,3 +1,12 @@
+## [7.1.28] - 2026-08-21
+
+### Changed
+* Bump `nylo_support` dependency from `^7.27.5` to `^7.28.0`, which brings:
+  * `name` and `path` constructor parameters on `NavigationHub`, plus `NyStatefulWidget.declaredStateName`, so a hub and the `NavigationHubStateActions` driving it can agree on a single state name
+  * State names are now built from the page's widget class on both the sending and listening end of a state update — fixes updates being silently dropped in obfuscated builds (`flutter build --obfuscate`)
+  * `NyPage` no longer adopts another page's state data on init, and `JourneyState.isLastStep` no longer reports `true` for a journey with no steps
+  * `NyLogger.error` now reports routes whose builder names no page, and `NavigationHubStateActions` calls addressing a name no hub listens on
+
 ## [7.1.27] - 2026-08-18
 
 ### Changed
