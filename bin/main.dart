@@ -9,13 +9,13 @@ void main(List<String> arguments) async {
   if (arguments.isEmpty) {
     print(metroMenu);
 
-    // Discover and show custom commands
-    final customCommands = await MetroService.discoverCustomCommands();
-    if (customCommands.isNotEmpty) {
-      print('[Custom Commands]');
-      for (var cmd in customCommands) {
-        print('  ${cmd.category}:${cmd.name}');
-      }
+    // Discover and show the custom commands from the project and its packages
+    final customCommands = await MetroService.discoverCustomCommands(
+      reservedCommands: builtInCommands.keys,
+    );
+    final customCommandsMenu = MetroService.customCommandsMenu(customCommands);
+    if (customCommandsMenu.isNotEmpty) {
+      print(customCommandsMenu.trimRight());
     }
     exit(0);
   }
@@ -29,12 +29,14 @@ void main(List<String> arguments) async {
     exit(0);
   }
 
-  // Otherwise, try to run as custom command
-  final customCommands = await MetroService.discoverCustomCommands();
-  await MetroService.runCommand(
+  // Otherwise, try to run as a custom command from the project or a package
+  final customCommands = await MetroService.discoverCustomCommands(
+    reservedCommands: builtInCommands.keys,
+  );
+  final exitCode = await MetroService.runCommand(
     arguments,
     allCommands: customCommands,
     menu: metroMenu,
   );
-  exit(0);
+  exit(exitCode);
 }

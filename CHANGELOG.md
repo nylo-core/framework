@@ -1,3 +1,13 @@
+## [7.1.29] - 2026-09-05
+
+### Added
+* **Metro discovers commands shipped by packages** - When a dependency of your project contains a `metro_commands.json` file at its root, its commands appear in the `metro` menu under `[<package> Commands]` and run like any other command, e.g. `metro tenant:create`. Nothing needs to be registered in the project. The "Package Commands" section of the Commands documentation covers how to ship commands in a package
+
+### Changed
+* `metro` now exits with the exit code of the custom command it ran, instead of always `0`
+* A custom command that collides with a built-in command (e.g. `make:page`), or with a command from another source, is skipped with a warning naming both sides instead of being listed but never run
+* Bump `nylo_support` dependency from `^7.28.0` to `^7.29.0`
+
 ## [7.1.28] - 2026-08-21
 
 ### Changed
