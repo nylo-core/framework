@@ -28,11 +28,11 @@ class ${rc.pascalCase}Button extends StatefulAppButton {
 
   @override
   Widget buildButton(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
 
-    final bgColor = backgroundColor ?? theme.colorScheme.primary;
-    final fgColor = contentColor ?? theme.colorScheme.onPrimary;
-    final radius = BorderRadius.circular(14);
+    final Color bgColor = backgroundColor ?? theme.colorScheme.primary;
+    final Color fgColor = contentColor ?? theme.colorScheme.onPrimary;
+    final BorderRadius radius = BorderRadius.circular(14);
 
     return Container(
       width: width ?? double.infinity,

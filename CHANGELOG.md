@@ -1,3 +1,10 @@
+## [7.1.30] - 2026-09-09
+
+### Changed
+* Bump `dio` dependency from `^5.11.0` to `^5.11.1`
+* Bump `yaml` dependency from `^3.1.3` to `^3.1.4`
+* `make:button` stub now uses explicit type annotations instead of inferred types in its generated code
+
 ## [7.1.29] - 2026-09-05
 
 ### Added
