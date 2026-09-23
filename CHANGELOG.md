@@ -1,3 +1,8 @@
+## [7.2.2] - 2026-09-23
+
+### Fixed
+* `package:nylo_framework/nylo_framework.dart` exports Flutter's painting API again (`Locale`, `Color`, `TextStyle`, `EdgeInsets`, `BorderRadius`, `BoxDecoration`, ...). It used to arrive through skeletonizer 2, which exports `package:flutter/painting.dart`; skeletonizer 3 doesn't, so in 7.2.0 and 7.2.1 a file that used these types with only the `nylo_framework` import stopped compiling, e.g. `List<Locale> supportedLocales` in the boilerplate's `lib/config/localization.dart`. `nylo_framework` now exports `package:flutter/painting.dart` itself
+
 ## [7.2.1] - 2026-09-23
 
 ### Changed

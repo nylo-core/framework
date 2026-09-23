@@ -531,7 +531,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "7.2.1"
+    version: "7.2.2"
   nylo_support:
     dependency: transitive
     description:

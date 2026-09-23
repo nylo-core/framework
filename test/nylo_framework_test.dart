@@ -7,6 +7,7 @@
 // - test/commands/        - CommandBuilder tests
 // - test/stubs/           - Stub generation tests
 // - test/console/         - Console components tests
+// - test/exports_test.dart - What nylo_framework.dart exports
 //
 // Run all tests with: flutter test
 // Run specific tests with: flutter test test/metro/ny_json_test.dart
