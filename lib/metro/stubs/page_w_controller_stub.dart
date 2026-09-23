@@ -13,6 +13,9 @@ import '/app/controllers/${creationPath != null ? "$creationPath/${className.sna
 class ${className.pascalCase}Page extends NyStatefulWidget<${className.pascalCase}Controller> {
   static RouteView path = ("/${className.paramCase}", (_) => ${className.pascalCase}Page());
 
+  /// Actions e.g. ${className.pascalCase}Page.actions.showToast("hello");
+  static final actions = path.actions;
+
   ${className.pascalCase}Page({super.key}) : super(child: () => _${className.pascalCase}PageState());
 }
 
@@ -25,10 +28,10 @@ class _${className.pascalCase}PageState extends NyPage<${className.pascalCase}Pa
   get init => () {
 
   };
-  
+
   @override
-  bool get stateManaged => false;
-  
+  bool get stateManaged => true;
+
  @override
   Widget view(BuildContext context) {
     return Scaffold(

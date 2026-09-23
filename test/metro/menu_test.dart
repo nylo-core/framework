@@ -110,9 +110,46 @@ void main() {
         expect(metroMenu, contains('make:command'));
       });
 
+      test('contains make:seeder command', () {
+        expect(metroMenu, contains('make:seeder'));
+      });
+
       test('contains make:env command', () {
         expect(metroMenu, contains('make:env'));
       });
+    });
+
+    group('Live Commands section', () {
+      test('contains section header after the helper commands', () {
+        expect(metroMenu, contains('[Live Commands]'));
+        expect(
+          metroMenu.indexOf('[Live Commands]'),
+          greaterThan(metroMenu.indexOf('[Helper Commands]')),
+        );
+      });
+
+      test('ends with the live commands so project live commands follow', () {
+        expect(metroMenu.trimRight(), endsWith('live:run'));
+      });
+
+      test('lists only the top-level live commands', () {
+        final String section = metroMenu.substring(
+          metroMenu.indexOf('[Live Commands]'),
+        );
+
+        expect(section.trim().split('\n').skip(1).map((line) => line.trim()), [
+          'live',
+          'live:devices',
+          'live:status',
+          'live:run',
+        ]);
+      });
+
+      for (final String action in ['live:route', 'live:storage', 'live:auth']) {
+        test('leaves $action to live:run', () {
+          expect(metroMenu, isNot(contains('  $action\n')));
+        });
+      }
     });
 
     test('is a constant string', () {

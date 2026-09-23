@@ -1,3 +1,35 @@
+## [7.2.0] - 2026-09-23
+
+### Added
+* **Nylo Live** - Metro can now reach into your app while it runs in debug mode, through the Dart VM service. It finds the running app through the Dart Tooling Daemon with no setup, and only connects to apps built from the current project. There are four top-level commands:
+  * `metro live` - Opens a shell connected to the running app, where live commands drop their prefix (`status`, `route /profile`). The prompt shows the device and current route, Tab completes commands, options, routes, storage keys and seeders, history is kept in `.dart_tool/nylo/live_history`, and the shell reconnects when the app restarts. `seed`, `seed:rollback`, `export`, `reload` and `restart` only run inside the shell. Piping a file in (`metro live < seeds/demo.live`) runs it one line at a time and stops at the first command that fails
+  * `metro live:devices` - Lists this project's running apps, numbered for `-d`
+  * `metro live:status` - Shows the app, device, build mode, current route and stack, locale, theme, and whether a user is signed in
+  * `metro live:run <command>` - Runs a built-in command: `data` (the page on screen, the route data it was opened with, and its state's own fields), `routes`, `route`, `back`, `deeplink` (also lists the link schemes declared in your iOS and Android config), `storage`, `storage:clear`, `backpack`, `auth`, `locale`, `theme`, `state`, `event` and `toast`
+* Every live command takes `-d/--device <#|name>`, `--all` (every running app), `--json`, `--uri` (a VM service address, skipping discovery) and `--timeout`. An option value written `@path` is read from that file, e.g. `--data @user.json` (`@@` for a literal `@`)
+* **Live commands** - `metro make:command <name> --live` creates a `LiveCommand`, which runs inside your app and has the same `builder`/`handle` shape as a Metro command. Metro marks it `"type": "live"` in `lib/app/commands/commands.json`, registers it in `lib/bootstrap/live_commands.dart` (an empty map in release builds) and passes `liveCommands` to `nylo.configure` in `app_provider.dart`. Run it with `metro <category>:<name>` while the app is running. `--description` sets the line shown for it under `[Live Commands]` in the Metro menu
+* **Seeders** - `metro make:seeder <name>` creates a `Seeder` in `lib/app/seeders/`, registers it in `lib/bootstrap/seeders.dart` and passes `seeders` to `nylo.configure`. Inside `metro live`, `seed <name>` runs its `up()` and `seed:rollback <name>` puts back every storage and Backpack value it changed; `seed` on its own lists the seeders. `--fresh` clears storage and Backpack first, and `--restart` hot restarts the app afterwards
+* **Storage snapshots** - `export [name]` inside `metro live` saves the app's storage and Backpack as a seeder in `lib/app/seeders/`, or as a JSON file with `--to`, and `seed <file>` loads a snapshot file back. `--only` and `--except` take comma-separated keys with `*` wildcards, and `--no-backpack` leaves Backpack out. Models, and any class with a registered decoder, come back as their own class. `export` warns when the snapshot holds keys that look like credentials
+* New live commands and seeders need a hot restart before a running app can run them; Metro says so when it creates one, and when you run one the app hasn't loaded yet
+* **Page actions** - `make:page` adds `static final actions = path.actions;` to the page class, so other code can call it, e.g. `HomePage.actions.showToast("hello")`
+* `package:nylo_framework/live.dart` exports the live API (`LiveCommand`, `Seeder`, `StorageSnapshot`, `LiveException`, `LiveOutput`) for live commands and seeders
+
+### Changed
+* `make:page` (with or without `--controller`) now generates `bool get stateManaged => true` instead of `false`, so the page receives the actions sent to it. Existing pages are unchanged; to call one through `actions`, add both lines to it
+* The Metro menu has a `[Live Commands]` section listing `live`, `live:devices`, `live:status` and `live:run`, followed by the project's own live commands (listed there instead of under `[Custom Commands]`)
+* Bump `nylo_support` dependency from `^7.29.0` to `^7.30.0`, which brings:
+  * The in-app side of Nylo Live, plus `Seeder`, `StorageSnapshot` and typed page actions (`PageStateActions`)
+  * Built-in English text for Nylo's own UI (toasts, confirm dialogs, validation messages, field labels) under `nylo.*` translation keys, used when your `lang/` files don't have the key
+  * `NyFormWidget.submit` returns a `Future<void>` that completes once `onSuccess` or `onFailure` has finished
+  * `lockRelease` releases its lock whatever `perform` throws, and `LocalNotification` falls back to an inexact alarm on Android 14+ when exact alarms aren't permitted
+* Bump `skeletonizer` dependency from `^2.1.3` to `^3.0.0`, which `nylo_support` 7.30.0 also requires. Skeletonizer 3 breaks apps that use its API directly through `nylo_framework`'s export: `SkeletonizerConfigData` is no longer a `ThemeExtension` (provide it with `SkeletonizerConfig(data: ..., child: ...)`), `SkeletonizerConfigData.light()` and `.dark()` are removed, and `BoneButtonType.elevated`/`filled`/`text` are renamed to `prominent`/`prominent`/`plain`. Code that only uses Nylo's `LoadingStyle.skeletonizer()` needs no changes
+* Bump `flutter_local_notifications` dependency from `^22.3.0` to `^22.3.1`
+* Bump `patrol` dev dependency from `^4.9.0` to `^4.10.0`
+* The publish workflow uses `actions/checkout@v5` (was `@v3`)
+
+### Fixed
+* `make:api_service` stops with exit code 1 when the file already exists and `--force` isn't passed. It used to print "already exists" and carry on, reformatting the existing file and exiting 0
+
 ## [7.1.30] - 2026-09-09
 
 ### Changed

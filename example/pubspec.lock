@@ -189,10 +189,10 @@ packages:
     dependency: transitive
     description:
       name: error_stack
-      sha256: "5fda05fba237b0048ae605683e730e638ae3a44c4a974fae0532a6c6e0610ddd"
+      sha256: "298e069f6544d518f2e44823f71a2f0a86df7baa3b66111d8814e8416b3bfd52"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.5"
+    version: "2.1.7"
   fake_async:
     dependency: transitive
     description:
@@ -242,10 +242,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_local_notifications
-      sha256: "1447ba911c60f2ba3f25dae1af151ec187162566b0f57e37771bf0b400f013ad"
+      sha256: "357be7ff996dc272e2037c69c1bdd5d1bd21172219d55f8bd2e11aeea602e6d3"
       url: "https://pub.dev"
     source: hosted
-    version: "22.3.0"
+    version: "22.3.1"
   flutter_local_notifications_linux:
     dependency: transitive
     description:
@@ -295,18 +295,18 @@ packages:
     dependency: transitive
     description:
       name: flutter_secure_storage
-      sha256: "2670c2a81a032080e779c015f4f775373605c4a364643ed371e78dea7781822c"
+      sha256: d4e1fb6b2cb524868929e78dc0282fa000554b22060fb53789dc481c9fc95bb8
       url: "https://pub.dev"
     source: hosted
-    version: "10.3.2"
+    version: "11.2.0"
   flutter_secure_storage_darwin:
     dependency: transitive
     description:
       name: flutter_secure_storage_darwin
-      sha256: "82329fa5cdf343773b1b6897dea959105a29f092454259edff92f9f6637e8149"
+      sha256: a031ceac9b070e62ef183cd7f7d1a8798ebde402d5049f0fe6eb3a51bd797a21
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.2"
+    version: "0.4.3"
   flutter_secure_storage_linux:
     dependency: transitive
     description:
@@ -319,10 +319,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_secure_storage_platform_interface
-      sha256: "788060052712555182aba55ecb5f8b6e5cb9cfe8f776c83249a61fe3ce877db4"
+      sha256: "64951127f001f546891c86f414972bf49ef2c4c8a4c92c65f5790cc0c9100045"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.3"
+    version: "2.1.1"
   flutter_secure_storage_web:
     dependency: transitive
     description:
@@ -531,15 +531,15 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "7.1.29"
+    version: "7.2.0"
   nylo_support:
     dependency: transitive
     description:
       name: nylo_support
-      sha256: "242e9085b522df68b3215329e58abfbf73b794e6160f767b01c6bad36c462300"
+      sha256: "9fb430cfed242be336c7a2d39afa8be7d80049c798bd7759c46915e0bc6fdd90"
       url: "https://pub.dev"
     source: hosted
-    version: "7.29.0"
+    version: "7.30.0"
   objective_c:
     dependency: transitive
     description:
@@ -680,10 +680,10 @@ packages:
     dependency: transitive
     description:
       name: service_runner
-      sha256: "95add4bb2836924632ab10a08df1c24db78a077878fe2831df44d0a7a87964e8"
+      sha256: "0109af1e57eacac78c6b6b6fa7668dd62acbfa5420f66ce92fe71bf6b80b2c52"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.2"
   shared_preferences:
     dependency: transitive
     description:
@@ -744,10 +744,10 @@ packages:
     dependency: transitive
     description:
       name: skeletonizer
-      sha256: "9f38f9b47ec3cf2235a6a4f154a88a95432bc55ba98b3e2eb6ced5c1974bc122"
+      sha256: f67c2ce8a3fedea63d885afe61a136f3adb59f2c28faa6e79102a5280973c64f
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.3"
+    version: "3.0.0"
   sky_engine:
     dependency: transitive
     description: flutter

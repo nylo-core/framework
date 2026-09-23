@@ -3,6 +3,7 @@ import 'package:recase/recase.dart';
 import 'package:nylo_framework/metro/stubs/model_stub.dart';
 import 'package:nylo_framework/metro/stubs/controller_stub.dart';
 import 'package:nylo_framework/metro/stubs/page_stub.dart';
+import 'package:nylo_framework/metro/stubs/page_w_controller_stub.dart';
 
 void main() {
   group('modelStub', () {
@@ -161,6 +162,46 @@ void main() {
       final stub = pageStub(className: 'shopping_cart');
 
       expect(stub, contains('"/shopping-cart"'));
+    });
+
+    test('declares actions built from its path', () {
+      final stub = pageStub(className: 'home');
+
+      expect(stub, contains('static final actions = path.actions;'));
+    });
+
+    test('opts in to state actions', () {
+      final stub = pageStub(className: 'home');
+
+      expect(stub, contains('bool get stateManaged => true;'));
+    });
+  });
+
+  group('pageWithControllerStub', () {
+    test('binds the page to its controller', () {
+      final stub = pageWithControllerStub(className: 'home');
+
+      expect(
+        stub,
+        contains('class HomePage extends NyStatefulWidget<HomeController>'),
+      );
+      expect(stub, contains("import '/app/controllers/home_controller.dart'"));
+      expect(
+        stub,
+        contains('HomeController get controller => widget.controller;'),
+      );
+    });
+
+    test('declares actions built from its path', () {
+      final stub = pageWithControllerStub(className: 'home');
+
+      expect(stub, contains('static final actions = path.actions;'));
+    });
+
+    test('opts in to state actions', () {
+      final stub = pageWithControllerStub(className: 'home');
+
+      expect(stub, contains('bool get stateManaged => true;'));
     });
   });
 }

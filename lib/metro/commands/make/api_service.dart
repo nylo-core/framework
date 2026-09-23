@@ -62,11 +62,12 @@ class _MakeApiServiceCommand extends NyCustomCommand {
       baseUrl: baseUrl,
     );
 
-    await scaffold(
+    final bool created = await scaffold(
       path: '$networkingPath/${classReCase.snakeCase}_api_service.dart',
       content: stubApiService,
       force: result.hasForceFlag,
     );
+    if (!created) abort();
 
     await dartFormat(
       '$networkingPath/${classReCase.snakeCase}_api_service.dart',

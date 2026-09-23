@@ -17,9 +17,13 @@ import 'make/navigation_hub.dart' as make_navigation_hub;
 import 'make/page.dart' as make_page;
 import 'make/provider.dart' as make_provider;
 import 'make/route_guard.dart' as make_route_guard;
+import 'make/seeder.dart' as make_seeder;
 import 'make/state_managed_widget.dart' as make_state_managed_widget;
 import 'make/stateful_widget.dart' as make_stateful_widget;
 import 'make/stateless_widget.dart' as make_stateless_widget;
+
+// Live commands
+import 'live/live_commands.dart' show liveBuiltInCommands;
 
 /// Map of built-in commands to their main functions
 final Map<String, Future<void> Function(List<String>)> builtInCommands = {
@@ -41,7 +45,9 @@ final Map<String, Future<void> Function(List<String>)> builtInCommands = {
   'make:page': make_page.main,
   'make:provider': make_provider.main,
   'make:route_guard': make_route_guard.main,
+  'make:seeder': make_seeder.main,
   'make:state_managed_widget': make_state_managed_widget.main,
   'make:stateful_widget': make_stateful_widget.main,
   'make:stateless_widget': make_stateless_widget.main,
+  ...liveBuiltInCommands,
 };
