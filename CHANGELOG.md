@@ -1,3 +1,8 @@
+## [7.2.1] - 2026-09-23
+
+### Changed
+* Bump `nylo_support` dependency from `^7.30.0` to `^7.30.1`, whose dartdoc for `Seeder`, `StorageSnapshot`, `LiveCommand` and `Nylo.addSeeders` now names the commands you type inside `metro live` (`seed`, `seed:rollback`, `export`, `seed <file>`) instead of `metro live:*` commands that don't exist
+
 ## [7.2.0] - 2026-09-23
 
 ### Added
