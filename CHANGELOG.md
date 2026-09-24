@@ -1,3 +1,8 @@
+## [7.2.3] - 2026-09-24
+
+### Changed
+* `metro make:seeder`'s generated `lib/bootstrap/seeders.dart` comment drops the "release builds get an empty map" note and reflows the "no need to edit this file" line
+
 ## [7.2.2] - 2026-09-23
 
 ### Fixed

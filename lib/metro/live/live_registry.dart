@@ -40,13 +40,11 @@ import 'package:nylo_framework/live.dart';
 |--------------------------------------------------------------------------
 | Seeders put your running app into a known state, like a signed-in user
 | with sample data, and take it back out again.
-| Metro adds them here, so there's no need to edit this file. Create one:
+| Metro adds them here, so there's no need to edit this file. 
+| Create one:
 |   metro make:seeder demo_user
 | Then, while your app is running, open metro live and seed it:
 |   seed demo_user
-|
-| Release builds get an empty map, so seeders and their demo data are left
-| out of the app you ship.
 |
 | Learn more: https://nylo.dev/docs/7.x/metro
 |-------------------------------------------------------------------------- */
