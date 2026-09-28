@@ -1,3 +1,11 @@
+## [7.2.4] - 2026-09-28
+
+### Changed
+* Bump `nylo_support` dependency from `^7.30.1` to `^7.31.0`, which brings:
+  * File storage: named disks in the style of Laravel's `Storage` facade, e.g. `disk('documents').put('reports/q3.pdf', bytes)` or `FileStorage.put(...)` for the default disk. `local`, `documents`, `cache`, `temp` and `assets` disks work without any configuration, and `nylo.configure(disks: ..., defaultDisk: ...)` adds your own. `putFile` stores an `XFile` from image_picker, file_picker or camera, `DiskImage` shows a stored image, and `FileStorage.fake()` and `FakeFile` cover tests (`NyTest.init()` fakes every writable disk)
+  * `lockRelease(onError:)`, which receives an `Exception` thrown by `perform` once the lock is released
+  * An empty `Field.date` stays empty until a date is chosen, `Field.picker` grows to fit larger text, `Field.chips` shows which chips are selected in dark mode, and the password visibility toggle is a labelled button
+
 ## [7.2.3] - 2026-09-24
 
 ### Changed
