@@ -585,10 +585,10 @@ packages:
     dependency: "direct main"
     description:
       name: nylo_support
-      sha256: "52bb5ea0c243b77c52fe9b6929d023115a1670f545d05bf56b73bfdaea1e4a30"
+      sha256: "1f929f36ce8aca789af0c8ef0e037d92c1bdc5df4f14afafdfaf820e06890926"
       url: "https://pub.dev"
     source: hosted
-    version: "7.31.0"
+    version: "7.31.1"
   objective_c:
     dependency: transitive
     description:

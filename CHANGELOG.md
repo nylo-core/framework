@@ -1,3 +1,8 @@
+## [7.2.5] - 2026-09-30
+
+### Changed
+* Bump `nylo_support` dependency from `^7.31.0` to `^7.31.1`, whose `handleFailure` works when a request throws (by default, any status outside 2xx). A callback that returns nothing, plain or `async`, gets the error response, and one that returns a value gets that value as the response's `data`; both used to end in a `TypeError`
+
 ## [7.2.4] - 2026-09-28
 
 ### Changed
