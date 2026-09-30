@@ -1,3 +1,10 @@
+## [7.2.6] - 2026-09-30
+
+### Changed
+* Bump `nylo_support` dependency from `^7.31.1` to `^7.31.2`, which brings:
+  * The boot completes while the iOS keychain is locked, as when a push notification launches the app in the background. With `monitorAppUsage()` on, that launch goes unrecorded and the error is logged instead of thrown out of the boot
+  * `setLoading` works after its page has closed, so async work that finishes late, such as a `CollectionView` refresh, no longer calls `setState` on a disposed state
+
 ## [7.2.5] - 2026-09-30
 
 ### Changed
