@@ -4,7 +4,7 @@ import 'package:nylo_framework/metro/helpers/metro_helpers.dart';
 void main() {
   group('NyJson.tryDecode', () {
     test('valid JSON object returns Map', () {
-      final result = NyJson.tryDecode('{"name": "test", "value": 123}');
+      final dynamic result = NyJson.tryDecode('{"name": "test", "value": 123}');
 
       expect(result, isA<Map>());
       expect(result['name'], equals('test'));
@@ -12,7 +12,7 @@ void main() {
     });
 
     test('valid JSON array returns List', () {
-      final result = NyJson.tryDecode('[1, 2, 3, "four"]');
+      final dynamic result = NyJson.tryDecode('[1, 2, 3, "four"]');
 
       expect(result, isA<List>());
       expect(result.length, equals(4));
@@ -21,19 +21,21 @@ void main() {
     });
 
     test('invalid JSON returns null', () {
-      final result = NyJson.tryDecode('not valid json {');
+      final dynamic result = NyJson.tryDecode('not valid json {');
 
       expect(result, isNull);
     });
 
     test('empty string returns null', () {
-      final result = NyJson.tryDecode('');
+      final dynamic result = NyJson.tryDecode('');
 
       expect(result, isNull);
     });
 
     test('nested JSON object returns correct structure', () {
-      final result = NyJson.tryDecode('{"user": {"name": "John", "age": 30}}');
+      final dynamic result = NyJson.tryDecode(
+        '{"user": {"name": "John", "age": 30}}',
+      );
 
       expect(result, isA<Map>());
       expect(result['user'], isA<Map>());
@@ -42,7 +44,9 @@ void main() {
     });
 
     test('JSON with boolean values parses correctly', () {
-      final result = NyJson.tryDecode('{"active": true, "deleted": false}');
+      final dynamic result = NyJson.tryDecode(
+        '{"active": true, "deleted": false}',
+      );
 
       expect(result, isA<Map>());
       expect(result['active'], isTrue);
@@ -50,7 +54,7 @@ void main() {
     });
 
     test('JSON with null value parses correctly', () {
-      final result = NyJson.tryDecode('{"value": null}');
+      final dynamic result = NyJson.tryDecode('{"value": null}');
 
       expect(result, isA<Map>());
       expect(result['value'], isNull);

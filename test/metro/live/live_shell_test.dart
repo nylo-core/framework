@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nylo_framework/metro/commands/live/live_commands.dart';
+import 'package:nylo_framework/metro/live/live_app.dart';
 import 'package:nylo_framework/metro/live/live_discovery.dart';
 import 'package:nylo_framework/metro/live/live_line_editor.dart';
 import 'package:nylo_framework/metro/live/live_manifest.dart';
@@ -122,7 +123,8 @@ void main() {
           'cart.seed': (args) async => {'seeded': 2},
         },
       );
-      final live = await sessionFor({'iPhone 17 Pro': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': phone});
 
       await live.session.refresh();
       await live.session.refresh();
@@ -142,16 +144,16 @@ void main() {
     test(
       'uses the only app, and asks for use when there are several',
       () async {
-        final live = await sessionFor({
+        final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+        live = await sessionFor({
           'iPhone 17 Pro': await app(),
           'Pixel 9': await app(),
         });
         await live.session.refresh();
 
-        final resolved = await live.session.resolve(
-          const LiveOptions(),
-          live.runner.output,
-        );
+        final ({int exitCode, List<LiveApp> targets}) resolved = await live
+            .session
+            .resolve(const LiveOptions(), live.runner.output);
 
         expect(resolved.exitCode, 2);
         expect(
@@ -165,7 +167,8 @@ void main() {
     );
 
     test('use picks an app by number or name, or all of them', () async {
-      final live = await sessionFor({
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({
         'iPhone 17 Pro': await app(),
         'Pixel 9': await app(),
       });
@@ -193,22 +196,24 @@ void main() {
         hasLength(2),
       );
 
-      final failure = await live.session.use('7');
+      final ({List<LiveApp> candidates, String error})? failure = await live
+          .session
+          .use('7');
       expect(failure?.error, contains('There is no app #7'));
     });
 
     test('-d and --all on one command win over use', () async {
-      final live = await sessionFor({
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({
         'iPhone 17 Pro': await app(),
         'Pixel 9': await app(),
       });
       await live.session.refresh();
       await live.session.use('1');
 
-      final resolved = await live.session.resolve(
-        const LiveOptions(device: 'Pixel'),
-        live.runner.output,
-      );
+      final ({int exitCode, List<LiveApp> targets}) resolved = await live
+          .session
+          .resolve(const LiveOptions(device: 'Pixel'), live.runner.output);
 
       expect(resolved.targets.single.device, 'Pixel 9');
       expect(live.session.current?.device, 'iPhone 17 Pro');
@@ -216,7 +221,8 @@ void main() {
 
     test('follows page changes for the prompt', () async {
       final FakeNyloApp phone = await app();
-      final live = await sessionFor({'iPhone 17 Pro': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': phone});
       int changes = 0;
       live.session.onChange = () => changes++;
       await live.session.refresh();
@@ -248,7 +254,8 @@ void main() {
 
     test('notices a hot restart and follows the new isolate', () async {
       final FakeNyloApp phone = await app();
-      final live = await sessionFor({'iPhone 17 Pro': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': phone});
       final List<String> notices = [];
       live.session.onNotice = notices.add;
       await live.session.refresh();
@@ -268,7 +275,8 @@ void main() {
 
     test('says when an app disconnects, and waits for it', () async {
       final FakeNyloApp phone = await app();
-      final live = await sessionFor({'iPhone 17 Pro': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': phone});
       final List<String> notices = [];
       live.session.onNotice = notices.add;
       await live.session.refresh();
@@ -297,7 +305,8 @@ void main() {
     };
 
     test('runs built-in commands without their prefix', () async {
-      final live = await sessionFor({'iPhone 17 Pro': await app()});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': await app()});
 
       final int? code = await runLiveShellCommand(
         'status',
@@ -315,7 +324,8 @@ void main() {
         status: {'route': '/home', 'seeders': []},
         commands: {'seeders.run': seedersRun},
       );
-      final live = await sessionFor({'iPhone 17e': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17e': phone});
 
       final int? code = await runLiveShellCommand('seed', [
         'demo_user',
@@ -338,7 +348,8 @@ void main() {
         status: {'route': '/home', 'seeders': []},
         commands: {'seeders.run': seedersRun},
       );
-      final live = await sessionFor({'iPhone 17e': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17e': phone});
 
       expect(
         await runLiveShellCommand('seed:rollback', ['demo_user'], live.runner),
@@ -362,7 +373,8 @@ void main() {
     });
 
     test('shell-only commands show examples as typed in the shell', () async {
-      final live = await sessionFor({'iPhone 17e': await app()});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17e': await app()});
 
       for (final (String name, String example) in [
         ('seed', 'e.g. seed demo_user'),
@@ -395,7 +407,8 @@ void main() {
             "  'app:seed_cart': () => SeedCartCommand(),\n"
             "};\n",
           );
-        final live = await sessionFor({
+        final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+        live = await sessionFor({
           'iPhone 17e': await app(
             commands: {
               'commands.list': (args) async => {'commands': []},
@@ -454,7 +467,8 @@ void main() {
     );
 
     test('the commands storage took over say what to type now', () async {
-      final live = await sessionFor({'iPhone 17 Pro': await app()});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': await app()});
 
       expect(
         await runLiveShellCommand('storage:get', ['SK_USER'], live.runner),
@@ -477,7 +491,8 @@ void main() {
 
     test('storage lists, shows one key, and deletes one key', () async {
       final FakeNyloApp phone = await storageApp();
-      final live = await sessionFor({'iPhone 17 Pro': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': phone});
 
       expect(await runLiveShellCommand('storage', const [], live.runner), 0);
       expect(live.printed.toString(), contains('KEY'));
@@ -499,7 +514,8 @@ void main() {
 
     test('storage saves a value given after the key', () async {
       final FakeNyloApp phone = await storageApp();
-      final live = await sessionFor({'iPhone 17 Pro': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': phone});
 
       expect(
         await runLiveShellCommand('storage', ['SK_COINS', '10'], live.runner),
@@ -519,7 +535,8 @@ void main() {
 
     test('storage reads the value as JSON, or as text with --string', () async {
       final FakeNyloApp phone = await storageApp();
-      final live = await sessionFor({'iPhone 17 Pro': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': phone});
 
       await runLiveShellCommand('storage', [
         'profile',
@@ -544,7 +561,8 @@ void main() {
 
     test('storage passes --ttl and --backpack when saving', () async {
       final FakeNyloApp phone = await storageApp();
-      final live = await sessionFor({'iPhone 17 Pro': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': phone});
 
       expect(
         await runLiveShellCommand('storage', [
@@ -581,7 +599,8 @@ void main() {
 
     test('the saving flags are refused when nothing is being saved', () async {
       final FakeNyloApp phone = await storageApp();
-      final live = await sessionFor({'iPhone 17 Pro': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': phone});
 
       expect(
         await runLiveShellCommand('storage', [
@@ -610,7 +629,8 @@ void main() {
 
     test('--delete refuses a value, so a save is never a delete', () async {
       final FakeNyloApp phone = await storageApp();
-      final live = await sessionFor({'iPhone 17 Pro': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': phone});
 
       expect(
         await runLiveShellCommand('storage', [
@@ -629,7 +649,8 @@ void main() {
     });
 
     test('storage says when a key is not set', () async {
-      final live = await sessionFor({
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({
         'iPhone 17 Pro': await app(
           commands: {
             'storage.get': (args) async => {
@@ -659,7 +680,8 @@ void main() {
 
     test('storage --delete needs a key, and points at clear', () async {
       final FakeNyloApp phone = await storageApp();
-      final live = await sessionFor({'iPhone 17 Pro': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': phone});
 
       expect(
         await runLiveShellCommand('storage', ['--delete'], live.runner),
@@ -696,7 +718,8 @@ void main() {
           },
         },
       );
-      final live = await sessionFor({'iPhone 17 Pro': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': phone});
 
       expect(await runLiveShellCommand('backpack', const [], live.runner), 0);
       expect(live.printed.toString(), contains('KEY'));
@@ -731,7 +754,8 @@ void main() {
           },
         },
       );
-      final live = await sessionFor({'iPhone 17 Pro': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': phone});
 
       expect(
         await runLiveShellCommand('backpack', ['coins', '10'], live.runner),
@@ -769,7 +793,8 @@ void main() {
           'backpack.list': (args) async => {'items': []},
         },
       );
-      final live = await sessionFor({'iPhone 17 Pro': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': phone});
 
       expect(
         await runLiveShellCommand('backpack', [
@@ -801,7 +826,8 @@ void main() {
     });
 
     test('backpack says when the app is too old to save', () async {
-      final live = await sessionFor({
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({
         'iPhone 17 Pro': await app(
           status: {'protocol': 5, 'route': '/home'},
           commands: {
@@ -831,7 +857,8 @@ void main() {
           },
         },
       );
-      final live = await sessionFor({'iPhone 17 Pro': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': phone});
 
       expect(
         await runLiveShellCommand('backpack', [
@@ -851,7 +878,8 @@ void main() {
     });
 
     test('backpack --delete says when the key was not there', () async {
-      final live = await sessionFor({
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({
         'iPhone 17 Pro': await app(
           status: {'protocol': 5, 'route': '/home'},
           commands: {
@@ -881,7 +909,8 @@ void main() {
           'backpack.list': (args) async => {'items': []},
         },
       );
-      final live = await sessionFor({'iPhone 17 Pro': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': phone});
 
       expect(
         await runLiveShellCommand('backpack', ['--delete'], live.runner),
@@ -892,7 +921,8 @@ void main() {
     });
 
     test('backpack --delete says when the app is too old', () async {
-      final live = await sessionFor({
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({
         'iPhone 17 Pro': await app(
           status: {'protocol': 4, 'route': '/home'},
           commands: {
@@ -912,7 +942,8 @@ void main() {
     });
 
     test('backpack says when a key was never saved', () async {
-      final live = await sessionFor({
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({
         'iPhone 17 Pro': await app(
           status: {'protocol': 4, 'route': '/home'},
           commands: {
@@ -931,7 +962,8 @@ void main() {
     });
 
     test('backpack says when the app is too old for one value', () async {
-      final live = await sessionFor({
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({
         'iPhone 17 Pro': await app(
           status: {'protocol': 3, 'route': '/home'},
           commands: {
@@ -973,7 +1005,8 @@ void main() {
           },
         },
       );
-      final live = await sessionFor({'iPhone 17 Pro': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': phone});
 
       expect(
         await runLiveShellCommand('auth', [
@@ -1020,7 +1053,8 @@ void main() {
           'auth.show': (args) async => {'key': 'SK_USER', 'sessions': []},
         },
       );
-      final live = await sessionFor({'iPhone 17 Pro': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': phone});
 
       expect(await runLiveShellCommand('auth', ['signin'], live.runner), 64);
       expect(
@@ -1050,7 +1084,8 @@ void main() {
     });
 
     test('auth says when nobody is signed in, or no key is set', () async {
-      final live = await sessionFor({
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({
         'iPhone 17 Pro': await app(
           status: {'protocol': 7, 'route': '/home'},
           commands: {
@@ -1105,7 +1140,8 @@ void main() {
 
     test('deeplink reports each stage of the link', () async {
       final FakeNyloApp phone = await linkApp();
-      final live = await sessionFor({'iPhone 17 Pro': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': phone});
 
       expect(
         await runLiveShellCommand('deeplink', [
@@ -1125,7 +1161,8 @@ void main() {
 
     test('deeplink --dry resolves without sending anything', () async {
       final FakeNyloApp phone = await linkApp();
-      final live = await sessionFor({'iPhone 17 Pro': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': phone});
 
       expect(
         await runLiveShellCommand('deeplink', [
@@ -1142,7 +1179,8 @@ void main() {
     });
 
     test('deeplink says when the path falls back', () async {
-      final live = await sessionFor({
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({
         'iPhone 17 Pro': await linkApp(registered: false),
       });
 
@@ -1161,7 +1199,8 @@ void main() {
 
     test('deeplink refuses a bare path and points at route', () async {
       final FakeNyloApp phone = await linkApp();
-      final live = await sessionFor({'iPhone 17 Pro': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': phone});
 
       expect(
         await runLiveShellCommand('deeplink', ['/product/42'], live.runner),
@@ -1176,7 +1215,8 @@ void main() {
 
     test('deeplink --no-callback skips onIncomingLink', () async {
       final FakeNyloApp phone = await linkApp();
-      final live = await sessionFor({'iPhone 17 Pro': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': phone});
 
       expect(
         await runLiveShellCommand('deeplink', [
@@ -1203,9 +1243,8 @@ void main() {
           '</dict></array></dict></plist>',
         );
       final FakeNyloApp phone = await linkApp();
-      final live = await sessionFor({
-        'iPhone 17 Pro': phone,
-      }, root: project.path);
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': phone}, root: project.path);
 
       expect(await runLiveShellCommand('deeplink', const [], live.runner), 0);
 
@@ -1229,7 +1268,8 @@ void main() {
           '<key>CFBundleURLSchemes</key><array><string>myapp</string></array>'
           '</dict></array></dict></plist>',
         );
-      final live = await sessionFor({
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({
         'iPhone 17 Pro': await linkApp(),
       }, root: project.path);
 
@@ -1286,7 +1326,8 @@ void main() {
           ],
         ),
       );
-      final live = await sessionFor({'iPhone 17 Pro': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': phone});
 
       final int? code = await runLiveShellCommand(
         'data',
@@ -1308,7 +1349,8 @@ void main() {
         status: {'protocol': 3, 'route': '/conversation-detail'},
         commands: {'state.data': stateData},
       );
-      final live = await sessionFor({'iPhone 17 Pro': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17 Pro': phone});
 
       expect(
         await runLiveShellCommand('data', [
@@ -1321,7 +1363,8 @@ void main() {
     });
 
     test('data says when the app is too old to answer', () async {
-      final live = await sessionFor({
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({
         'iPhone 17 Pro': await app(
           status: {'protocol': 2, 'route': '/home'},
           commands: {'state.data': stateData},
@@ -1336,7 +1379,8 @@ void main() {
     });
 
     test('data explains a build whose fields cannot be read', () async {
-      final live = await sessionFor({
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({
         'iPhone 17 Pro': await app(
           status: {'protocol': 3, 'route': '/conversation-detail'},
           commands: {'state.data': stateData},
@@ -1373,7 +1417,8 @@ void main() {
             },
           },
         );
-        final live = await sessionFor({'iPhone 17 Pro': phone});
+        final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+        live = await sessionFor({'iPhone 17 Pro': phone});
 
         expect(
           await runLiveShellCommand('route', ['/profile'], live.runner),
@@ -1501,7 +1546,8 @@ void main() {
         status: snapshotStatus,
         commands: {'storage.export': (args) async => exportPayload()},
       );
-      final live = await sessionFor({'iPhone 17e': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17e': phone});
 
       final int? code = await runLiveShellCommand(
         'export',
@@ -1539,7 +1585,8 @@ void main() {
         status: snapshotStatus,
         commands: {'storage.export': (args) async => exportPayload()},
       );
-      final live = await sessionFor({'iPhone 17e': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17e': phone});
 
       expect(
         await runLiveShellCommand('export', [
@@ -1582,9 +1629,8 @@ void main() {
           status: snapshotStatus,
           commands: {'storage.export': (args) async => exportPayload()},
         );
-        final live = await sessionFor({
-          'iPhone 17e': phone,
-        }, root: project.path);
+        final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+        live = await sessionFor({'iPhone 17e': phone}, root: project.path);
 
         final int? code = await runLiveShellCommand('export', [
           'demo_user',
@@ -1664,7 +1710,8 @@ void main() {
         status: snapshotStatus,
         commands: {'storage.export': (args) async => exportPayload()},
       );
-      final live = await sessionFor({'iPhone 17e': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17e': phone});
 
       final int? code = await runLiveShellCommand('export', [
         '--to',
@@ -1706,7 +1753,8 @@ void main() {
         status: snapshotStatus,
         commands: {'snapshot.import': snapshotImport},
       );
-      final live = await sessionFor({'Pixel 9': phone}, root: project.path);
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'Pixel 9': phone}, root: project.path);
 
       expect(await runLiveShellCommand('seed', ['tone'], live.runner), 0);
 
@@ -1738,7 +1786,8 @@ void main() {
         status: snapshotStatus,
         commands: {'seeders.run': runSeeders},
       );
-      final live = await sessionFor({'Pixel 9': phone}, root: project.path);
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'Pixel 9': phone}, root: project.path);
 
       expect(await runLiveShellCommand('seed', ['tone'], live.runner), 0);
 
@@ -1755,7 +1804,8 @@ void main() {
         status: snapshotStatus,
         commands: {'seeders.run': runSeeders},
       );
-      final live = await sessionFor({'Pixel 9': phone}, root: project.path);
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'Pixel 9': phone}, root: project.path);
 
       // The app owns the list of seeders, so it explains an unknown name.
       expect(await runLiveShellCommand('seed', ['nope'], live.runner), 0);
@@ -1773,7 +1823,8 @@ void main() {
         status: snapshotStatus,
         commands: {'snapshot.import': snapshotImport},
       );
-      final live = await sessionFor({'Pixel 9': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'Pixel 9': phone});
 
       final int? code = await runLiveShellCommand('seed', [
         file.path,
@@ -1825,7 +1876,8 @@ void main() {
         status: snapshotStatus,
         commands: {'snapshot.import': snapshotImport},
       );
-      final live = await sessionFor({'Pixel 9': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'Pixel 9': phone});
 
       expect(
         await runLiveShellCommand('seed', [
@@ -1874,7 +1926,8 @@ void main() {
         status: {'protocol': 1, 'route': '/home', 'seeders': []},
         commands: {'storage.export': (args) async => exportPayload()},
       );
-      final live = await sessionFor({'iPhone 17e': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'iPhone 17e': phone});
 
       expect(await runLiveShellCommand('export', const [], live.runner), 1);
       expect(
@@ -1913,7 +1966,8 @@ void main() {
           },
         },
       );
-      final live = await sessionFor({'Pixel 9': phone});
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor({'Pixel 9': phone});
 
       expect(await runLiveShellCommand('seed', const [], live.runner), 0);
       expect(
@@ -1960,7 +2014,8 @@ void main() {
       Future<int?> Function(String name, List<String> args)? handler,
       String? root,
     }) async {
-      final live = await sessionFor(devices, root: root);
+      final ({StringBuffer printed, LiveRunner runner, LiveSession session})
+      live = await sessionFor(devices, root: root);
       final List<String> dispatched = [];
       final LiveShell shell = LiveShell(
         runner: live.runner,
@@ -1982,7 +2037,8 @@ void main() {
         Stream<List<int>>.fromIterable([utf8.encode(text)]);
 
     test('runs a piped script line by line', () async {
-      final shell = await shellFor(
+      final ({List<String> dispatched, StringBuffer output, LiveShell shell})
+      shell = await shellFor(
         {'iPhone 17 Pro': await app()},
         input: lines(
           '# Put the simulator into the demo state\n'
@@ -2001,7 +2057,8 @@ void main() {
     });
 
     test('stops a script at the first failure with its exit code', () async {
-      final shell = await shellFor(
+      final ({List<String> dispatched, StringBuffer output, LiveShell shell})
+      shell = await shellFor(
         {'iPhone 17 Pro': await app()},
         input: lines('status\nseed broken\nroute /never\n'),
         handler: (name, args) async => name == 'seed' ? 1 : 0,
@@ -2012,7 +2069,8 @@ void main() {
     });
 
     test('reports unknown commands and unclosed quotes', () async {
-      final unknown = await shellFor(
+      final ({List<String> dispatched, StringBuffer output, LiveShell shell})
+      unknown = await shellFor(
         {'iPhone 17 Pro': await app()},
         input: lines('dance\n'),
         handler: (name, args) async => null,
@@ -2023,7 +2081,8 @@ void main() {
         contains('There\'s no command named "dance"'),
       );
 
-      final quote = await shellFor({
+      final ({List<String> dispatched, StringBuffer output, LiveShell shell})
+      quote = await shellFor({
         'iPhone 17 Pro': await app(),
       }, input: lines('toast "unfinished\n'));
       expect(await quote.shell.start(), 64);
@@ -2031,7 +2090,8 @@ void main() {
     });
 
     test('use and exit are handled by the shell itself', () async {
-      final shell = await shellFor({
+      final ({List<String> dispatched, StringBuffer output, LiveShell shell})
+      shell = await shellFor({
         'iPhone 17 Pro': await app(),
         'Pixel 9': await app(),
       }, input: lines('use 2\nstatus\nexit\nstatus\n'));
@@ -2045,7 +2105,8 @@ void main() {
       'shows the device and page in the prompt, and completes with Tab',
       () async {
         final StreamController<List<int>> input = StreamController<List<int>>();
-        final shell = await shellFor(
+        final ({List<String> dispatched, StringBuffer output, LiveShell shell})
+        shell = await shellFor(
           {
             'iPhone 17 Pro': await app(
               commands: {
@@ -2080,7 +2141,8 @@ void main() {
 
     test('completes the Backpack keys after backpack', () async {
       final StreamController<List<int>> input = StreamController<List<int>>();
-      final shell = await shellFor(
+      final ({List<String> dispatched, StringBuffer output, LiveShell shell})
+      shell = await shellFor(
         {
           'iPhone 17 Pro': await app(
             commands: {
@@ -2113,7 +2175,8 @@ void main() {
 
     test('completes the states on screen after data', () async {
       final StreamController<List<int>> input = StreamController<List<int>>();
-      final shell = await shellFor(
+      final ({List<String> dispatched, StringBuffer output, LiveShell shell})
+      shell = await shellFor(
         {
           'iPhone 17 Pro': await app(
             commands: {
@@ -2155,7 +2218,8 @@ void main() {
       File('${project.path}/snapshots/notes.txt').writeAsStringSync('');
       File('${project.path}/README.md').writeAsStringSync('');
       final StreamController<List<int>> input = StreamController<List<int>>();
-      final shell = await shellFor(
+      final ({List<String> dispatched, StringBuffer output, LiveShell shell})
+      shell = await shellFor(
         {'iPhone 17 Pro': await app()},
         input: input.stream,
         terminal: true,
@@ -2180,7 +2244,8 @@ void main() {
 
     test('asks which app to use when several are running', () async {
       final StreamController<List<int>> input = StreamController<List<int>>();
-      final shell = await shellFor(
+      final ({List<String> dispatched, StringBuffer output, LiveShell shell})
+      shell = await shellFor(
         {'iPhone 17 Pro': await app(), 'Pixel 9': await app()},
         input: input.stream,
         terminal: true,

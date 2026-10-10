@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import '/metro/ny_cli.dart';
 import '/metro/stubs/env_stub.dart';
@@ -59,8 +60,8 @@ class _MakeEnvCommand extends NyCustomCommand {
     }
 
     // Parse .env file
-    final envContent = await envFile.readAsString();
-    final envMap = _parseEnvFile(envContent);
+    final String envContent = await envFile.readAsString();
+    final Map<String, String> envMap = _parseEnvFile(envContent);
 
     // Validate APP_KEY exists
     if (!envMap.containsKey('APP_KEY') || envMap['APP_KEY']!.isEmpty) {
@@ -69,19 +70,19 @@ class _MakeEnvCommand extends NyCustomCommand {
       return;
     }
 
-    final appKey = envMap['APP_KEY']!;
+    final String appKey = envMap['APP_KEY']!;
 
     // Remove APP_KEY from the map (we don't want to include it in the generated file)
     envMap.remove('APP_KEY');
 
     // Encrypt all values using XOR with APP_KEY
     final encryptedMap = <String, String>{};
-    for (final entry in envMap.entries) {
+    for (final MapEntry<String, String> entry in envMap.entries) {
       encryptedMap[entry.key] = _xorEncrypt(entry.value, appKey);
     }
 
     // Generate the Dart file
-    final dartCode = envStub(
+    final String dartCode = envStub(
       encryptedMap: encryptedMap,
       appKey: (useDartDefine ?? false) ? null : appKey,
       useDartDefine: useDartDefine ?? false,
@@ -93,7 +94,7 @@ class _MakeEnvCommand extends NyCustomCommand {
     // Write the file
     await outputFile.writeAsString(dartCode);
 
-    info('Encrypted ${envFileName}');
+    info('Encrypted $envFileName');
     success('Generated $outputPath');
 
     if (useDartDefine == true) {
@@ -110,7 +111,7 @@ class _MakeEnvCommand extends NyCustomCommand {
   /// Parses a .env file content into a Map
   Map<String, String> _parseEnvFile(String content) {
     final map = <String, String>{};
-    final lines = content.split('\n');
+    final List<String> lines = content.split('\n');
 
     for (var line in lines) {
       line = line.trim();
@@ -121,13 +122,13 @@ class _MakeEnvCommand extends NyCustomCommand {
       }
 
       // Find the first = sign
-      final equalsIndex = line.indexOf('=');
+      final int equalsIndex = line.indexOf('=');
       if (equalsIndex == -1) {
         continue;
       }
 
-      final key = line.substring(0, equalsIndex).trim();
-      var value = line.substring(equalsIndex + 1).trim();
+      final String key = line.substring(0, equalsIndex).trim();
+      String value = line.substring(equalsIndex + 1).trim();
 
       // Remove surrounding quotes if present
       if ((value.startsWith('"') && value.endsWith('"')) ||
@@ -145,8 +146,8 @@ class _MakeEnvCommand extends NyCustomCommand {
 
   /// XOR encrypts a string using the provided key
   String _xorEncrypt(String text, String key) {
-    final textBytes = utf8.encode(text);
-    final keyBytes = utf8.encode(key);
+    final Uint8List textBytes = utf8.encode(text);
+    final Uint8List keyBytes = utf8.encode(key);
     final encryptedBytes = <int>[];
 
     for (var i = 0; i < textBytes.length; i++) {

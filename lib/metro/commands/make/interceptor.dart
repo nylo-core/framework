@@ -31,7 +31,7 @@ class _MakeInterceptorCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final interceptorName = requireArgument(
+    final String interceptorName = requireArgument(
       result,
       message: 'An interceptor name is required',
     );

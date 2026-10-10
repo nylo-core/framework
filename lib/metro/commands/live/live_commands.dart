@@ -264,7 +264,7 @@ abstract class _LiveBuiltInCommand extends NyCustomCommand {
       await super.run();
     } on FormatException catch (e) {
       error(e.message);
-      print('\nUsage:\n${builder(CommandBuilder()).usage}');
+      stdout.writeln('\nUsage:\n${builder(CommandBuilder()).usage}');
       exit(64);
     } on _LiveUsageError catch (e) {
       error(e.message);
@@ -2523,7 +2523,7 @@ Future<void> _runLiveRunCommand(List<String> arguments) async {
   if (name == null) {
     final String? stoppedAt = split.stoppedAt;
     if (stoppedAt == null || stoppedAt == '--help' || stoppedAt == '-h') {
-      print(liveRunUsage(LiveManifest.load()));
+      stdout.writeln(liveRunUsage(LiveManifest.load()));
       return;
     }
     MetroConsole.writeInRed(
@@ -2705,7 +2705,7 @@ String? resolveLiveAppCommand(String name, List<LiveManifestEntry> entries) {
 /// `metro live`: opens the shell.
 Future<void> _runLiveShell(List<String> arguments) async {
   if (arguments.contains('--help') || arguments.contains('-h')) {
-    print(liveShellUsage);
+    stdout.writeln(liveShellUsage);
     return;
   }
 

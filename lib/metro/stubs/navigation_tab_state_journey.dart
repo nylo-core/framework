@@ -6,8 +6,7 @@ String navigationTabJourneyStateStub(
   required ReCase parentNavigationHub,
   bool isLastStep = false,
 }) =>
-    '''
-import 'package:flutter/material.dart';
+    '''import 'package:flutter/material.dart';
 import '/resources/pages/navigation_hubs/${parentNavigationHub.snakeCase}/${parentNavigationHub.snakeCase}_navigation_hub.dart';
 import '/resources/widgets/buttons/buttons.dart';
 import 'package:nylo_framework/nylo_framework.dart';
@@ -22,19 +21,14 @@ class ${rc.pascalCase} extends StatefulWidget {
 class _${rc.pascalCase}State extends JourneyState<${rc.pascalCase}> {
   _${rc.pascalCase}State() : super(
       navigationHubState: ${parentNavigationHub.pascalCase}NavigationHub.path.stateName());
-''' +
-    (isLastStep
-        ? '''
+${isLastStep ? '''
   /// Callback when journey completes
   @override
   void Function()? get onJourneyComplete => () {
     // Navigate to your home page or next destination
     // routeTo(HomePage.path);
   };
-'''
-        : '') +
-    '''
-
+''' : ''}
   @override
   get init => () {
     // Your initialization logic here
@@ -75,12 +69,8 @@ class _${rc.pascalCase}State extends JourneyState<${rc.pascalCase}> {
                 const SizedBox.shrink(),
               Flexible(
                 child: Button.primary(
-                  text: ''' +
-    (isLastStep ? '"Get Started"' : '"Continue"') +
-    ''',
-                  onPressed: ''' +
-    (isLastStep ? 'onJourneyComplete' : 'nextStep') +
-    ''',
+                  text: ${isLastStep ? '"Get Started"' : '"Continue"'},
+                  onPressed: ${isLastStep ? 'onJourneyComplete' : 'nextStep'},
                 ),
               ),
             ],
@@ -90,10 +80,7 @@ class _${rc.pascalCase}State extends JourneyState<${rc.pascalCase}> {
     );
   }
 
-''' +
-    (isLastStep
-        ? ''
-        : '''
+${isLastStep ? '' : '''
   /// Check if the journey can continue to the next step
   /// Override this method to add validation logic
   @override
@@ -102,9 +89,7 @@ class _${rc.pascalCase}State extends JourneyState<${rc.pascalCase}> {
     // Return true if the journey can continue, false otherwise
     return true;
   }
-''') +
-    '''
-  /// Called before navigating to the next step
+'''}  /// Called before navigating to the next step
   /// Override this method to perform actions before continuing
   @override
   Future<void> onBeforeNext() async {

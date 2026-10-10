@@ -32,7 +32,7 @@ dependencies:
 dev_dependencies:
   patrol: ^4.10.0
   rename: ^3.1.0
-  flutter_lints: ^6.0.0
+  vibe_check: ^1.0.1
   flutter_test:
     sdk: flutter
   lints: ^6.1.0

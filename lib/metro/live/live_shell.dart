@@ -41,16 +41,14 @@ class LiveShell {
     required this.session,
     required this.dispatch,
     required this.commands,
-    required Stream<List<int>> input,
-    required StringSink output,
+    required this._input,
+    required this._output,
     this.options = const LiveOptions(),
     this.appCommands = const [],
     this.terminal = const StdioLiveTerminal(),
     this.historyPath,
-    Stream<ProcessSignal>? interrupts,
-  }) : _input = input,
-       _output = output,
-       _interrupts = interrupts;
+    this._interrupts,
+  });
 
   /// A shell for the Flutter project in the current directory.
   ///

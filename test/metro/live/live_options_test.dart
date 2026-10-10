@@ -6,7 +6,8 @@ import 'package:nylo_framework/metro/live/live_options.dart';
 void main() {
   group('LiveOptions.extract', () {
     test('leaves command arguments alone when there are no shared flags', () {
-      final result = LiveOptions.extract(['--count', '5', '--open']);
+      final ({LiveOptions options, List<String> rest}) result =
+          LiveOptions.extract(['--count', '5', '--open']);
 
       expect(result.rest, ['--count', '5', '--open']);
       expect(result.options.device, isNull);
@@ -17,19 +18,20 @@ void main() {
     });
 
     test('pulls shared flags out from anywhere in the arguments', () {
-      final result = LiveOptions.extract([
-        '--count',
-        '5',
-        '-d',
-        'iPhone 17e',
-        '--json',
-        '--open',
-        '--timeout',
-        '1.5',
-        '--all',
-        '--uri',
-        'ws://127.0.0.1:5000/abc=/ws',
-      ]);
+      final ({LiveOptions options, List<String> rest}) result =
+          LiveOptions.extract([
+            '--count',
+            '5',
+            '-d',
+            'iPhone 17e',
+            '--json',
+            '--open',
+            '--timeout',
+            '1.5',
+            '--all',
+            '--uri',
+            'ws://127.0.0.1:5000/abc=/ws',
+          ]);
 
       expect(result.rest, ['--count', '5', '--open']);
       expect(result.options.device, 'iPhone 17e');
@@ -40,11 +42,12 @@ void main() {
     });
 
     test('supports --flag=value forms', () {
-      final result = LiveOptions.extract([
-        '--device=Pixel 9',
-        '--uri=ws://h:1/x=/ws',
-        '--timeout=2',
-      ]);
+      final ({LiveOptions options, List<String> rest}) result =
+          LiveOptions.extract([
+            '--device=Pixel 9',
+            '--uri=ws://h:1/x=/ws',
+            '--timeout=2',
+          ]);
 
       expect(result.rest, isEmpty);
       expect(result.options.device, 'Pixel 9');
@@ -53,7 +56,8 @@ void main() {
     });
 
     test('passes everything after -- through untouched', () {
-      final result = LiveOptions.extract(['--count', '5', '--', '-d', '--all']);
+      final ({LiveOptions options, List<String> rest}) result =
+          LiveOptions.extract(['--count', '5', '--', '-d', '--all']);
 
       expect(result.rest, ['--count', '5', '--', '-d', '--all']);
       expect(result.options.device, isNull);

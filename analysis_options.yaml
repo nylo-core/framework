@@ -1,10 +1,13 @@
+# analysis_options.yaml
 analyzer:
   exclude:
     - build/**
-    - android/**
-    - ios/**
-    - web/**
-    - windows/**
-    - macos/**
-    - linux/**
-include: package:lints/core.yaml
+include: package:vibe_check/nylo.yaml   # keep: flutter_lints + companion lints
+plugins:
+  vibe_check:
+    version: ^1.0.1
+    diagnostics:
+      unlocalized_string: true
+      inline_async_in_builder: true
+      swallowed_exception: false
+      redundant_null_check: true

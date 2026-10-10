@@ -27,7 +27,7 @@ class _MakeFormCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final formName = requireArgument(
+    final String formName = requireArgument(
       result,
       message: 'A form name is required',
     );

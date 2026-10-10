@@ -92,24 +92,20 @@ class StdioLiveTerminal implements LiveTerminal {
 /// When input isn't an interactive terminal, such as a script piped into
 /// `metro live`, lines are read as they are, without editing.
 class LiveLineEditor {
-  /// Creates a [LiveLineEditor] that reads bytes from [input] and writes to
-  /// [output].
+  /// Creates a [LiveLineEditor] that reads bytes from [_input] and writes to
+  /// [_output].
   ///
   /// [history] seeds the lines ↑ and ↓ step through, oldest first, keeping
-  /// the newest [historyLimit]. [complete] supplies Tab completions.
+  /// the newest [historyLimit]. [_complete] supplies Tab completions.
   LiveLineEditor({
-    required Stream<List<int>> input,
-    required StringSink output,
-    LiveTerminal terminal = const StdioLiveTerminal(),
+    required this._input,
+    required this._output,
+    this._terminal = const StdioLiveTerminal(),
     List<String> history = const [],
     int historyLimit = 500,
-    LiveCompleter? complete,
-  }) : _input = input,
-       _output = output,
-       _terminal = terminal,
-       _history = List<String>.of(history),
-       _historyLimit = historyLimit < 0 ? 0 : historyLimit,
-       _complete = complete {
+    this._complete,
+  }) : _history = List<String>.of(history),
+       _historyLimit = historyLimit < 0 ? 0 : historyLimit {
     _trimHistory();
   }
 

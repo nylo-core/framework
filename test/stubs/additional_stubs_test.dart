@@ -14,32 +14,32 @@ import 'package:nylo_framework/metro/stubs/custom_command_stub.dart';
 void main() {
   group('eventStub', () {
     test('contains correct class name in PascalCase', () {
-      final stub = eventStub(eventName: ReCase('user_login'));
+      final String stub = eventStub(eventName: ReCase('user_login'));
 
       expect(stub, contains('class UserLoginEvent implements NyEvent'));
     });
 
     test('contains listeners map', () {
-      final stub = eventStub(eventName: ReCase('order_placed'));
+      final String stub = eventStub(eventName: ReCase('order_placed'));
 
       expect(stub, contains('final listeners = {'));
       expect(stub, contains('DefaultListener: DefaultListener()'));
     });
 
     test('contains DefaultListener class', () {
-      final stub = eventStub(eventName: ReCase('notification'));
+      final String stub = eventStub(eventName: ReCase('notification'));
 
       expect(stub, contains('class DefaultListener extends NyListener'));
     });
 
     test('contains handle method', () {
-      final stub = eventStub(eventName: ReCase('test'));
+      final String stub = eventStub(eventName: ReCase('test'));
 
       expect(stub, contains('handle(dynamic data) async'));
     });
 
     test('imports nylo_framework', () {
-      final stub = eventStub(eventName: ReCase('app'));
+      final String stub = eventStub(eventName: ReCase('app'));
 
       expect(
         stub,
@@ -50,25 +50,25 @@ void main() {
 
   group('providerStub', () {
     test('contains correct class name with Provider suffix', () {
-      final stub = providerStub(ReCase('app_config'));
+      final String stub = providerStub(ReCase('app_config'));
 
       expect(stub, contains('class AppConfigProvider implements NyProvider'));
     });
 
     test('contains boot method', () {
-      final stub = providerStub(ReCase('auth'));
+      final String stub = providerStub(ReCase('auth'));
 
       expect(stub, contains('boot(Nylo nylo) async'));
     });
 
     test('contains setup method that returns nylo', () {
-      final stub = providerStub(ReCase('database'));
+      final String stub = providerStub(ReCase('database'));
 
       expect(stub, contains('setup(Nylo nylo) async => nylo'));
     });
 
     test('imports nylo_framework', () {
-      final stub = providerStub(ReCase('service'));
+      final String stub = providerStub(ReCase('service'));
 
       expect(
         stub,
@@ -79,34 +79,38 @@ void main() {
 
   group('interceptorStub', () {
     test('contains correct class name with Interceptor suffix', () {
-      final stub = interceptorStub(interceptorName: ReCase('auth_header'));
+      final String stub = interceptorStub(
+        interceptorName: ReCase('auth_header'),
+      );
 
       expect(stub, contains('class AuthHeaderInterceptor extends Interceptor'));
     });
 
     test('contains onRequest override', () {
-      final stub = interceptorStub(interceptorName: ReCase('logging'));
+      final String stub = interceptorStub(interceptorName: ReCase('logging'));
 
       expect(stub, contains('void onRequest(RequestOptions options'));
       expect(stub, contains('RequestInterceptorHandler handler'));
     });
 
     test('contains onResponse override', () {
-      final stub = interceptorStub(interceptorName: ReCase('cache'));
+      final String stub = interceptorStub(interceptorName: ReCase('cache'));
 
       expect(stub, contains('void onResponse(Response response'));
       expect(stub, contains('ResponseInterceptorHandler handler'));
     });
 
     test('contains onError override', () {
-      final stub = interceptorStub(interceptorName: ReCase('error_handler'));
+      final String stub = interceptorStub(
+        interceptorName: ReCase('error_handler'),
+      );
 
       expect(stub, contains('void onError(DioException err'));
       expect(stub, contains('ErrorInterceptorHandler handler'));
     });
 
     test('imports nylo_framework', () {
-      final stub = interceptorStub(interceptorName: ReCase('test'));
+      final String stub = interceptorStub(interceptorName: ReCase('test'));
 
       expect(
         stub,
@@ -117,19 +121,19 @@ void main() {
 
   group('routeGuardStub', () {
     test('contains correct class name with RouteGuard suffix', () {
-      final stub = routeGuardStub(ReCase('auth'));
+      final String stub = routeGuardStub(ReCase('auth'));
 
       expect(stub, contains('class AuthRouteGuard extends NyRouteGuard'));
     });
 
     test('contains constructor', () {
-      final stub = routeGuardStub(ReCase('admin'));
+      final String stub = routeGuardStub(ReCase('admin'));
 
       expect(stub, contains('AdminRouteGuard()'));
     });
 
     test('contains onBefore method', () {
-      final stub = routeGuardStub(ReCase('guest'));
+      final String stub = routeGuardStub(ReCase('guest'));
 
       expect(
         stub,
@@ -138,13 +142,13 @@ void main() {
     });
 
     test('contains next() return', () {
-      final stub = routeGuardStub(ReCase('authenticated'));
+      final String stub = routeGuardStub(ReCase('authenticated'));
 
       expect(stub, contains('return next()'));
     });
 
     test('contains usage comments', () {
-      final stub = routeGuardStub(ReCase('subscriber'));
+      final String stub = routeGuardStub(ReCase('subscriber'));
 
       expect(stub, contains('context.data'));
       expect(stub, contains('context.queryParameters'));
@@ -152,7 +156,7 @@ void main() {
     });
 
     test('imports nylo_framework', () {
-      final stub = routeGuardStub(ReCase('test'));
+      final String stub = routeGuardStub(ReCase('test'));
 
       expect(
         stub,
@@ -163,19 +167,19 @@ void main() {
 
   group('configStub', () {
     test('contains correct class name', () {
-      final stub = configStub(ReCase('app_settings'));
+      final String stub = configStub(ReCase('app_settings'));
 
       expect(stub, contains('class AppSettingsConfig'));
     });
 
     test('contains final class modifier', () {
-      final stub = configStub(ReCase('database'));
+      final String stub = configStub(ReCase('database'));
 
       expect(stub, contains('final class DatabaseConfig'));
     });
 
     test('contains static example setting', () {
-      final stub = configStub(ReCase('cache'));
+      final String stub = configStub(ReCase('cache'));
 
       expect(stub, contains('static final String exampleValue'));
     });
@@ -183,7 +187,7 @@ void main() {
 
   group('envStub', () {
     test('generates environment template content with encrypted map', () {
-      final stub = envStub(
+      final String stub = envStub(
         encryptedMap: {'APP_NAME': 'encrypted_value'},
         appKey: 'test_key',
       );
@@ -193,25 +197,34 @@ void main() {
     });
 
     test('contains decrypt method', () {
-      final stub = envStub(encryptedMap: {'KEY': 'value'}, appKey: 'key');
+      final String stub = envStub(
+        encryptedMap: {'KEY': 'value'},
+        appKey: 'key',
+      );
 
       expect(stub, contains('_decrypt'));
     });
 
     test('contains get method', () {
-      final stub = envStub(encryptedMap: {'TEST': 'test'}, appKey: 'mykey');
+      final String stub = envStub(
+        encryptedMap: {'TEST': 'test'},
+        appKey: 'mykey',
+      );
 
       expect(stub, contains('static dynamic get(String key'));
     });
 
     test('uses dart define when specified', () {
-      final stub = envStub(encryptedMap: {'VAR': 'val'}, useDartDefine: true);
+      final String stub = envStub(
+        encryptedMap: {'VAR': 'val'},
+        useDartDefine: true,
+      );
 
       expect(stub, contains('String.fromEnvironment'));
     });
 
     test('embeds app key when not using dart define', () {
-      final stub = envStub(
+      final String stub = envStub(
         encryptedMap: {'VAR': 'val'},
         appKey: 'my_secret_key',
         useDartDefine: false,
@@ -221,7 +234,7 @@ void main() {
     });
 
     test('escapes quotes and backslashes in the app key', () {
-      final stub = envStub(
+      final String stub = envStub(
         encryptedMap: {'VAR': 'val'},
         appKey: "k'e\\y",
         useDartDefine: false,
@@ -236,7 +249,10 @@ void main() {
     test('annotates non-obvious local variable types', () {
       // Keeps generated code clean under the
       // specify_nonobvious_local_variable_types lint.
-      final stub = envStub(encryptedMap: {'KEY': 'value'}, appKey: 'key');
+      final String stub = envStub(
+        encryptedMap: {'KEY': 'value'},
+        appKey: 'key',
+      );
 
       expect(stub, contains("import 'dart:typed_data';"));
       expect(
@@ -255,7 +271,7 @@ void main() {
     });
 
     test('escapes quotes and backslashes in encrypted map entries', () {
-      final stub = envStub(
+      final String stub = envStub(
         encryptedMap: {'APP_NAME': "O'Brien\\path"},
         appKey: 'key',
       );
@@ -269,19 +285,19 @@ void main() {
 
   group('formStub', () {
     test('contains correct class name', () {
-      final stub = formStub(ReCase('login'));
+      final String stub = formStub(ReCase('login'));
 
       expect(stub, contains('class LoginForm extends NyFormWidget'));
     });
 
     test('contains fields method', () {
-      final stub = formStub(ReCase('registration'));
+      final String stub = formStub(ReCase('registration'));
 
       expect(stub, contains('fields() =>'));
     });
 
     test('contains Field types', () {
-      final stub = formStub(ReCase('contact'));
+      final String stub = formStub(ReCase('contact'));
 
       expect(stub, contains('Field.text'));
       expect(stub, contains('Field.currency'));
@@ -290,7 +306,7 @@ void main() {
     });
 
     test('imports nylo_framework', () {
-      final stub = formStub(ReCase('settings'));
+      final String stub = formStub(ReCase('settings'));
 
       expect(
         stub,
@@ -301,25 +317,25 @@ void main() {
 
   group('bottomSheetModalStub', () {
     test('contains correct class name', () {
-      final stub = bottomSheetModalStub(ReCase('user_options'));
+      final String stub = bottomSheetModalStub(ReCase('user_options'));
 
       expect(stub, contains('class UserOptionsModal extends StatelessWidget'));
     });
 
     test('contains build method', () {
-      final stub = bottomSheetModalStub(ReCase('settings'));
+      final String stub = bottomSheetModalStub(ReCase('settings'));
 
       expect(stub, contains('Widget build(BuildContext context)'));
     });
 
     test('contains const constructor', () {
-      final stub = bottomSheetModalStub(ReCase('filter'));
+      final String stub = bottomSheetModalStub(ReCase('filter'));
 
       expect(stub, contains('const FilterModal({super.key})'));
     });
 
     test('imports flutter material', () {
-      final stub = bottomSheetModalStub(ReCase('test'));
+      final String stub = bottomSheetModalStub(ReCase('test'));
 
       expect(stub, contains("import 'package:flutter/material.dart'"));
     });
@@ -327,7 +343,7 @@ void main() {
 
   group('bottomSheetModalStaticMethodStub', () {
     test('generates static show method', () {
-      final stub = bottomSheetModalStaticMethodStub(ReCase('share'));
+      final String stub = bottomSheetModalStaticMethodStub(ReCase('share'));
 
       expect(stub, contains('static Future<void> showShare'));
       expect(stub, contains('ShareModal()'));
@@ -336,25 +352,25 @@ void main() {
 
   group('buttonStub', () {
     test('contains correct class name', () {
-      final stub = buttonStub(ReCase('primary'));
+      final String stub = buttonStub(ReCase('primary'));
 
       expect(stub, contains('class PrimaryButton extends StatefulAppButton'));
     });
 
     test('contains buildButton method', () {
-      final stub = buttonStub(ReCase('submit'));
+      final String stub = buttonStub(ReCase('submit'));
 
       expect(stub, contains('Widget buildButton(BuildContext context'));
     });
 
     test('contains Container widget', () {
-      final stub = buttonStub(ReCase('action'));
+      final String stub = buttonStub(ReCase('action'));
 
       expect(stub, contains('Container('));
     });
 
     test('contains color properties', () {
-      final stub = buttonStub(ReCase('custom'));
+      final String stub = buttonStub(ReCase('custom'));
 
       expect(stub, contains('final Color? backgroundColor'));
       expect(stub, contains('final Color? contentColor'));
@@ -363,7 +379,7 @@ void main() {
 
   group('buttonStaticMethodStub', () {
     test('generates static factory method', () {
-      final stub = buttonStaticMethodStub(ReCase('secondary'));
+      final String stub = buttonStaticMethodStub(ReCase('secondary'));
 
       expect(stub, contains('static Widget secondary('));
       expect(stub, contains('SecondaryButton('));
@@ -372,37 +388,37 @@ void main() {
 
   group('customCommandStub', () {
     test('contains correct command name', () {
-      final stub = customCommandStub(customCommand: ReCase('sync_data'));
+      final String stub = customCommandStub(customCommand: ReCase('sync_data'));
 
       expect(stub, contains('class _SyncDataCommand extends NyCustomCommand'));
     });
 
     test('contains handle method', () {
-      final stub = customCommandStub(customCommand: ReCase('migrate'));
+      final String stub = customCommandStub(customCommand: ReCase('migrate'));
 
       expect(stub, contains('Future<void> handle(CommandResult result)'));
     });
 
     test('contains builder method', () {
-      final stub = customCommandStub(customCommand: ReCase('generate'));
+      final String stub = customCommandStub(customCommand: ReCase('generate'));
 
       expect(stub, contains('CommandBuilder builder(CommandBuilder command)'));
     });
 
     test('contains main function', () {
-      final stub = customCommandStub(customCommand: ReCase('deploy'));
+      final String stub = customCommandStub(customCommand: ReCase('deploy'));
 
       expect(stub, contains('void main(arguments)'));
     });
 
     test('uses default category app', () {
-      final stub = customCommandStub(customCommand: ReCase('test'));
+      final String stub = customCommandStub(customCommand: ReCase('test'));
 
       expect(stub, contains('app:test'));
     });
 
     test('uses custom category when specified', () {
-      final stub = customCommandStub(
+      final String stub = customCommandStub(
         customCommand: ReCase('backup'),
         category: 'db',
       );
@@ -411,7 +427,7 @@ void main() {
     });
 
     test('imports ny_cli', () {
-      final stub = customCommandStub(customCommand: ReCase('example'));
+      final String stub = customCommandStub(customCommand: ReCase('example'));
 
       expect(
         stub,

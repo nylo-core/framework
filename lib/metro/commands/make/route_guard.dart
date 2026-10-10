@@ -31,7 +31,7 @@ class _MakeRouteGuardCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final routeGuardName = requireArgument(
+    final String routeGuardName = requireArgument(
       result,
       message: 'A route guard name is required',
     );

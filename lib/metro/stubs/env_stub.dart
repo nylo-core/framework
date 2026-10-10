@@ -49,7 +49,7 @@ String envStub({
   // Encrypted values map
   buffer.writeln('  /// Encrypted environment values.');
   buffer.writeln('  static const Map<String, String> _encrypted = {');
-  for (final entry in encryptedMap.entries) {
+  for (final MapEntry<String, String> entry in encryptedMap.entries) {
     buffer.writeln(
       "    '${_escapeSingleQuoted(entry.key)}': '${_escapeSingleQuoted(entry.value)}',",
     );

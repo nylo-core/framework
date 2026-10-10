@@ -24,7 +24,7 @@ import 'package:recase/recase.dart';
 void main() {
   group('make:stateless_widget subdirectory support', () {
     test('parses subdirectory from widget name', () {
-      final projectFile = MetroService.createMetroProjectFile(
+      final MetroProjectFile projectFile = MetroService.createMetroProjectFile(
         'login/BrandPanel',
         prefix: RegExp(r'(_?widget)'),
       );
@@ -34,7 +34,7 @@ void main() {
     });
 
     test('generates correct stub with subdirectory path', () {
-      final projectFile = MetroService.createMetroProjectFile(
+      final MetroProjectFile projectFile = MetroService.createMetroProjectFile(
         'login/BrandPanel',
         prefix: RegExp(r'(_?widget)'),
       );
@@ -50,7 +50,7 @@ void main() {
     });
 
     test('generates correct file path with subdirectory', () {
-      final projectFile = MetroService.createMetroProjectFile(
+      final MetroProjectFile projectFile = MetroService.createMetroProjectFile(
         'login/BrandPanel',
         prefix: RegExp(r'(_?widget)'),
       );
@@ -71,7 +71,7 @@ void main() {
     });
 
     test('works without subdirectory', () {
-      final projectFile = MetroService.createMetroProjectFile(
+      final MetroProjectFile projectFile = MetroService.createMetroProjectFile(
         'BrandPanel',
         prefix: RegExp(r'(_?widget)'),
       );
@@ -95,7 +95,7 @@ void main() {
     });
 
     test('handles deep subdirectory path', () {
-      final projectFile = MetroService.createMetroProjectFile(
+      final MetroProjectFile projectFile = MetroService.createMetroProjectFile(
         'auth/social/GoogleSignIn',
         prefix: RegExp(r'(_?widget)'),
       );
@@ -124,7 +124,7 @@ void main() {
 
   group('make:stateful_widget subdirectory support', () {
     test('parses subdirectory and generates correct stub', () {
-      final projectFile = MetroService.createMetroProjectFile(
+      final MetroProjectFile projectFile = MetroService.createMetroProjectFile(
         'dashboard/StatsChart',
         prefix: RegExp(r'(_?widget)'),
       );
@@ -142,7 +142,7 @@ void main() {
     });
 
     test('generates correct file path with subdirectory', () {
-      final projectFile = MetroService.createMetroProjectFile(
+      final MetroProjectFile projectFile = MetroService.createMetroProjectFile(
         'dashboard/StatsChart',
         prefix: RegExp(r'(_?widget)'),
       );
@@ -168,7 +168,7 @@ void main() {
 
   group('make:state_managed_widget subdirectory support', () {
     test('parses subdirectory and generates correct stub', () {
-      final projectFile = MetroService.createMetroProjectFile(
+      final MetroProjectFile projectFile = MetroService.createMetroProjectFile(
         'cart/CartIcon',
         prefix: RegExp(r'(_?widget)'),
       );
@@ -189,7 +189,7 @@ void main() {
   group('make:controller subdirectory support', () {
     test('parses subdirectory and generates correct stub', () {
       // The command strips "Controller" suffix before calling createMetroProjectFile
-      final projectFile = MetroService.createMetroProjectFile(
+      final MetroProjectFile projectFile = MetroService.createMetroProjectFile(
         'admin/User',
         prefix: RegExp(r'(_?controller)'),
       );
@@ -206,7 +206,7 @@ void main() {
     });
 
     test('generates correct file path with subdirectory', () {
-      final projectFile = MetroService.createMetroProjectFile(
+      final MetroProjectFile projectFile = MetroService.createMetroProjectFile(
         'admin/User',
         prefix: RegExp(r'(_?controller)'),
       );
@@ -224,7 +224,7 @@ void main() {
 
   group('make:event subdirectory support', () {
     test('parses subdirectory and generates correct stub', () {
-      final projectFile = MetroService.createMetroProjectFile(
+      final MetroProjectFile projectFile = MetroService.createMetroProjectFile(
         'auth/LoginEvent',
         prefix: RegExp(r'(_?event)'),
       );
@@ -242,7 +242,7 @@ void main() {
     });
 
     test('generates correct file path with subdirectory', () {
-      final projectFile = MetroService.createMetroProjectFile(
+      final MetroProjectFile projectFile = MetroService.createMetroProjectFile(
         'auth/LoginEvent',
         prefix: RegExp(r'(_?event)'),
       );
@@ -272,7 +272,7 @@ void main() {
 
   group('make:provider subdirectory support', () {
     test('parses subdirectory and generates correct stub', () {
-      final projectFile = MetroService.createMetroProjectFile(
+      final MetroProjectFile projectFile = MetroService.createMetroProjectFile(
         'services/StorageProvider',
         prefix: RegExp(r'(_?provider)'),
       );
@@ -290,7 +290,7 @@ void main() {
     });
 
     test('generates correct file path with subdirectory', () {
-      final projectFile = MetroService.createMetroProjectFile(
+      final MetroProjectFile projectFile = MetroService.createMetroProjectFile(
         'services/StorageProvider',
         prefix: RegExp(r'(_?provider)'),
       );
@@ -320,7 +320,7 @@ void main() {
 
   group('make:interceptor subdirectory support', () {
     test('parses subdirectory and generates correct stub', () {
-      final projectFile = MetroService.createMetroProjectFile(
+      final MetroProjectFile projectFile = MetroService.createMetroProjectFile(
         'api/AuthTokenInterceptor',
         prefix: RegExp(r'(_?interceptor)'),
       );
@@ -338,7 +338,7 @@ void main() {
     });
 
     test('generates correct file path with subdirectory', () {
-      final projectFile = MetroService.createMetroProjectFile(
+      final MetroProjectFile projectFile = MetroService.createMetroProjectFile(
         'api/AuthTokenInterceptor',
         prefix: RegExp(r'(_?interceptor)'),
       );
@@ -364,7 +364,7 @@ void main() {
 
   group('make:config subdirectory support', () {
     test('parses subdirectory and generates correct stub', () {
-      final projectFile = MetroService.createMetroProjectFile(
+      final MetroProjectFile projectFile = MetroService.createMetroProjectFile(
         'settings/CurrenciesConfig',
         prefix: RegExp(r'(_?config)'),
       );
@@ -382,7 +382,7 @@ void main() {
     });
 
     test('generates correct file path with subdirectory', () {
-      final projectFile = MetroService.createMetroProjectFile(
+      final MetroProjectFile projectFile = MetroService.createMetroProjectFile(
         'settings/CurrenciesConfig',
         prefix: RegExp(r'(_?config)'),
       );
@@ -404,7 +404,7 @@ void main() {
 
   group('make:command subdirectory support', () {
     test('parses subdirectory and generates correct stub', () {
-      final projectFile = MetroService.createMetroProjectFile(
+      final MetroProjectFile projectFile = MetroService.createMetroProjectFile(
         'db/MigrateCommand',
         prefix: RegExp(r'(_?command)'),
       );
@@ -422,7 +422,7 @@ void main() {
     });
 
     test('generates correct file path with subdirectory', () {
-      final projectFile = MetroService.createMetroProjectFile(
+      final MetroProjectFile projectFile = MetroService.createMetroProjectFile(
         'db/MigrateCommand',
         prefix: RegExp(r'(_?command)'),
       );
@@ -444,7 +444,7 @@ void main() {
 
   group('make:form subdirectory support', () {
     test('parses subdirectory and generates correct stub', () {
-      final projectFile = MetroService.createMetroProjectFile(
+      final MetroProjectFile projectFile = MetroService.createMetroProjectFile(
         'auth/RegisterForm',
         prefix: RegExp(r'(_?form)'),
       );
@@ -462,7 +462,7 @@ void main() {
     });
 
     test('generates correct file path with subdirectory', () {
-      final projectFile = MetroService.createMetroProjectFile(
+      final MetroProjectFile projectFile = MetroService.createMetroProjectFile(
         'auth/RegisterForm',
         prefix: RegExp(r'(_?form)'),
       );
@@ -485,7 +485,7 @@ void main() {
 
   group('make:route_guard subdirectory support', () {
     test('parses subdirectory and generates correct stub', () {
-      final projectFile = MetroService.createMetroProjectFile(
+      final MetroProjectFile projectFile = MetroService.createMetroProjectFile(
         'admin/SubscriptionRouteGuard',
         prefix: RegExp(r'(_?route_guard)'),
       );
@@ -506,7 +506,7 @@ void main() {
     });
 
     test('generates correct file path with subdirectory', () {
-      final projectFile = MetroService.createMetroProjectFile(
+      final MetroProjectFile projectFile = MetroService.createMetroProjectFile(
         'admin/SubscriptionRouteGuard',
         prefix: RegExp(r'(_?route_guard)'),
       );
@@ -530,13 +530,14 @@ void main() {
   group('comma-separated names with subdirectories', () {
     test('stateless_widget handles comma-separated with subdirectory', () {
       // Simulates: make:stateless_widget login/BrandPanel,login/LogoPanel
-      final inputs = 'login/BrandPanel,login/LogoPanel'.split(',');
+      final List<String> inputs = 'login/BrandPanel,login/LogoPanel'.split(',');
 
       for (final input in inputs) {
-        final projectFile = MetroService.createMetroProjectFile(
-          input.trim(),
-          prefix: RegExp(r'(_?widget)'),
-        );
+        final MetroProjectFile projectFile =
+            MetroService.createMetroProjectFile(
+              input.trim(),
+              prefix: RegExp(r'(_?widget)'),
+            );
 
         expect(projectFile.creationPath, 'login');
 

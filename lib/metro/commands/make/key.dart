@@ -34,10 +34,10 @@ class _MakeKeyCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final envFile = result.getString("file", defaultValue: ".env")!;
+    final String envFile = result.getString("file", defaultValue: ".env")!;
 
     // Generate a 32-character secure key
-    final appKey = _generateSecureKey(32);
+    final String appKey = _generateSecureKey(32);
 
     // Read existing .env file or create new one
     final file = File(envFile);

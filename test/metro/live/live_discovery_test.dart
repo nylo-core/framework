@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nylo_framework/metro/live/live_app.dart';
 import 'package:nylo_framework/metro/live/live_discovery.dart';
 
 import 'fake_servers.dart';
@@ -172,7 +173,7 @@ void main() {
       ).discover();
 
       expect(result.apps, hasLength(1));
-      final app0 = result.apps.single;
+      final LiveApp app0 = result.apps.single;
       expect(app0.device, 'iPhone 17e');
       expect(app0.package, 'shop');
       expect(app0.isolateId, 'isolates/100');
@@ -203,7 +204,7 @@ void main() {
 
       expect(result.apps.map((a) => a.device), ['iPhone 17e']);
       expect(other.server.connections, 0);
-      for (final a in result.apps) {
+      for (final LiveApp a in result.apps) {
         await a.close();
       }
     });
@@ -235,7 +236,7 @@ void main() {
       expect(result.skipped.map((s) => s.device), ['iPhone 17e']);
       expect(result.skipped.single.reason, contains('didn\'t respond'));
       expect(asleep.server.connections, 1);
-      for (final a in result.apps) {
+      for (final LiveApp a in result.apps) {
         await a.close();
       }
     });
@@ -266,7 +267,7 @@ void main() {
       ).discover();
 
       expect(result.apps.map((a) => a.device), ['iPhone 17e']);
-      for (final a in result.apps) {
+      for (final LiveApp a in result.apps) {
         await a.close();
       }
     });
@@ -325,7 +326,7 @@ void main() {
         'iPhone 17e',
         'Pixel 9',
       ]);
-      for (final app0 in result.apps) {
+      for (final LiveApp app0 in result.apps) {
         await app0.close();
       }
     });
@@ -425,7 +426,7 @@ void main() {
 
       expect(result.apps.map((a) => a.device), ['iPhone 17 Pro']);
       expect(result.skipped, isEmpty);
-      for (final a in result.apps) {
+      for (final LiveApp a in result.apps) {
         await a.close();
       }
     });

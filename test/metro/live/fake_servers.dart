@@ -130,7 +130,7 @@ class FakeNyloApp {
     bool resolvesPackageUris = true,
     FakeStateObject? inspected,
   }) async {
-    final _FakeAppState state = _FakeAppState(
+    final FakeAppState state = FakeAppState(
       status ??
           {
             'protocol': 1,
@@ -156,7 +156,7 @@ class FakeNyloApp {
   }
 
   final FakeJsonRpcServer server;
-  final _FakeAppState state;
+  final FakeAppState state;
 
   Uri get wsUri => server.wsUri;
 
@@ -169,8 +169,8 @@ class FakeNyloApp {
   Future<void> close() => server.close();
 }
 
-class _FakeAppState {
-  _FakeAppState(
+class FakeAppState {
+  FakeAppState(
     this.status,
     this.commands, {
     this.entrypoint,

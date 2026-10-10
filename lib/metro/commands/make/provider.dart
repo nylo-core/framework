@@ -31,7 +31,7 @@ class _MakeProviderCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final providerName = requireArgument(
+    final String providerName = requireArgument(
       result,
       message: 'A provider name is required',
     );

@@ -158,7 +158,7 @@ class LiveCommandSchema {
     final String optionsUsage = toArgParser().usage;
     return [
       'Usage: metro $name [options]',
-      if (description != null) description!,
+      ?description,
       if (optionsUsage.isNotEmpty) ...['', optionsUsage],
     ].join('\n');
   }

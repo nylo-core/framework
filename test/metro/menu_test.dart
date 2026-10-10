@@ -154,7 +154,7 @@ void main() {
 
     test('is a constant string', () {
       // Verify it can be used in const context
-      const menu = metroMenu;
+      const String menu = metroMenu;
       expect(menu, equals(metroMenu));
     });
   });

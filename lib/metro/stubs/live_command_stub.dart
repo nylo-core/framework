@@ -15,7 +15,7 @@ import 'package:nylo_framework/live.dart';
 /// NyStorage, routeTo, Auth and anything else your app can.
 ///
 /// Usage:
-///   [From Terminal] metro ${category}:${customCommand.snakeCase}
+///   [From Terminal] metro $category:${customCommand.snakeCase}
 class ${customCommand.pascalCase}Command extends LiveCommand {
   @override
   CommandBuilder builder(CommandBuilder command) {

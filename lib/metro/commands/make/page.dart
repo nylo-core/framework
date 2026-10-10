@@ -48,7 +48,7 @@ class _MakePageCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final firstArg = requireArgument(
+    final String firstArg = requireArgument(
       result,
       message: 'You cannot create a page with an empty name',
     );

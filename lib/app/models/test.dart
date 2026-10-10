@@ -9,7 +9,7 @@ class Test extends Model {
   Test() : super(key: key);
 
   /// Creates a [Test] from JSON [data].
-  Test.fromJson(dynamic data) : super(key: key) {}
+  Test.fromJson(dynamic data) : super(key: key);
 
   @override
   toJson() {

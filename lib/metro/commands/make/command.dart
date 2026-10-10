@@ -52,7 +52,7 @@ class _MakeCommandCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final commandName = requireArgument(
+    final String commandName = requireArgument(
       result,
       message: 'A command name is required',
     );

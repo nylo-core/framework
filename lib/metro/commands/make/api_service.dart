@@ -41,7 +41,7 @@ class _MakeApiServiceCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final apiServiceName = requireArgument(
+    final String apiServiceName = requireArgument(
       result,
       message: 'API service name is required',
     );

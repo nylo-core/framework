@@ -40,7 +40,7 @@ class _MakeModelCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final modelNameArg = requireArgument(
+    final String modelNameArg = requireArgument(
       result,
       message: 'A model name is required',
     );
@@ -112,7 +112,7 @@ class _MakeModelCommand extends NyCustomCommand {
           ? "${projectFile.creationPath!}/"
           : "");
 
-      final formatProcess = await Process.start(
+      final Process formatProcess = await Process.start(
         "dart",
         [
           "format",

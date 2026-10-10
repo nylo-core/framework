@@ -6,7 +6,7 @@ void main() {
     group('generate', () {
       test('generates class for simple JSON object', () {
         final generator = DartCodeGenerator(rootClassName: 'User');
-        final result = generator.generate('{"name": "John", "age": 30}');
+        final String result = generator.generate('{"name": "John", "age": 30}');
 
         expect(result, contains('class User'));
         expect(result, contains('String? name'));
@@ -17,7 +17,7 @@ void main() {
 
       test('generates class for nested JSON object', () {
         final generator = DartCodeGenerator(rootClassName: 'Person');
-        final result = generator.generate('''
+        final String result = generator.generate('''
         {
           "name": "John",
           "address": {
@@ -35,7 +35,7 @@ void main() {
 
       test('generates class with list type', () {
         final generator = DartCodeGenerator(rootClassName: 'Response');
-        final result = generator.generate('{"items": [1, 2, 3]}');
+        final String result = generator.generate('{"items": [1, 2, 3]}');
 
         expect(result, contains('class Response'));
         expect(result, contains('List<int>'));
@@ -43,7 +43,7 @@ void main() {
 
       test('generates class with list of objects', () {
         final generator = DartCodeGenerator(rootClassName: 'Response');
-        final result = generator.generate('''
+        final String result = generator.generate('''
         {
           "users": [
             {"name": "John"},
@@ -61,7 +61,7 @@ void main() {
           rootClassName: 'User',
           classPrefix: 'Api',
         );
-        final result = generator.generate('{"name": "John"}');
+        final String result = generator.generate('{"name": "John"}');
 
         expect(result, contains('class ApiUser'));
       });
@@ -71,7 +71,7 @@ void main() {
           rootClassName: 'User',
           classSuffix: 'Model',
         );
-        final result = generator.generate('{"name": "John"}');
+        final String result = generator.generate('{"name": "John"}');
 
         expect(result, contains('class UserModel'));
       });
@@ -82,7 +82,7 @@ void main() {
           classPrefix: 'Api',
           classSuffix: 'Dto',
         );
-        final result = generator.generate('{"name": "John"}');
+        final String result = generator.generate('{"name": "John"}');
 
         expect(result, contains('class ApiUserDto'));
       });
@@ -94,7 +94,7 @@ void main() {
           classPrefix: 'Api',
           classSuffix: 'Model',
         );
-        final result = generator.generate('{"name": "John"}');
+        final String result = generator.generate('{"name": "John"}');
 
         expect(result, contains('class User'));
         expect(result, isNot(contains('class ApiUserModel')));
@@ -102,14 +102,16 @@ void main() {
 
       test('returns empty string for invalid JSON', () {
         final generator = DartCodeGenerator(rootClassName: 'Test');
-        final result = generator.generate('invalid json {');
+        final String result = generator.generate('invalid json {');
 
         expect(result, isEmpty);
       });
 
       test('handles boolean values', () {
         final generator = DartCodeGenerator(rootClassName: 'Config');
-        final result = generator.generate('{"enabled": true, "debug": false}');
+        final String result = generator.generate(
+          '{"enabled": true, "debug": false}',
+        );
 
         expect(result, contains('bool? enabled'));
         expect(result, contains('bool? debug'));
@@ -117,7 +119,7 @@ void main() {
 
       test('handles double values', () {
         final generator = DartCodeGenerator(rootClassName: 'Metrics');
-        final result = generator.generate(
+        final String result = generator.generate(
           '{"temperature": 36.6, "ratio": 0.5}',
         );
 
@@ -127,21 +129,21 @@ void main() {
 
       test('handles null values as dynamic', () {
         final generator = DartCodeGenerator(rootClassName: 'Data');
-        final result = generator.generate('{"unknown": null}');
+        final String result = generator.generate('{"unknown": null}');
 
         expect(result, contains('dynamic unknown'));
       });
 
       test('generates fromJson with correct type conversions', () {
         final generator = DartCodeGenerator(rootClassName: 'Item');
-        final result = generator.generate('{"price": 19.99}');
+        final String result = generator.generate('{"price": 19.99}');
 
         expect(result, contains('toDouble()'));
       });
 
       test('handles empty object', () {
         final generator = DartCodeGenerator(rootClassName: 'Empty');
-        final result = generator.generate('{}');
+        final String result = generator.generate('{}');
 
         expect(result, contains('class Empty'));
         expect(result, contains('Empty()'));
@@ -149,14 +151,14 @@ void main() {
 
       test('handles JSON array as root', () {
         final generator = DartCodeGenerator(rootClassName: 'Items');
-        final result = generator.generate('[{"id": 1}, {"id": 2}]');
+        final String result = generator.generate('[{"id": 1}, {"id": 2}]');
 
         expect(result, contains('class Items'));
       });
 
       test('handles empty JSON array', () {
         final generator = DartCodeGenerator(rootClassName: 'EmptyList');
-        final result = generator.generate('[]');
+        final String result = generator.generate('[]');
 
         expect(result, contains('class EmptyList'));
         expect(result, contains('List<dynamic>'));
@@ -164,7 +166,7 @@ void main() {
 
       test('handles deeply nested objects', () {
         final generator = DartCodeGenerator(rootClassName: 'Deep');
-        final result = generator.generate('''
+        final String result = generator.generate('''
         {
           "level1": {
             "level2": {
@@ -183,14 +185,14 @@ void main() {
       test('handles mixed array types as String list', () {
         // Mixed types in arrays are converted to String with .toString() mapping
         final generator = DartCodeGenerator(rootClassName: 'Mixed');
-        final result = generator.generate('{"mixed": [1, "two", true]}');
+        final String result = generator.generate('{"mixed": [1, "two", true]}');
 
         expect(result, contains('List<String>'));
       });
 
       test('uses Root as default class name when not specified', () {
         final generator = DartCodeGenerator();
-        final result = generator.generate('{"test": 123}');
+        final String result = generator.generate('{"test": 123}');
 
         expect(result, contains('class Root'));
       });

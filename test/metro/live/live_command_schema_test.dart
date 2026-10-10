@@ -67,20 +67,23 @@ void main() {
 
   group('LiveCommandSchema.parse', () {
     test('applies defaults', () {
-      final result = seedCart.parse([]);
+      final ({List<String> rest, Map<String, Object?> values}) result = seedCart
+          .parse([]);
 
       expect(result.values, {'count': '3', 'size': null, 'open': false});
       expect(result.rest, isEmpty);
     });
 
     test('parses long, abbreviated and flag arguments', () {
-      final result = seedCart.parse(['-c', '5', '--size', 'large', '--open']);
+      final ({List<String> rest, Map<String, Object?> values}) result = seedCart
+          .parse(['-c', '5', '--size', 'large', '--open']);
 
       expect(result.values, {'count': '5', 'size': 'large', 'open': true});
     });
 
     test('keeps positional arguments in rest', () {
-      final result = seedCart.parse(['extra', '--count', '2', 'more']);
+      final ({List<String> rest, Map<String, Object?> values}) result = seedCart
+          .parse(['extra', '--count', '2', 'more']);
 
       expect(result.values['count'], '2');
       expect(result.rest, ['extra', 'more']);
@@ -100,7 +103,8 @@ void main() {
         ],
       })!;
 
-      final result = schema.parse(['-c', '4', '--clear']);
+      final ({List<String> rest, Map<String, Object?> values}) result = schema
+          .parse(['-c', '4', '--clear']);
 
       expect(result.values, {'count': '4', 'clear': true});
     });

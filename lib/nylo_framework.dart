@@ -2,7 +2,7 @@
 ///
 /// Provides tools for building Flutter applications including routing,
 /// networking, themes, storage, CLI scaffolding, and more.
-library nylo_framework;
+library;
 
 // Nylo Core
 export 'package:nylo_support/ny_core.dart';

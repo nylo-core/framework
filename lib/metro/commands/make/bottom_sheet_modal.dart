@@ -33,13 +33,13 @@ class _MakeBottomSheetModalCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final modalNameArg = requireArgument(
+    final String modalNameArg = requireArgument(
       result,
       message: 'You cannot create a bottom sheet modal with an empty name',
     );
 
     // Strip 'modal' suffix if user included it (e.g., "StripeModal" -> "Stripe")
-    final modalName = modalNameArg.replaceAll(
+    final String modalName = modalNameArg.replaceAll(
       RegExp(r'modal$', caseSensitive: false),
       '',
     );
@@ -94,7 +94,7 @@ class _MakeBottomSheetModalCommand extends NyCustomCommand {
     // Create the file
     await file.writeAsString(stubContent);
     final linkText = '${nameReCase.snakeCase}_modal';
-    final link = MetroConsole.hyperlink(linkText, filePath);
+    final String link = MetroConsole.hyperlink(linkText, filePath);
     MetroConsole.writeInGreen('[BottomSheetModal] $link created 🎉');
   }
 
@@ -128,28 +128,28 @@ class _MakeBottomSheetModalCommand extends NyCustomCommand {
 
     // Find the last import statement and add after it
     final importRegex = RegExp(r"^import .*?;$", multiLine: true);
-    final matches = importRegex.allMatches(fileContent).toList();
+    final List<RegExpMatch> matches = importRegex
+        .allMatches(fileContent)
+        .toList();
 
     if (matches.isNotEmpty) {
-      final lastImportEnd = matches.last.end;
+      final int lastImportEnd = matches.last.end;
       fileContent =
-          fileContent.substring(0, lastImportEnd) +
-          '\n$importStatement' +
-          fileContent.substring(lastImportEnd);
+          '${fileContent.substring(0, lastImportEnd)}\n$importStatement${fileContent.substring(lastImportEnd)}';
     } else {
       // No imports found, add at the beginning
       fileContent = '$importStatement\n$fileContent';
     }
 
     // Add static method before the closing brace of the BottomSheetModal class
-    final staticMethod = bottomSheetModalStaticMethodStub(nameReCase);
+    final String staticMethod = bottomSheetModalStaticMethodStub(nameReCase);
 
     // Find the closing brace of the last class in the file
-    final classMatches = RegExp(
+    final List<RegExpMatch> classMatches = RegExp(
       r'class\s+\w+',
     ).allMatches(fileContent).toList();
     if (classMatches.isNotEmpty) {
-      final lastClassStart = classMatches.last.start;
+      final int lastClassStart = classMatches.last.start;
       int braceCount = 0;
       int? classBraceIndex;
       for (int i = lastClassStart; i < fileContent.length; i++) {
@@ -164,9 +164,7 @@ class _MakeBottomSheetModalCommand extends NyCustomCommand {
       }
       if (classBraceIndex != null) {
         fileContent =
-            fileContent.substring(0, classBraceIndex) +
-            '\n$staticMethod' +
-            fileContent.substring(classBraceIndex);
+            '${fileContent.substring(0, classBraceIndex)}\n$staticMethod${fileContent.substring(classBraceIndex)}';
       }
     }
 

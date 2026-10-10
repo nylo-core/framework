@@ -1,0 +1,6 @@
+# The example is its own package and can't resolve the root package's
+# dev_dependencies (e.g. vibe_check), so it must not inherit the root
+# analysis_options.yaml.
+analyzer:
+  exclude:
+    - build/**

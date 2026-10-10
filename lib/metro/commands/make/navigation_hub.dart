@@ -35,7 +35,7 @@ class _MakeNavigationHubCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final className = requireArgument(
+    final String className = requireArgument(
       result,
       message: 'A navigation hub name is required',
     );
@@ -66,7 +66,7 @@ class _MakeNavigationHubCommand extends NyCustomCommand {
     line('     Best for: Multi-step wizards or linear user journeys');
     newLine();
 
-    final layoutSelection = select("Select layout:", [
+    final String layoutSelection = select("Select layout:", [
       "navigation_tabs",
       "journey_states",
     ], defaultOption: "navigation_tabs");
@@ -85,13 +85,13 @@ class _MakeNavigationHubCommand extends NyCustomCommand {
     }
     newLine();
 
-    final childrenInput = prompt(
+    final String childrenInput = prompt(
       isJourney
           ? "State names (comma-separated):"
           : "Tab names (comma-separated):",
       defaultValue: "",
     );
-    final children = childrenInput
+    final List<String> children = childrenInput
         .split(",")
         .map((s) => s.trim())
         .where((s) => s.isNotEmpty)
@@ -107,7 +107,7 @@ class _MakeNavigationHubCommand extends NyCustomCommand {
     final navigationEntries = <String>[];
 
     for (int i = 0; i < children.length; i++) {
-      final cleanChildName = children[i].snakeCase.replaceAll(
+      final String cleanChildName = children[i].snakeCase.replaceAll(
         RegExp(r'(_?widget|_?tab)'),
         "",
       );
@@ -147,7 +147,7 @@ class _MakeNavigationHubCommand extends NyCustomCommand {
     );
 
     for (final child in children) {
-      final cleanChildName = child.snakeCase.replaceAll(
+      final String cleanChildName = child.snakeCase.replaceAll(
         RegExp(r'(_?widget|_?tab)'),
         "",
       );
@@ -158,7 +158,7 @@ class _MakeNavigationHubCommand extends NyCustomCommand {
 
       if (isJourney) {
         final isLast = child == children.last;
-        final stub = navigationTabJourneyStateStub(
+        final String stub = navigationTabJourneyStateStub(
           childRc,
           parentNavigationHub: classReCase,
           isLastStep: isLast,
@@ -171,7 +171,7 @@ class _MakeNavigationHubCommand extends NyCustomCommand {
           folderPath: pagesPath,
         );
       } else {
-        final stub = widgetStatefulStub(
+        final String stub = widgetStatefulStub(
           childRc,
           content: 'Center(child: Text("${childRc.titleCase}").bodyLarge())',
         );

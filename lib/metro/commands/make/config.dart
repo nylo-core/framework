@@ -27,7 +27,7 @@ class _MakeConfigCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final configName = requireArgument(
+    final String configName = requireArgument(
       result,
       message: 'A config name is required',
     );

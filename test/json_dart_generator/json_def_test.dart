@@ -134,7 +134,7 @@ void main() {
           rootClassNameWithPrefixSuffix: true,
         );
 
-        final code = jsonDef.classCode;
+        final String code = jsonDef.classCode;
         expect(code, contains('class Product'));
         expect(code, contains('String? name'));
         expect(code, contains('double? price'));
@@ -152,7 +152,7 @@ void main() {
           rootClassNameWithPrefixSuffix: true,
         );
 
-        final code = jsonDef.classCode;
+        final String code = jsonDef.classCode;
         expect(code, contains('class Order'));
         expect(code, contains('class OrderCustomer'));
       });
@@ -167,7 +167,7 @@ void main() {
           },
         );
 
-        final code = jsonDef.classCode;
+        final String code = jsonDef.classCode;
         expect(code, contains('class ApiUserModel'));
       });
     });
@@ -314,7 +314,7 @@ void main() {
           value: 'hello',
           rootClassNameWithPrefixSuffix: true,
         );
-        final copy = original.copyWith(type: ClassType.tInt);
+        final ValueDef copy = original.copyWith(type: ClassType.tInt);
 
         expect(copy.type, equals(ClassType.tInt));
         expect(copy.rootClassName, equals(original.rootClassName));
@@ -325,7 +325,7 @@ void main() {
           value: [1, 2, 3],
           rootClassNameWithPrefixSuffix: true,
         );
-        final copy = original.copyWith(listType: ClassType.tString);
+        final ValueDef copy = original.copyWith(listType: ClassType.tString);
 
         expect(copy.listType, equals(ClassType.tString));
       });
@@ -337,7 +337,7 @@ void main() {
           value: [1, 2, 3],
           rootClassNameWithPrefixSuffix: true,
         );
-        final summarized = valueDef.summarize();
+        final ValueDef summarized = valueDef.summarize();
 
         expect(summarized.type, equals(ClassType.tListDynamic));
         expect(summarized.listType, equals(ClassType.tInt));
@@ -348,7 +348,7 @@ void main() {
           value: {'field': null},
           rootClassNameWithPrefixSuffix: true,
         );
-        final summarized = valueDef.summarize();
+        final ValueDef summarized = valueDef.summarize();
 
         expect(summarized.childrenDef, isA<Map<String, ValueDef>>());
       });

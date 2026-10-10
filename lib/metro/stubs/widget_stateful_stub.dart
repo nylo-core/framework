@@ -24,7 +24,7 @@ class _${rc.pascalCase}State extends NyState<${rc.pascalCase}> {
   @override
   Widget view(BuildContext context) {
     return Container(
-      ${content != null ? 'child: ${content}' : ''}
+      ${content != null ? 'child: $content' : ''}
     );
   }
 }

@@ -12,13 +12,13 @@ extension DartCodeGenerator on ValueDef {
     String fieldText() {
       String detectListInner(ValueDef def) {
         if (def.type.isList) {
-          var defListType = def.listType!;
+          ClassType defListType = def.listType!;
           if (defListType.isDynamic) {
             return 'List<${defListType.value}>?';
           } else if (defListType.isPrimitive) {
             return 'List<${defListType.value}>?';
           } else if (defListType.isList) {
-            var childType = detectListInner(
+            String childType = detectListInner(
               (def.childrenDef as List<ValueDef>).first,
             );
             return 'List<$childType>?';
@@ -27,26 +27,26 @@ extension DartCodeGenerator on ValueDef {
           }
         }
 
-        var obj = findCustomObject(def)!;
+        ValueDef obj = findCustomObject(def)!;
         return obj.classNameFull;
       }
 
       var text = '';
       if (childrenDef is List<ValueDef>) {
-        var prefix = detectListInner(this);
+        String prefix = detectListInner(this);
         text += '$prefix value;';
       } else if (childrenDef is Map<String, ValueDef>) {
         var keyMap = childrenDef as Map<String, ValueDef>;
         keyMap.forEach((key, value) {
           if (value.type == ClassType.tListDynamic) {
-            var prefix = detectListInner(value);
+            String prefix = detectListInner(value);
             text += '$prefix ${key.lowerCamel()};';
           } else if (value.type == ClassType.tObject) {
             ValueDef? findCustomDef;
             try {
               findCustomDef = findCustomObject(value);
-            } catch (e) {
-              print(value);
+            } catch (_) {
+              // No matching custom object; falls back to dynamic below.
             }
             if (findCustomDef != null) {
               text += '${findCustomDef.classNameFull}? ${key.lowerCamel()};';
@@ -166,7 +166,7 @@ extension DartCodeGenerator on ValueDef {
 
       if (childrenDef is List<ValueDef>) {
         param = 'List<dynamic> json';
-        var innerType = listInnerType!;
+        ListInner innerType = listInnerType!;
 
         body +=
             'value = ${detectListInner(this, listInnerContent(innerType), listInnerTypeShow(innerType))};';
@@ -179,11 +179,11 @@ extension DartCodeGenerator on ValueDef {
           }
 
           if (value.type == ClassType.tListDynamic) {
-            var innerType = value.listInnerType!;
+            ListInner innerType = value.listInnerType!;
             body +=
                 'if (json[\'${value.key}\'] != null) {\n ${(value.key ?? value.parentKey)!.lowerCamel()} = ${detectListInner(value, listInnerContent(innerType), listInnerTypeShow(innerType))}; \n}';
           } else if (value.type == ClassType.tObject) {
-            var findCustomDef = findCustomObject(value);
+            ValueDef? findCustomDef = findCustomObject(value);
             if (findCustomDef != null) {
               body +=
                   '${key.lowerCamel()} = json[\'$key\'] != null ?  ${findCustomDef.classNameFull}.fromJson(json[\'$key\']) : null;';
@@ -236,7 +236,7 @@ extension DartCodeGenerator on ValueDef {
       if (childrenDef is List<ValueDef>) {
         returnText = 'List<dynamic>?';
 
-        var innerType = listInnerType!;
+        ListInner innerType = listInnerType!;
 
         if (innerType.type.isObject) {
           var innerContent = 'e.toJson()';
@@ -253,7 +253,7 @@ extension DartCodeGenerator on ValueDef {
           }
 
           if (value.type == ClassType.tListDynamic) {
-            var innerType = value.listInnerType!;
+            ListInner innerType = value.listInnerType!;
 
             if (innerType.type.isObject) {
               var innerContent = 'e.toJson()';

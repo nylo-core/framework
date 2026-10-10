@@ -11,7 +11,7 @@ int _count(String haystack, String needle) =>
 void main() {
   group('apiServiceStub imports', () {
     test('emits the nylo_framework import when a custom --url is used', () {
-      final stub = apiServiceStub(
+      final String stub = apiServiceStub(
         ReCase('user'),
         model: ReCase('Model'),
         baseUrl: '"https://api.example.com"',
@@ -29,7 +29,7 @@ void main() {
     });
 
     test('emits the nylo_framework import with the default getEnv baseUrl', () {
-      final stub = apiServiceStub(
+      final String stub = apiServiceStub(
         ReCase('user'),
         model: ReCase('Model'),
         baseUrl: "getEnv('API_BASE_URL')",
@@ -43,12 +43,12 @@ void main() {
     });
 
     test('emits the nylo_framework import exactly once (no duplication)', () {
-      final withUrl = apiServiceStub(
+      final String withUrl = apiServiceStub(
         ReCase('payments'),
         model: ReCase('Payment'),
         baseUrl: '"https://api.example.com"',
       );
-      final withEnv = apiServiceStub(
+      final String withEnv = apiServiceStub(
         ReCase('payments'),
         model: ReCase('Payment'),
         baseUrl: "getEnv('API_BASE_URL')",
@@ -60,12 +60,12 @@ void main() {
     });
 
     test('only imports the model file when a model is supplied', () {
-      final withoutModel = apiServiceStub(
+      final String withoutModel = apiServiceStub(
         ReCase('user'),
         model: ReCase('Model'),
         baseUrl: '"https://api.example.com"',
       );
-      final withModel = apiServiceStub(
+      final String withModel = apiServiceStub(
         ReCase('user'),
         model: ReCase('Product'),
         baseUrl: '"https://api.example.com"',

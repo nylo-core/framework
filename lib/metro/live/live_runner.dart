@@ -90,16 +90,14 @@ typedef LiveDiscoveryFactory =
 class LiveRunner {
   /// Creates a [LiveRunner].
   ///
-  /// [project] defaults to the project in the current directory, and
-  /// [discovery] to discovery through the running Dart Tooling Daemons.
+  /// [_project] defaults to the project in the current directory, and
+  /// [_discovery] to discovery through the running Dart Tooling Daemons.
   LiveRunner({
     LivePrinter? output,
-    LiveProject? project,
-    LiveDiscoveryFactory? discovery,
+    this._project,
+    this._discovery,
     this.session,
-  }) : output = output ?? LivePrinter(),
-       _project = project,
-       _discovery = discovery;
+  }) : output = output ?? LivePrinter();
 
   /// Where output is printed.
   final LivePrinter output;

@@ -19,13 +19,14 @@ void main(List<String> arguments) async {
     stdout.writeln();
 
     // Discover and show the custom commands from the project and its packages
-    final customCommands = await MetroService.discoverCustomCommands(
-      reservedCommands: builtInCommands.keys,
-    );
+    final List<NyCommand> customCommands =
+        await MetroService.discoverCustomCommands(
+          reservedCommands: builtInCommands.keys,
+        );
     final Set<String> liveNames = liveEntries
         .map((entry) => entry.fullName)
         .toSet();
-    final customCommandsMenu = MetroService.customCommandsMenu(
+    final String customCommandsMenu = MetroService.customCommandsMenu(
       customCommands
           .where(
             (command) =>
@@ -34,13 +35,15 @@ void main(List<String> arguments) async {
           .toList(),
     );
     if (customCommandsMenu.isNotEmpty) {
-      print(customCommandsMenu.trimRight());
+      stdout.writeln(customCommandsMenu.trimRight());
     }
     exit(0);
   }
 
-  final commandName = arguments.first;
-  final commandArgs = arguments.length > 1 ? arguments.sublist(1) : <String>[];
+  final String commandName = arguments.first;
+  final List<String> commandArgs = arguments.length > 1
+      ? arguments.sublist(1)
+      : <String>[];
 
   // Check if it's a built-in command
   if (builtInCommands.containsKey(commandName)) {
@@ -75,10 +78,11 @@ void main(List<String> arguments) async {
   }
 
   // Otherwise, try to run as a custom command from the project or a package
-  final customCommands = await MetroService.discoverCustomCommands(
-    reservedCommands: builtInCommands.keys,
-  );
-  final exitCode = await MetroService.runCommand(
+  final List<NyCommand> customCommands =
+      await MetroService.discoverCustomCommands(
+        reservedCommands: builtInCommands.keys,
+      );
+  final int exitCode = await MetroService.runCommand(
     arguments,
     allCommands: customCommands,
     menu: metroMenu,

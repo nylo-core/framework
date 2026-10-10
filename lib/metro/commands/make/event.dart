@@ -27,7 +27,7 @@ class _MakeEventCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final eventName = requireArgument(
+    final String eventName = requireArgument(
       result,
       message: 'An event name is required',
     );

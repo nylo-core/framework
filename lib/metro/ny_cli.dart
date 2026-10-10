@@ -1,7 +1,7 @@
 /// Metro CLI - Nylo's command-line companion for scaffolding Flutter apps.
 ///
 /// Provides the base classes and utilities for creating custom Metro commands.
-library nylo_framework.metro;
+library;
 
 import 'dart:async';
 import 'dart:convert';
@@ -44,8 +44,8 @@ abstract class NyCustomCommand {
 
     // Handle help flag
     if (arguments.contains('--help') || arguments.contains('-h')) {
-      print('\nUsage:');
-      print(_builder!.usage);
+      stdout.writeln('\nUsage:');
+      stdout.writeln(_builder!.usage);
       return;
     }
 
@@ -78,12 +78,12 @@ abstract class NyCustomCommand {
       // Listen to the process output
       process.stdout.transform(SystemEncoding().decoder).listen((String data) {
         // Print the output of the command
-        print(data);
+        stdout.writeln(data);
       });
 
       process.stderr.transform(SystemEncoding().decoder).listen((String data) {
         // Print the error output of the command
-        print(data);
+        stdout.writeln(data);
       });
     }
 
@@ -108,7 +108,7 @@ abstract class NyCustomCommand {
     String quoteChar = '';
 
     for (int i = 0; i < command.length; i++) {
-      final char = command[i];
+      final String char = command[i];
 
       if ((char == '"' || char == "'") && (i == 0 || command[i - 1] != '\\')) {
         if (!inQuotes) {
@@ -154,34 +154,34 @@ abstract class NyCustomCommand {
   /// Prints a message in blue color
   void info(String message) {
     // Print info message in blue
-    print('\x1B[34m$message\x1B[0m');
+    stdout.writeln('\x1B[34m$message\x1B[0m');
   }
 
   /// Prints a message in red color
   void error(String message) {
     // Print error message in red
-    print('\x1B[31m$message\x1B[0m');
+    stdout.writeln('\x1B[31m$message\x1B[0m');
   }
 
   /// Prints a message in green color
   void success(String message) {
     // Print success message in green
-    print('\x1B[32m$message\x1B[0m');
+    stdout.writeln('\x1B[32m$message\x1B[0m');
   }
 
   /// Prints a message in yellow color
   void warning(String message) {
     // Print warning message in yellow
-    print('\x1B[33m$message\x1B[0m');
+    stdout.writeln('\x1B[33m$message\x1B[0m');
   }
 
   /// Asks the user a question and returns their response
   String prompt(String question, {String defaultValue = ''}) {
     // Print the question and default value if provided
     if (defaultValue.isNotEmpty) {
-      print('$question (default: $defaultValue)');
+      stdout.writeln('$question (default: $defaultValue)');
     } else {
-      print('$question');
+      stdout.writeln(question);
     }
 
     // Explicitly flush stdout to ensure the prompt is displayed
@@ -198,7 +198,7 @@ abstract class NyCustomCommand {
     }
 
     // Trim the input and handle null/empty cases
-    final trimmedInput = input?.trim() ?? '';
+    final String trimmedInput = input?.trim() ?? '';
 
     // Return default value if user just presses Enter
     return trimmedInput.isEmpty ? defaultValue : trimmedInput;
@@ -213,7 +213,7 @@ abstract class NyCustomCommand {
     final defaultText = defaultValue ? 'Y/n' : 'y/N';
     stdout.write('$question [$defaultText] ');
 
-    final input = stdin.readLineSync()?.trim().toLowerCase() ?? '';
+    final String input = stdin.readLineSync()?.trim().toLowerCase() ?? '';
 
     if (input.isEmpty) {
       return defaultValue;
@@ -231,19 +231,19 @@ abstract class NyCustomCommand {
     info(question);
 
     for (int i = 0; i < options.length; i++) {
-      final option = options[i];
+      final String option = options[i];
       final isDefault = option == defaultOption;
       final marker = isDefault ? '*' : ' ';
 
-      print('  $marker ${i + 1}. $option');
+      stdout.writeln('  $marker ${i + 1}. $option');
     }
 
     stdout.write('Enter your choice (1-${options.length}): ');
-    final input = stdin.readLineSync()?.trim() ?? '';
+    final String input = stdin.readLineSync()?.trim() ?? '';
 
     // Try to parse as integer first
     try {
-      final index = int.parse(input) - 1;
+      final int index = int.parse(input) - 1;
       if (index >= 0 && index < options.length) {
         return options[index];
       }
@@ -262,28 +262,28 @@ abstract class NyCustomCommand {
   List<String> multiSelect(String question, List<String> options) {
     final selected = <String>[];
 
-    print('$question');
-    print(
+    stdout.writeln(question);
+    stdout.writeln(
       'Enter the numbers of your choices (comma-separated) or "all" for all options:',
     );
 
     // Display options with numbers
     for (int i = 0; i < options.length; i++) {
-      print('  ${i + 1}. ${options[i]}');
+      stdout.writeln('  ${i + 1}. ${options[i]}');
     }
 
-    print('\nYour selection (e.g. "1,3,4" or "all"): ');
-    final input = stdin.readLineSync()?.trim().toLowerCase() ?? '';
+    stdout.writeln('\nYour selection (e.g. "1,3,4" or "all"): ');
+    final String input = stdin.readLineSync()?.trim().toLowerCase() ?? '';
 
     if (input == 'all') {
       return List<String>.from(options);
     }
 
     // Parse number inputs
-    final selections = input.split(',');
+    final List<String> selections = input.split(',');
     for (final selection in selections) {
       try {
-        final index = int.parse(selection.trim()) - 1;
+        final int index = int.parse(selection.trim()) - 1;
         if (index >= 0 && index < options.length) {
           selected.add(options[index]);
         }
@@ -321,27 +321,27 @@ abstract class NyCustomCommand {
 
   /// Prints a message without any color formatting
   void line(String message) {
-    print(message);
+    stdout.writeln(message);
   }
 
   /// Prints one or more blank lines
   void newLine([int count = 1]) {
     for (int i = 0; i < count; i++) {
-      print('');
+      stdout.writeln('');
     }
   }
 
   /// Prints a message in gray/muted color
   void comment(String message) {
-    print('\x1B[90m$message\x1B[0m');
+    stdout.writeln('\x1B[90m$message\x1B[0m');
   }
 
   /// Prints a prominent alert box with a message
   void alert(String message) {
-    final border = '═' * (message.length + 4);
-    print('\x1B[33m╔$border╗\x1B[0m');
-    print('\x1B[33m║\x1B[0m  $message  \x1B[33m║\x1B[0m');
-    print('\x1B[33m╚$border╝\x1B[0m');
+    final String border = '═' * (message.length + 4);
+    stdout.writeln('\x1B[33m╔$border╗\x1B[0m');
+    stdout.writeln('\x1B[33m║\x1B[0m  $message  \x1B[33m║\x1B[0m');
+    stdout.writeln('\x1B[33m╚$border╝\x1B[0m');
   }
 
   // ============================================
@@ -457,9 +457,9 @@ abstract class NyCustomCommand {
     // Try to disable echo for password input
     try {
       stdin.echoMode = false;
-      final input = stdin.readLineSync() ?? '';
+      final String input = stdin.readLineSync() ?? '';
       stdin.echoMode = true;
-      print(''); // New line after hidden input
+      stdout.writeln(''); // New line after hidden input
       return input.trim();
     } catch (e) {
       // Fallback if echoMode is not supported
@@ -628,13 +628,13 @@ abstract class NyCustomCommand {
 
   /// Read a JSON file and return its contents as a Map
   Future<Map<String, dynamic>> readJson(String path) async {
-    final content = await readFile(path);
+    final String content = await readFile(path);
     return jsonDecode(content) as Map<String, dynamic>;
   }
 
   /// Read a JSON file and return its contents as a List
   Future<List<dynamic>> readJsonArray(String path) async {
-    final content = await readFile(path);
+    final String content = await readFile(path);
     return jsonDecode(content) as List<dynamic>;
   }
 
@@ -669,7 +669,7 @@ abstract class NyCustomCommand {
 
     // Check for duplicates if uniqueKey is provided
     if (uniqueKey != null) {
-      final exists = array.any(
+      final bool exists = array.any(
         (existing) => existing[uniqueKey] == item[uniqueKey],
       );
       if (exists) {
@@ -684,8 +684,8 @@ abstract class NyCustomCommand {
 
   /// Read a YAML file and return its contents as a Map
   Future<Map<String, dynamic>> readYaml(String path) async {
-    final content = await readFile(path);
-    final yaml = loadYaml(content);
+    final String content = await readFile(path);
+    final dynamic yaml = loadYaml(content);
     return _yamlToMap(yaml);
   }
 
@@ -716,7 +716,7 @@ abstract class NyCustomCommand {
 
   /// Run dart analyze on a path (defaults to current directory)
   Future<int> dartAnalyze([String? path]) async {
-    final target = path ?? '.';
+    final String target = path ?? '.';
     return await runProcess('dart analyze $target', runInShell: true);
   }
 
@@ -767,14 +767,12 @@ abstract class NyCustomCommand {
 
     // Find the last import statement
     final importRegex = RegExp(r"^import .*?;$", multiLine: true);
-    final matches = importRegex.allMatches(content).toList();
+    final List<RegExpMatch> matches = importRegex.allMatches(content).toList();
 
     if (matches.isNotEmpty) {
-      final lastImportEnd = matches.last.end;
+      final int lastImportEnd = matches.last.end;
       content =
-          content.substring(0, lastImportEnd) +
-          '\n$importStatement' +
-          content.substring(lastImportEnd);
+          '${content.substring(0, lastImportEnd)}\n$importStatement${content.substring(lastImportEnd)}';
     } else {
       // No imports found, add at the beginning
       content = '$importStatement\n$content';
@@ -794,9 +792,11 @@ abstract class NyCustomCommand {
     String content = await readFile(filePath);
 
     // Find the last class declaration and track its closing brace
-    final classMatches = RegExp(r'class\s+\w+').allMatches(content).toList();
+    final List<RegExpMatch> classMatches = RegExp(
+      r'class\s+\w+',
+    ).allMatches(content).toList();
     if (classMatches.isNotEmpty) {
-      final lastClassStart = classMatches.last.start;
+      final int lastClassStart = classMatches.last.start;
       int braceCount = 0;
       int? classBraceIndex;
       for (int i = lastClassStart; i < content.length; i++) {
@@ -811,9 +811,7 @@ abstract class NyCustomCommand {
       }
       if (classBraceIndex != null) {
         content =
-            content.substring(0, classBraceIndex) +
-            '\n$code\n' +
-            content.substring(classBraceIndex);
+            '${content.substring(0, classBraceIndex)}\n$code\n${content.substring(classBraceIndex)}';
         await writeFile(filePath, content);
       }
     }
@@ -824,7 +822,7 @@ abstract class NyCustomCommand {
     if (!fileExists(filePath)) {
       return false;
     }
-    final content = await readFile(filePath);
+    final String content = await readFile(filePath);
     return content.contains(identifier);
   }
 
@@ -833,7 +831,7 @@ abstract class NyCustomCommand {
     if (!fileExists(filePath)) {
       return false;
     }
-    final content = await readFile(filePath);
+    final String content = await readFile(filePath);
     return pattern.allMatches(content).isNotEmpty;
   }
 
@@ -863,7 +861,7 @@ abstract class NyCustomCommand {
     }
 
     return dir.listSync(recursive: recursive).whereType<File>().where((file) {
-      final fileName = file.path.split(Platform.pathSeparator).last;
+      final String fileName = file.path.split(Platform.pathSeparator).last;
 
       if (extension != null && !fileName.endsWith(extension)) {
         return false;
@@ -895,8 +893,12 @@ abstract class NyCustomCommand {
     final destDir = Directory(destination);
     await destDir.create(recursive: true);
 
-    await for (final entity in sourceDir.list(recursive: true)) {
-      final relativePath = entity.path.substring(sourceDir.path.length + 1);
+    await for (final FileSystemEntity entity in sourceDir.list(
+      recursive: true,
+    )) {
+      final String relativePath = entity.path.substring(
+        sourceDir.path.length + 1,
+      );
       final destPath = '$destination${Platform.pathSeparator}$relativePath';
 
       if (entity is File) {
@@ -1030,7 +1032,7 @@ abstract class NyCustomCommand {
   /// Run a list of named tasks with status output
   Future<void> runTasks(List<CommandTask> tasks) async {
     for (int i = 0; i < tasks.length; i++) {
-      final task = tasks[i];
+      final CommandTask task = tasks[i];
       final taskNumber = '[${i + 1}/${tasks.length}]';
 
       try {
@@ -1049,7 +1051,7 @@ abstract class NyCustomCommand {
   /// Run tasks with a spinner animation
   Future<void> runTasksWithSpinner(List<CommandTask> tasks) async {
     for (int i = 0; i < tasks.length; i++) {
-      final task = tasks[i];
+      final CommandTask task = tasks[i];
       final spinner = ConsoleSpinner('${task.name}...');
       spinner.start();
 
@@ -1112,7 +1114,7 @@ class ConsoleSpinner {
 
     _timer = Timer.periodic(Duration(milliseconds: 80), (_) {
       _clearPreviousLine();
-      final frame = _spinnerFrames[_currentFrame];
+      final String frame = _spinnerFrames[_currentFrame];
       stdout.write('\r\x1B[36m$frame\x1B[0m $_message');
       _previousLine = '\r\x1B[36m$frame\x1B[0m $_message';
       _currentFrame = (_currentFrame + 1) % _spinnerFrames.length;
@@ -1146,7 +1148,7 @@ class ConsoleSpinner {
 
   void _clearPreviousLine() {
     if (_previousLine != null) {
-      final length = _previousLine!.length;
+      final int length = _previousLine!.length;
       stdout.write('\r${' ' * length}\r');
     }
   }
@@ -1168,14 +1170,14 @@ class ConsoleTable {
     if (headers.isEmpty) return;
 
     // Calculate column widths
-    final columnWidths = _calculateColumnWidths();
+    final List<int> columnWidths = _calculateColumnWidths();
 
     // Build and print the table
     _printHorizontalBorder(columnWidths, '┌', '┬', '┐');
     _printRow(headers, columnWidths, isHeader: true);
     _printHorizontalBorder(columnWidths, '├', '┼', '┤');
 
-    for (final row in rows) {
+    for (final List<String> row in rows) {
       _printRow(row, columnWidths);
     }
 
@@ -1191,7 +1193,7 @@ class ConsoleTable {
     }
 
     // Check row widths
-    for (final row in rows) {
+    for (final List<String> row in rows) {
       for (int i = 0; i < row.length && i < widths.length; i++) {
         if (row[i].length > widths[i]) {
           widths[i] = row[i].length;
@@ -1216,7 +1218,7 @@ class ConsoleTable {
       }
     }
     buffer.write(right);
-    print(buffer.toString());
+    stdout.writeln(buffer.toString());
   }
 
   void _printRow(
@@ -1226,15 +1228,15 @@ class ConsoleTable {
   }) {
     final buffer = StringBuffer('│');
     for (int i = 0; i < widths.length; i++) {
-      final cell = i < cells.length ? cells[i] : '';
-      final paddedCell = cell.padRight(widths[i]);
+      final String cell = i < cells.length ? cells[i] : '';
+      final String paddedCell = cell.padRight(widths[i]);
       if (isHeader) {
         buffer.write(' \x1B[1m$paddedCell\x1B[0m │');
       } else {
         buffer.write(' $paddedCell │');
       }
     }
-    print(buffer.toString());
+    stdout.writeln(buffer.toString());
   }
 }
 
@@ -1250,8 +1252,7 @@ class ConsoleProgressBar {
   final int _barWidth;
 
   /// Creates a [ConsoleProgressBar] with the given [total] steps.
-  ConsoleProgressBar({required this.total, this.message, int barWidth = 30})
-    : _barWidth = barWidth;
+  ConsoleProgressBar({required this.total, this.message, this._barWidth = 30});
 
   /// Get the current progress value
   int get current => _current;
@@ -1290,30 +1291,30 @@ class ConsoleProgressBar {
   void complete([String? completionMessage]) {
     _current = total;
     _render();
-    print(''); // New line
+    stdout.writeln(''); // New line
     // Show cursor
     stdout.write('\x1B[?25h');
     if (completionMessage != null) {
-      print('\x1B[32m✓\x1B[0m $completionMessage');
+      stdout.writeln('\x1B[32m✓\x1B[0m $completionMessage');
     }
   }
 
   /// Stop the progress bar without completing
   void stop() {
-    print(''); // New line
+    stdout.writeln(''); // New line
     // Show cursor
     stdout.write('\x1B[?25h');
   }
 
   void _render() {
-    final filledWidth = total > 0
+    final int filledWidth = total > 0
         ? ((_current / total) * _barWidth).round()
         : 0;
-    final emptyWidth = _barWidth - filledWidth;
+    final int emptyWidth = _barWidth - filledWidth;
 
-    final filled = '█' * filledWidth;
-    final empty = '░' * emptyWidth;
-    final percent = percentage.toStringAsFixed(0).padLeft(3);
+    final String filled = '█' * filledWidth;
+    final String empty = '░' * emptyWidth;
+    final String percent = percentage.toStringAsFixed(0).padLeft(3);
 
     final messageStr = message != null ? ' $message' : '';
 
@@ -1334,7 +1335,7 @@ extension SpinnerExtension on NyCustomCommand {
     spinner.start();
 
     try {
-      final result = await task();
+      final T result = await task();
       spinner.stop(
         completionMessage: successMessage ?? '$message completed',
         success: true,
@@ -1368,7 +1369,7 @@ extension SpinnerExtension on NyCustomCommand {
     final results = <R>[];
 
     for (int i = 0; i < items.length; i++) {
-      final result = await process(items[i], i);
+      final R result = await process(items[i], i);
       results.add(result);
       progress.tick();
     }
@@ -1390,7 +1391,7 @@ extension SpinnerExtension on NyCustomCommand {
     final results = <R>[];
 
     for (int i = 0; i < items.length; i++) {
-      final result = process(items[i], i);
+      final R result = process(items[i], i);
       results.add(result);
       progress.tick();
     }
@@ -1424,7 +1425,7 @@ class ApiService {
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
-      final response = await _dio.get(
+      final Response<dynamic> response = await _dio.get(
         path,
         queryParameters: queryParameters,
         options: options,
@@ -1449,7 +1450,7 @@ class ApiService {
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
-      final response = await _dio.post(
+      final Response<dynamic> response = await _dio.post(
         path,
         data: data,
         queryParameters: queryParameters,
@@ -1476,7 +1477,7 @@ class ApiService {
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
-      final response = await _dio.put(
+      final Response<dynamic> response = await _dio.put(
         path,
         data: data,
         queryParameters: queryParameters,
@@ -1501,7 +1502,7 @@ class ApiService {
     CancelToken? cancelToken,
   }) async {
     try {
-      final response = await _dio.delete(
+      final Response<dynamic> response = await _dio.delete(
         path,
         data: data,
         queryParameters: queryParameters,
@@ -1526,7 +1527,7 @@ class ApiService {
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
-      final response = await _dio.patch(
+      final Response<dynamic> response = await _dio.patch(
         path,
         data: data,
         queryParameters: queryParameters,
@@ -1565,8 +1566,8 @@ class ApiService {
         case DioExceptionType.receiveTimeout:
           throw TimeoutException('Request timeout');
         case DioExceptionType.badResponse:
-          final statusCode = error.response?.statusCode;
-          final data = error.response?.data;
+          final int? statusCode = error.response?.statusCode;
+          final dynamic data = error.response?.data;
           throw ApiException(
             code: statusCode ?? 0,
             message: 'Server error: $statusCode',
@@ -1655,7 +1656,7 @@ class CommandBuilder {
   final Map<String, dynamic> _defaults = {};
 
   /// Creates a new [CommandBuilder].
-  CommandBuilder() {}
+  CommandBuilder();
 
   /// Add an option (--option or -o)
   CommandBuilder addOption(

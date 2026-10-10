@@ -109,7 +109,7 @@ class ValueDef {
           return findInner((def.childrenDef as List<ValueDef>).first);
         }
       } else if (def.type == ClassType.tObject) {
-        var customObject = findCustomObject(def)!;
+        ValueDef customObject = findCustomObject(def)!;
         return ListInner(
           type: def.type,
           oriType: def.type,
@@ -166,7 +166,7 @@ class ValueDef {
   /// get parent key
   String? get parentKey {
     ValueDef? parentDef = this;
-    var key = parentDef.key;
+    String? key = parentDef.key;
 
     while (key == null && parentDef != null) {
       key = parentDef.key;
@@ -203,33 +203,28 @@ class ValueDef {
     }
 
     if (childrenDef is List<ValueDef>) {
-      var childrenObject = (childrenDef as List<ValueDef>)
+      List<ValueDef> childrenObject = (childrenDef as List<ValueDef>)
           .map((e) => e.customObjects)
           .expand((element) => element)
           .toList();
 
       for (var outerE in childrenObject) {
-        var isExist = objects.any((innerE) {
-          var result = innerE.isStructSame(outerE);
-          if (innerE.key == 'ios') {
-            print(result);
-          }
-          return result;
-        });
+        bool isExist = objects.any((innerE) => innerE.isStructSame(outerE));
 
         if (!isExist) {
           objects.add(outerE);
         }
       }
     } else if (childrenDef is Map<String, ValueDef>) {
-      var childrenObject = (childrenDef as Map<String, ValueDef>).entries
+      List<ValueDef> childrenObject = (childrenDef as Map<String, ValueDef>)
+          .entries
           .map((e) => e.value.customObjects)
           .expand((element) => element)
           .toList();
 
       for (var outerE in childrenObject) {
-        var isExist = objects.any((innerE) {
-          var result = innerE.isStructSame(outerE);
+        bool isExist = objects.any((innerE) {
+          bool result = innerE.isStructSame(outerE);
           return result;
         });
 
@@ -252,7 +247,7 @@ class ValueDef {
 
   /// Finds a matching custom object definition for [def].
   ValueDef? findCustomObject(ValueDef def) {
-    var find = _allCustomObject.firstWhereOrNull(
+    ValueDef? find = _allCustomObject.firstWhereOrNull(
       (element) => def.isStructSame(element),
     );
     return find;
@@ -269,21 +264,23 @@ class ValueDef {
       return thisList.first.isStructSame(otherList.first);
     } else if (childrenDef is Map<String, ValueDef> &&
         other.childrenDef is Map<String, ValueDef>) {
-      var thisKeyList = (childrenDef as Map<String, ValueDef>).entries;
-      var otherKeyList = (other.childrenDef as Map<String, ValueDef>).entries;
+      Iterable<MapEntry<String, ValueDef>> thisKeyList =
+          (childrenDef as Map<String, ValueDef>).entries;
+      Iterable<MapEntry<String, ValueDef>> otherKeyList =
+          (other.childrenDef as Map<String, ValueDef>).entries;
       var isLengthSame = thisKeyList.length == otherKeyList.length;
 
       if (isLengthSame) {
-        var isSame = !thisKeyList.any((element) {
-          var thisKey = element.key;
-          var thisValue = element.value;
+        bool isSame = !thisKeyList.any((element) {
+          String thisKey = element.key;
+          ValueDef thisValue = element.value;
 
-          var findOther = otherKeyList.firstWhereOrNull(
+          MapEntry<String, ValueDef>? findOther = otherKeyList.firstWhereOrNull(
             (element) => element.key == thisKey,
           );
 
           if (findOther != null) {
-            var isSame = thisValue.isStructSame(findOther.value);
+            bool isSame = thisValue.isStructSame(findOther.value);
             return !isSame;
           } else {
             return true;
@@ -388,12 +385,12 @@ class ValueDef {
         other.type == ClassType.tListDynamic) {
       ValueDef? elementDef;
 
-      var keyList = (List<ValueDef?>.from(
+      List<ValueDef> keyList = (List<ValueDef?>.from(
         childrenDef,
       )..addAll(other.childrenDef)).nonNulls.toList();
 
       for (var i = 0; i < keyList.length; i++) {
-        var element = keyList[i];
+        ValueDef element = keyList[i];
 
         elementDef ??= element;
         elementDef = elementDef._summarizeData(element);
@@ -421,10 +418,10 @@ class ValueDef {
       });
       return copyWith(type: type, childrenDef: keyMap);
     } else {
-      var resultType = ClassType.mergeType(type, other.type);
+      ClassType? resultType = ClassType.mergeType(type, other.type);
 
-      var mergeListType = ClassType.mergeType(listType, other.listType);
-      var children = type.isNull ? other.childrenDef : childrenDef;
+      ClassType? mergeListType = ClassType.mergeType(listType, other.listType);
+      final dynamic children = type.isNull ? other.childrenDef : childrenDef;
 
       return copyWith(
         type: resultType,
@@ -446,7 +443,7 @@ class ValueDef {
 
           var keyList = List<ValueDef>.from(childrenDef);
           for (var i = 0; i < keyList.length; i++) {
-            var element = keyList[i];
+            ValueDef element = keyList[i];
 
             elementDef ??= element;
             elementDef = elementDef._summarizeData(element);
@@ -477,7 +474,7 @@ class ValueDef {
   ValueDef _convertNullToDynamic(ValueDef def) {
     switch (def.type) {
       case ClassType.tListDynamic:
-        var listType = def.listType!;
+        ClassType listType = def.listType!;
         if (listType.isNull || listType.isDynamic) {
           listType = ClassType.tDynamic;
           return def.copyWith(type: def.type, listType: listType);
@@ -508,7 +505,7 @@ class ValueDef {
 
   /// Summarizes this definition by merging types and converting nulls.
   ValueDef summarize() {
-    var def = _summarizeEntry();
+    ValueDef def = _summarizeEntry();
 
     return _convertNullToDynamic(def);
   }
@@ -539,11 +536,11 @@ class ValueDef {
   String get customObjectString {
     var text = '';
 
-    for (var element in customObjects) {
+    for (ValueDef element in customObjects) {
       if (text.isNotEmpty) {
         text += '\n\n';
       }
-      var tempParent = parent;
+      ValueDef? tempParent = parent;
       element.parent = null;
       text += element.structString;
       element.parent = tempParent;
@@ -565,7 +562,7 @@ class ValueDef {
     if (isRoot) {
       return rootClassName ?? 'Root';
     } else {
-      var parentName = parent?.classNameNoPrefixSuffix;
+      String? parentName = parent?.classNameNoPrefixSuffix;
 
       if (parentKey == null && type.isObject) {
         return '${parentName}Value'.upperCamel();
@@ -585,7 +582,7 @@ extension StringExtension on String {
   /// Converts this string to UpperCamelCase.
   String upperCamel() {
     String capitalize(Match match) {
-      var text = match[0];
+      String? text = match[0];
       if (text == null) return '';
       if (text.length >= 2) {
         return '${text[0].toUpperCase()}${text.substring(1)}';
@@ -607,7 +604,7 @@ extension StringExtension on String {
 
   /// Converts this string to lowerCamelCase.
   String lowerCamel() {
-    var upper = upperCamel();
+    String upper = upperCamel();
     return '${upper[0].toLowerCase()}${upper.substring(1)}';
   }
 }

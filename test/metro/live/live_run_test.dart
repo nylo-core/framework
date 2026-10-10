@@ -143,12 +143,8 @@ void main() {
 
   group('splitLiveRunArguments', () {
     test('takes the first argument as the command name', () {
-      final split = splitLiveRunArguments([
-        'route',
-        '/profile',
-        '--data',
-        '{"id": 42}',
-      ]);
+      final ({List<String> arguments, String? name, String? stoppedAt}) split =
+          splitLiveRunArguments(['route', '/profile', '--data', '{"id": 42}']);
 
       expect(split.name, 'route');
       expect(split.arguments, ['/profile', '--data', '{"id": 42}']);
@@ -156,15 +152,16 @@ void main() {
     });
 
     test('keeps shared live flags that come before the name', () {
-      final split = splitLiveRunArguments([
-        '-d',
-        '17 Pro',
-        '--all',
-        '--timeout=5',
-        'storage:set',
-        'coins',
-        '10',
-      ]);
+      final ({List<String> arguments, String? name, String? stoppedAt}) split =
+          splitLiveRunArguments([
+            '-d',
+            '17 Pro',
+            '--all',
+            '--timeout=5',
+            'storage:set',
+            'coins',
+            '10',
+          ]);
 
       expect(split.name, 'storage:set');
       expect(split.arguments, [
@@ -178,19 +175,16 @@ void main() {
     });
 
     test('keeps app command names with a category', () {
-      final split = splitLiveRunArguments([
-        'cart:seed_cart',
-        '--count',
-        '5',
-        '--json',
-      ]);
+      final ({List<String> arguments, String? name, String? stoppedAt}) split =
+          splitLiveRunArguments(['cart:seed_cart', '--count', '5', '--json']);
 
       expect(split.name, 'cart:seed_cart');
       expect(split.arguments, ['--count', '5', '--json']);
     });
 
     test('never reads a flag value as the name', () {
-      final split = splitLiveRunArguments(['--data', '{}', 'route']);
+      final ({List<String> arguments, String? name, String? stoppedAt}) split =
+          splitLiveRunArguments(['--data', '{}', 'route']);
 
       expect(split.name, isNull);
       expect(split.stoppedAt, '--data');

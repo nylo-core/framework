@@ -31,7 +31,7 @@ class _MakeStateManagedWidgetCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final widgetName = requireArgument(
+    final String widgetName = requireArgument(
       result,
       message: 'A widget name is required',
     );

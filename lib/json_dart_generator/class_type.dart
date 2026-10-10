@@ -8,10 +8,11 @@ class ClassType {
 
   /// Creates a [ClassType] from a type name string.
   factory ClassType.name(String typeName) {
-    var find = values.firstWhereOrNull((element) => element.value == typeName);
+    ClassType? find = values.firstWhereOrNull(
+      (element) => element.value == typeName,
+    );
 
     if (find == null) {
-      print(typeName);
       throw typeName;
     }
     return find;

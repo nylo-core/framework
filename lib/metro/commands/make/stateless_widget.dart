@@ -31,7 +31,7 @@ class _MakeStatelessWidgetCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final firstArgument = requireArgument(
+    final String firstArgument = requireArgument(
       result,
       message: 'A widget name is required',
     );

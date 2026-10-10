@@ -13,7 +13,7 @@ void main(arguments) => _${customCommand.pascalCase}Command(arguments).run();
 /// ${customCommand.titleCase} Command
 ///
 /// Usage:
-///   [From Terminal] metro ${category}:${customCommand.snakeCase}
+///   [From Terminal] metro $category:${customCommand.snakeCase}
 class _${customCommand.pascalCase}Command extends NyCustomCommand {
   _${customCommand.pascalCase}Command(super.arguments);
 

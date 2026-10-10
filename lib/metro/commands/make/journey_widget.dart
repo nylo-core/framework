@@ -39,7 +39,7 @@ class _MakeJourneyWidgetCommand extends NyCustomCommand {
 
   @override
   Future<void> handle(CommandResult result) async {
-    final firstArgument = requireArgument(
+    final String firstArgument = requireArgument(
       result,
       message: 'A journey widget name is required',
     );
