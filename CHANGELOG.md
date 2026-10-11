@@ -1,3 +1,15 @@
+## [7.2.7] - 2026-10-11
+
+### Changed
+* Bump `nylo_support` dependency from `^7.31.2` to `^7.31.3`, which brings:
+  * Faster boot: date formatting, time zone, themes, language files and async service factories load in parallel, and `syncKeys` reads storage once
+  * Faster navigation, number formatting and form validation, with route patterns, `NumberFormat`s and validation patterns compiled once and reused
+  * Lighter network logging that sizes payloads from `Content-Length` instead of stringifying the body; `NY_API_LOGS` keeps a request summary and is skipped in release builds
+  * `refreshToken` receives the service's own `Dio`, sharing its base URL, headers and connection pool
+  * New `Nylo.hasApiDecoder<T>()`, `FormValidationResult.firstError` and `BaseThemeConfig.invalidateThemeData()`
+* Generating a model from JSON no longer prints debug output
+* The package now lints with `vibe_check` instead of `flutter_lints`
+
 ## [7.2.6] - 2026-09-30
 
 ### Changed
