@@ -1,3 +1,8 @@
+## [7.2.8] - 2026-10-11
+
+### Changed
+* Bump `nylo_support` dependency from `^7.31.3` to `^7.31.4`, whose `refreshToken` once more receives a new `Dio`, separate from the service's client and its interceptors, so an interceptor that reacts to auth cannot trigger itself during a token refresh
+
 ## [7.2.7] - 2026-10-11
 
 ### Changed
