@@ -14,6 +14,20 @@ This project is open source and MIT-licenced, we welcome any contributions. You 
 
 > **Note:** If you want to build an application using Nylo, please visit the main [Nylo repository](https://github.com/nylo-core/nylo). This repository contains the code for the framework Nylo uses.
 
+<div align="center">
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://discord.gg/eKZC9FbVDv">
+        <img src="https://cdn.simpleicons.org/discord/5865F2" width="56" alt="Discord">
+      </a>
+      <h3><a href="https://discord.gg/eKZC9FbVDv">Join the Nylo Community</a></h3>
+      Discord · Q&amp;A · Show and Tell
+    </td>
+  </tr>
+</table>
+</div>
+
 ---
 
 ## Features
@@ -38,6 +52,7 @@ Visit the docs on [Nylo](https://nylo.dev/docs) to view our extensive and thorou
 Please see [CHANGELOG](https://github.com/nylo-core/framework/blob/7.x/CHANGELOG.md) for more information what has changed recently.
 
 ## Social
+* [Discord](https://discord.gg/eKZC9FbVDv)
 * [Twitter](https://twitter.com/nylo_dev)
 
 ## Security
