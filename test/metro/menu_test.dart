@@ -114,6 +114,10 @@ void main() {
         expect(metroMenu, contains('make:seeder'));
       });
 
+      test('contains make:playbook command', () {
+        expect(metroMenu, contains('make:playbook'));
+      });
+
       test('contains make:env command', () {
         expect(metroMenu, contains('make:env'));
       });

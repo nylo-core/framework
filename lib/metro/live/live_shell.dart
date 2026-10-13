@@ -309,9 +309,17 @@ class LiveShell {
 
   /// Runs [action], returning early when Ctrl+C is pressed and the action
   /// doesn't stop on its own soon after.
+  ///
+  /// A command that set [LiveRunner.interruptHandler] gets Ctrl+C instead,
+  /// and decides itself when to stop.
   Future<int?> _whileInterruptible(Future<int?> Function() action) async {
     final Completer<int?> interrupted = Completer<int?>();
     _onInterrupt = () {
+      final void Function()? handler = runner.interruptHandler;
+      if (handler != null) {
+        handler();
+        return;
+      }
       Timer(const Duration(milliseconds: 300), () {
         if (!interrupted.isCompleted) interrupted.complete(130);
       });
@@ -508,6 +516,7 @@ class LiveShell {
         ..._snapshotPaths(current),
       ],
       'seed' || 'seed:rollback' => await _cached('seeders', _seeders),
+      'playbook' => await _cached('playbooks', _playbooks),
       'use' => [
         for (int i = 0; i < session.apps.length; i++) '${i + 1}',
         'all',
@@ -586,6 +595,21 @@ class LiveShell {
         ? [
             for (final Object? seeder in seeders)
               if (seeder is Map) '${seeder['name']}',
+          ]
+        : [];
+  }
+
+  Future<List<String>> _playbooks(LiveApp app) async {
+    final Object? payload = await app.call(
+      'playbooks.list',
+      null,
+      _completionTimeout,
+    );
+    final Object? playbooks = payload is Map ? payload['playbooks'] : null;
+    return playbooks is List
+        ? [
+            for (final Object? playbook in playbooks)
+              if (playbook is Map) '${playbook['name']}',
           ]
         : [];
   }

@@ -52,6 +52,34 @@ import 'package:nylo_framework/live.dart';
 final Map<String, Seeder Function()> seeders = kReleaseMode ? const {} : {};
 ''';
 
+/// Where apps register their playbooks.
+const String playbooksRegistryPath = 'lib/bootstrap/playbooks.dart';
+
+/// The contents of a new `lib/bootstrap/playbooks.dart`.
+const String playbooksRegistryTemplate =
+    '''import 'package:flutter/foundation.dart';
+import 'package:nylo_framework/playbook.dart';
+
+/* Playbooks
+|--------------------------------------------------------------------------
+| Playbooks are user journeys your app performs on itself: taps, typing,
+| scrolling and page changes, at a natural, fast or slow pace.
+| Metro adds them here, so there's no need to edit this file.
+| Create one:
+|   metro make:playbook sign_up_to_dashboard
+| Then, while your app is running, play it:
+|   metro live:run playbook sign_up_to_dashboard
+| or open metro live and type: playbook sign_up_to_dashboard
+|
+| Release builds get an empty map, so playbooks are left out of the app
+| you ship.
+|
+| Learn more: https://nylo.dev/docs/7.x/metro
+|-------------------------------------------------------------------------- */
+
+final Map<String, Playbook Function()> playbooks = kReleaseMode ? const {} : {};
+''';
+
 /// Adds `'<fullName>': () => <className>(),` to the `liveCommands` map in
 /// [file].
 ///
@@ -81,6 +109,22 @@ String? insertSeederRegistration(
   file,
   variable: 'seeders',
   type: 'Seeder Function()',
+  key: name,
+  value: '$className.new',
+);
+
+/// Adds `'<name>': <className>.new,` to the `playbooks` map in [file].
+///
+/// Returns the updated file, or null when the playbook is already registered
+/// or the `playbooks` map can't be found.
+String? insertPlaybookRegistration(
+  String file, {
+  required String name,
+  required String className,
+}) => insertRegistryEntry(
+  file,
+  variable: 'playbooks',
+  type: 'Playbook Function()',
   key: name,
   value: '$className.new',
 );
@@ -183,6 +227,14 @@ List<String> registeredSeeders({String projectRoot = '.'}) => _readKeys(
   type: 'Seeder Function()',
 );
 
+/// The playbook names `lib/bootstrap/playbooks.dart` registers in the
+/// project at [projectRoot].
+List<String> registeredPlaybooks({String projectRoot = '.'}) => _readKeys(
+  '$projectRoot/$playbooksRegistryPath',
+  variable: 'playbooks',
+  type: 'Playbook Function()',
+);
+
 List<String> _readKeys(
   String path, {
   required String variable,
@@ -281,6 +333,25 @@ Future<LiveRegistration> registerSeeder({
       hasRegistryMap(file, variable: 'seeders', type: 'Seeder Function()'),
 );
 
+/// Registers the playbook class [className] (from [importPath], relative to
+/// `lib/`) under [name] in `lib/bootstrap/playbooks.dart`, creating the file
+/// when it doesn't exist.
+Future<LiveRegistration> registerPlaybook({
+  required String name,
+  required String className,
+  required String importPath,
+}) => _register(
+  path: playbooksRegistryPath,
+  template: playbooksRegistryTemplate,
+  configName: 'playbooks',
+  label: 'Playbook',
+  importPath: importPath,
+  insert: (String file) =>
+      insertPlaybookRegistration(file, name: name, className: className),
+  hasMap: (String file) =>
+      hasRegistryMap(file, variable: 'playbooks', type: 'Playbook Function()'),
+);
+
 Future<LiveRegistration> _register({
   required String path,
   required String template,
@@ -330,6 +401,9 @@ const String liveCommandsImport = "import '/bootstrap/live_commands.dart';";
 /// The import that makes `seeders` available to the app provider.
 const String seedersImport = "import '/bootstrap/seeders.dart';";
 
+/// The import that makes `playbooks` available to the app provider.
+const String playbooksImport = "import '/bootstrap/playbooks.dart';";
+
 /// The result of wiring a registry into the app provider.
 enum LiveWiring {
   /// The import and the `nylo.configure` argument were added.
@@ -356,6 +430,12 @@ Future<LiveWiring> wireLiveCommands(File appProvider) =>
 Future<LiveWiring> wireSeeders(File appProvider) =>
     _wire(appProvider, addSeedersToProvider, _passesSeeders);
 
+/// Passes the app's playbooks to Nylo in [appProvider] by adding
+/// [playbooksImport] and `playbooks: playbooks` to its `nylo.configure(...)`
+/// call.
+Future<LiveWiring> wirePlaybooks(File appProvider) =>
+    _wire(appProvider, addPlaybooksToProvider, _passesPlaybooks);
+
 Future<LiveWiring> _wire(
   File appProvider,
   String? Function(String source) add,
@@ -375,6 +455,9 @@ bool _passesLiveCommands(String source) => source.contains('liveCommands');
 
 bool _passesSeeders(String source) =>
     RegExp(r'\bseeders\s*:|\baddSeeders\s*\(').hasMatch(source);
+
+bool _passesPlaybooks(String source) =>
+    RegExp(r'\bplaybooks\s*:|\baddPlaybooks\s*\(').hasMatch(source);
 
 /// Returns [source] with `liveCommands: liveCommands` added as the last
 /// argument of its first `nylo.configure(...)` call and [liveCommandsImport]
@@ -403,6 +486,21 @@ String? addSeedersToProvider(String source) {
     source,
     argument: 'seeders: seeders',
     import: seedersImport,
+  );
+}
+
+/// Returns [source] with `playbooks: playbooks` added as the last argument
+/// of its first `nylo.configure(...)` call and [playbooksImport] added after
+/// the last import.
+///
+/// Returns [source] unchanged when it already passes playbooks, and null when
+/// it has no `nylo.configure(...)` call.
+String? addPlaybooksToProvider(String source) {
+  if (_passesPlaybooks(source)) return source;
+  return _addConfigureArgument(
+    source,
+    argument: 'playbooks: playbooks',
+    import: playbooksImport,
   );
 }
 

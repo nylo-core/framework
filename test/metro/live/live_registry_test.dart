@@ -179,6 +179,82 @@ final Map<String, LiveCommand Function()> liveCommands = {
     });
   });
 
+  group('insertPlaybookRegistration', () {
+    test('adds to the release-guarded map in the generated template', () {
+      final String? updated = insertPlaybookRegistration(
+        playbooksRegistryTemplate,
+        name: 'sign_up_to_dashboard',
+        className: 'SignUpToDashboardPlaybook',
+      );
+
+      expect(
+        updated,
+        endsWith(
+          "final Map<String, Playbook Function()> playbooks = kReleaseMode\n"
+          "    ? const {}\n"
+          "    : {\n"
+          "        'sign_up_to_dashboard': SignUpToDashboardPlaybook.new,\n"
+          "      };\n",
+        ),
+      );
+      expect(
+        insertPlaybookRegistration(
+          updated!,
+          name: 'sign_up_to_dashboard',
+          className: 'SignUpToDashboardPlaybook',
+        ),
+        isNull,
+      );
+      expect(
+        registryKeys(
+          updated,
+          variable: 'playbooks',
+          type: 'Playbook Function()',
+        ),
+        ['sign_up_to_dashboard'],
+      );
+    });
+
+    test('imports the playbook library and says how to play one', () {
+      expect(
+        playbooksRegistryTemplate,
+        contains("import 'package:nylo_framework/playbook.dart';"),
+      );
+      expect(
+        playbooksRegistryTemplate,
+        contains('metro live:run playbook sign_up_to_dashboard'),
+      );
+      expect(
+        hasRegistryMap(
+          seedersRegistryTemplate,
+          variable: 'playbooks',
+          type: 'Playbook Function()',
+        ),
+        isFalse,
+      );
+    });
+
+    test('reads a project\'s playbooks from disk', () {
+      final Directory project = Directory.systemTemp.createTempSync(
+        'nylo_live_playbooks_',
+      );
+      addTearDown(() => project.deleteSync(recursive: true));
+      expect(registeredPlaybooks(projectRoot: project.path), isEmpty);
+
+      File('${project.path}/$playbooksRegistryPath')
+        ..createSync(recursive: true)
+        ..writeAsStringSync(
+          insertPlaybookRegistration(
+            playbooksRegistryTemplate,
+            name: 'log_out',
+            className: 'LogOutPlaybook',
+          )!,
+        );
+
+      expect(registeredPlaybooks(projectRoot: project.path), ['log_out']);
+    });
+  });
+
   group('registryKeys', () {
     test('reads the keys of either map form, skipping comments', () {
       const String commands =
@@ -321,6 +397,61 @@ final Map<String, LiveCommand Function()> liveCommands = {
         addSeedersToProvider(source),
         endsWith('await nylo.configure(seeders: seeders);'),
       );
+    });
+  });
+
+  group('addPlaybooksToProvider', () {
+    test('adds the argument and import after seeders', () {
+      const String source =
+          "import 'package:nylo_framework/nylo_framework.dart';\n"
+          "import '/bootstrap/seeders.dart';\n"
+          "\n"
+          "setup(Nylo nylo) async {\n"
+          "  await nylo.configure(\n"
+          "    useErrorStack: true,\n"
+          "    seeders: seeders,\n"
+          "  );\n"
+          "}\n";
+
+      final String? updated = addPlaybooksToProvider(source);
+
+      expect(
+        updated,
+        contains(
+          "    seeders: seeders,\n"
+          "    playbooks: playbooks,\n"
+          "  );",
+        ),
+      );
+      expect(
+        updated,
+        contains(
+          "import '/bootstrap/seeders.dart';\n"
+          "import '/bootstrap/playbooks.dart';\n",
+        ),
+      );
+      expect(addPlaybooksToProvider(updated!), updated);
+    });
+
+    test('treats addPlaybooks as already wired', () {
+      const String source =
+          "nylo.addPlaybooks(playbooks);\nawait nylo.configure();";
+
+      expect(addPlaybooksToProvider(source), source);
+    });
+
+    test('isn\'t fooled by the word playbooks elsewhere', () {
+      const String source =
+          "// playbooks live in lib/app/playbooks\nawait nylo.configure();";
+
+      expect(
+        addPlaybooksToProvider(source),
+        endsWith('await nylo.configure(playbooks: playbooks);'),
+      );
+    });
+
+    test('returns null without a configure call', () {
+      expect(addPlaybooksToProvider('nylo.addLoader(loader);'), isNull);
     });
   });
 
@@ -491,6 +622,24 @@ class AppProvider implements NyProvider {
           'await nylo.configure(useErrorStack: true, '
           'liveCommands: liveCommands, seeders: seeders);',
         ),
+      );
+    });
+
+    test('wires playbooks once', () async {
+      final File file = File('${temp.path}/app_provider.dart')
+        ..writeAsStringSync('await nylo.configure(seeders: seeders);');
+
+      expect(await wirePlaybooks(file), LiveWiring.added);
+      expect(await wirePlaybooks(file), LiveWiring.alreadyWired);
+      expect(
+        file.readAsStringSync(),
+        endsWith(
+          'await nylo.configure(seeders: seeders, playbooks: playbooks);',
+        ),
+      );
+      expect(
+        await wirePlaybooks(File('${temp.path}/missing.dart')),
+        LiveWiring.providerMissing,
       );
     });
   });

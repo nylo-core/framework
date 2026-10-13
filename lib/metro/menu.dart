@@ -33,6 +33,7 @@ All commands:
   make:interceptor
   make:command
   make:seeder
+  make:playbook
   make:env
   make:key
 

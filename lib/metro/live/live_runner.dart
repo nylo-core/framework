@@ -111,6 +111,13 @@ class LiveRunner {
   LiveProject? _project;
   final LiveDiscoveryFactory? _discovery;
 
+  /// Handles Ctrl+C for the command that's running, when it stops cleanly
+  /// on its own, such as a playbook that asks the app to stop.
+  ///
+  /// `metro live` calls it instead of giving up on the command. Commands set
+  /// it while they run and put the previous one back when they finish.
+  void Function()? interruptHandler;
+
   /// How long an app gets to run a command before Metro gives up.
   static const Duration commandTimeout = Duration(seconds: 30);
 
@@ -287,6 +294,66 @@ class LiveRunner {
       output.blocks([
         for (final LiveOutcome outcome in outcomes)
           (label: outcome.app.device, block: outcome.block),
+      ]);
+    }
+
+    await _release(resolved.targets);
+    return outcomes.every((outcome) => outcome.isSuccess) ? 0 : 1;
+  }
+
+  /// Runs [action] on every target app in parallel, like [run], but prints
+  /// each block the moment [action] passes it to `print`, instead of once the
+  /// command finishes, so a long-running command shows its progress.
+  ///
+  /// Blocks are prefixed with `[device]` when there is more than one app.
+  /// With `--json`, nothing is printed along the way and the document [run]
+  /// prints comes at the end. Returns `0` when every app succeeded, `1` when
+  /// any failed.
+  Future<int> stream(
+    LiveOptions options,
+    Future<Object?> Function(LiveApp app, void Function(LiveBlock block) print)
+    action,
+  ) async {
+    final ({List<LiveApp> targets, int exitCode}) resolved =
+        await resolveTargets(options);
+    if (resolved.targets.isEmpty) return resolved.exitCode;
+
+    final int width = resolved.targets
+        .map((app) => app.device.length)
+        .fold(0, (a, b) => a > b ? a : b);
+    void Function(LiveBlock block) printerFor(LiveApp app) {
+      if (options.json) return (_) {};
+      if (resolved.targets.length == 1) return output.block;
+      final String prefix = '[${app.device}]'.padRight(width + 4);
+      return (LiveBlock block) => output.block(block, prefix: prefix);
+    }
+
+    final List<LiveOutcome> outcomes = await Future.wait(
+      resolved.targets.map((app) async {
+        final void Function(LiveBlock block) print = printerFor(app);
+        try {
+          final Object? result = await action(app, print);
+          return LiveOutcome(app, LiveBlock(), result: result);
+        } on LiveReportedFailure catch (e) {
+          // The app already explained the failure in the printed lines.
+          return LiveOutcome(
+            app,
+            LiveBlock(),
+            result: e.result,
+            error: e.message,
+          );
+        } catch (e) {
+          final String message = describeLiveError(e);
+          final LiveBlock block = LiveBlock()..failure(message);
+          print(block);
+          return LiveOutcome(app, block, error: message);
+        }
+      }),
+    );
+
+    if (options.json) {
+      output.json([
+        for (final LiveOutcome outcome in outcomes) outcome.toJson(),
       ]);
     }
 

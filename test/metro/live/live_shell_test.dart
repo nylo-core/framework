@@ -1466,6 +1466,10 @@ void main() {
       expect(optionsOf('seed'), containsAll(['--fresh', '--restart', '--all']));
       expect(optionsOf('seed'), isNot(contains('--down')));
       expect(optionsOf('seed:rollback'), containsAll(['--restart', '--all']));
+      expect(
+        optionsOf('playbook'),
+        containsAll(['--list', '--speed', '--data', '--overlay', '--loop']),
+      );
     });
   });
 
@@ -2013,6 +2017,7 @@ void main() {
       LiveOptions options = const LiveOptions(),
       Future<int?> Function(String name, List<String> args)? handler,
       String? root,
+      Stream<ProcessSignal>? interrupts,
     }) async {
       final ({StringBuffer printed, LiveRunner runner, LiveSession session})
       live = await sessionFor(devices, root: root);
@@ -2029,6 +2034,7 @@ void main() {
         input: input,
         output: live.printed,
         terminal: FakeTerminal(hasTerminal: terminal),
+        interrupts: interrupts,
       );
       return (shell: shell, output: live.printed, dispatched: dispatched);
     }
@@ -2054,6 +2060,31 @@ void main() {
         'route /home --data {"tab": "orders"}',
       ]);
       expect(shell.output.toString(), contains('› seed demo --fresh'));
+    });
+
+    test('hands Ctrl+C to a command that stops by itself', () async {
+      final StreamController<ProcessSignal> interrupts =
+          StreamController<ProcessSignal>();
+      cleanup.add(interrupts.close);
+      final Completer<int?> stopped = Completer<int?>();
+      int handled = 0;
+      late final LiveShell shell;
+      shell = (await shellFor(
+        {'iPhone 17 Pro': await app()},
+        input: lines('playbook demo\n'),
+        interrupts: interrupts.stream,
+        handler: (name, args) async {
+          shell.runner.interruptHandler = () {
+            handled++;
+            stopped.complete(130);
+          };
+          interrupts.add(ProcessSignal.sigint);
+          return stopped.future;
+        },
+      )).shell;
+
+      expect(await shell.start(), 130);
+      expect(handled, 1);
     });
 
     test('stops a script at the first failure with its exit code', () async {
@@ -2171,6 +2202,40 @@ void main() {
 
       expect(await running, 0);
       expect(shell.dispatched, ['backpack translate_page_translate_from']);
+    });
+
+    test('completes playbook names after playbook', () async {
+      final StreamController<List<int>> input = StreamController<List<int>>();
+      final ({List<String> dispatched, StringBuffer output, LiveShell shell})
+      shell = await shellFor(
+        {
+          'iPhone 17 Pro': await app(
+            commands: {
+              'playbooks.list': (args) async => {
+                'playbooks': [
+                  {'name': 'log_out'},
+                  {'name': 'sign_up_to_dashboard'},
+                ],
+              },
+            },
+          ),
+        },
+        input: input.stream,
+        terminal: true,
+      );
+
+      final Future<int> running = shell.shell.start();
+      await eventually(
+        () => shell.output.toString().contains('iPhone 17 Pro /home › '),
+      );
+      input.add(utf8.encode('playbook log_out sign\t'));
+      await settle();
+      input.add(utf8.encode('\r'));
+      await eventually(() => shell.dispatched.isNotEmpty);
+      input.add(utf8.encode('exit\r'));
+
+      expect(await running, 0);
+      expect(shell.dispatched, ['playbook log_out sign_up_to_dashboard']);
     });
 
     test('completes the states on screen after data', () async {

@@ -15,6 +15,7 @@ import 'make/key.dart' as make_key;
 import 'make/model.dart' as make_model;
 import 'make/navigation_hub.dart' as make_navigation_hub;
 import 'make/page.dart' as make_page;
+import 'make/playbook.dart' as make_playbook;
 import 'make/provider.dart' as make_provider;
 import 'make/route_guard.dart' as make_route_guard;
 import 'make/seeder.dart' as make_seeder;
@@ -43,6 +44,7 @@ final Map<String, Future<void> Function(List<String>)> builtInCommands = {
   'make:model': make_model.main,
   'make:navigation_hub': make_navigation_hub.main,
   'make:page': make_page.main,
+  'make:playbook': make_playbook.main,
   'make:provider': make_provider.main,
   'make:route_guard': make_route_guard.main,
   'make:seeder': make_seeder.main,

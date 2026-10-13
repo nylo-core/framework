@@ -1,3 +1,20 @@
+## [7.3.0] - 2026-10-13
+
+### Added
+* **Playbooks** - A playbook is a class listing the taps, typing, scrolling and page changes of a user journey, which the running app then performs on itself at a natural, fast or slow pace, with a visible finger. The same playbook runs as a live demo, from Dart with `run()`, and in widget and integration tests, and playbooks can play each other
+  * `metro make:playbook <name>` - Creates `lib/app/playbooks/<name>_playbook.dart`, registers it in `lib/bootstrap/playbooks.dart` (created on first use, and an empty map in release builds) and passes `playbooks` to `nylo.configure(...)` in your app provider. Takes `--description` and `--force`, and subfolders like `make:playbook onboarding/sign_up`
+  * `metro live:run playbook <name> [<name> ...]` - Plays playbooks back to back in the running app, printing each step as it happens. Takes `--speed instant|fast|natural|slow`, `--data <json>` (shared by every playbook in the run), `--no-overlay` and `--loop`. Without names, or with `--list`, it lists the app's playbooks. Ctrl+C asks the app to stop, which skips the remaining steps but still runs `tearDown`; a second Ctrl+C stops waiting. Inside `metro live` it's `playbook <name>`, and Tab completes playbook names
+* `package:nylo_framework/playbook.dart` - The library playbooks and `lib/bootstrap/playbooks.dart` import
+
+### Changed
+* Bump `nylo_support` dependency from `^7.31.4` to `^7.32.0`, which brings:
+  * Playbooks: the runtime behind `make:playbook` and `live:run playbook`, `PLAYBOOK_ON_BOOT`, and the `NyTesterClock` testing helpers
+  * `NyFormPicker` laid out like a text field, with `FieldStylePicker.decoration` and `prefixIcon`
+  * A saved language that isn't a locale code is dropped instead of loaded, and `NyLogger` no longer throws before Nylo starts
+
+### Fixed
+* A second listener to a running app's events no longer ends the first one's subscription when it stops listening. Inside `metro live`, a command that watched the app's events cancelled the stream the shell itself uses to follow page changes
+
 ## [7.2.8] - 2026-10-11
 
 ### Changed

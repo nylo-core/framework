@@ -77,3 +77,6 @@ build/
 # Claude related
 CLAUDE.md
 .claude
+
+# Local path overrides for developing against sibling repos
+pubspec_overrides.yaml

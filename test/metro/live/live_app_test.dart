@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nylo_framework/metro/live/json_rpc_client.dart';
 import 'package:nylo_framework/metro/live/live_app.dart';
@@ -175,6 +177,38 @@ void main() {
       expect(event.data['name'], '/profile');
       expect(event.timestamp, isNotNull);
       expect(fake.server.methods, contains('streamListen'));
+    });
+
+    test('events shares one stream subscription between listeners', () async {
+      fake = await FakeNyloApp.start();
+      final LiveApp live = await connect();
+      final List<LiveEvent> first = [];
+      final List<LiveEvent> second = [];
+      final StreamSubscription<LiveEvent> a = live.events().listen(first.add);
+      final StreamSubscription<LiveEvent> b = live.events().listen(second.add);
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+
+      // The second listener leaving keeps the first one subscribed.
+      await b.cancel();
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+      expect(
+        fake.server.methods.where((method) => method == 'streamListen'),
+        hasLength(1),
+      );
+      expect(fake.server.methods, isNot(contains('streamCancel')));
+
+      fake.server.clients.single.streamNotify('nylo', {
+        'kind': 'Extension',
+        'extensionKind': 'nylo.route',
+        'extensionData': {'action': 'push', 'name': '/profile'},
+      });
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+      expect(first.single.data['name'], '/profile');
+      expect(second, isEmpty);
+
+      await a.cancel();
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+      expect(fake.server.methods, contains('streamCancel'));
     });
 
     test('reload calls the tool service the Flutter tool registered', () async {

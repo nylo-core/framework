@@ -89,6 +89,14 @@ class LiveApp {
   final Map<String, String> _toolServices = {};
   bool _serviceStreamListening = false;
 
+  /// How many [events] streams are listening, so the `nylo` stream is only
+  /// subscribed by the first and cancelled by the last.
+  int _eventListeners = 0;
+
+  /// The `streamListen` call for the `nylo` stream, while [events] streams
+  /// are listening.
+  Future<void>? _nyloListening;
+
   /// Connects to the VM service at [uri] and finds the Nylo isolate.
   ///
   /// When [projectRoot] is given, the app's entrypoint is resolved to a file
@@ -320,6 +328,11 @@ class LiveApp {
   }
 
   /// Streams the events this app posts to the `nylo` VM service stream.
+  ///
+  /// Each call gets its own stream. The VM service subscription is shared:
+  /// it's made when the first stream is listened to and cancelled when the
+  /// last one is, so a command watching events inside `metro live` doesn't
+  /// end the shell's own subscription.
   Stream<LiveEvent> events() {
     late final StreamController<LiveEvent> controller;
     StreamSubscription<JsonRpcNotification>? subscription;
@@ -330,17 +343,18 @@ class LiveApp {
           final LiveEvent? event = parseStreamEvent(notification, 'nylo');
           if (event != null) controller.add(event);
         }, onDone: controller.close);
+        if (++_eventListeners > 1) return;
+        final Future<void> listening = _nyloListening = _listenToNylo();
         try {
-          await client.call('streamListen', {'streamId': 'nylo'});
-        } on JsonRpcException catch (e) {
-          // 103: the stream is already subscribed on this connection.
-          if (e.code != 103) controller.addError(e);
+          await listening;
         } catch (e) {
           controller.addError(e);
         }
       },
       onCancel: () async {
         await subscription?.cancel();
+        if (--_eventListeners > 0) return;
+        _nyloListening = null;
         if (client.isClosed) return;
         try {
           await client.call('streamCancel', {'streamId': 'nylo'});
@@ -350,6 +364,23 @@ class LiveApp {
       },
     );
     return controller.stream;
+  }
+
+  /// Completes once the VM service is sending this app's `nylo` events to
+  /// the [events] streams.
+  ///
+  /// Listening to [events] subscribes without waiting, so await this before
+  /// asking the app for something whose first events mustn't be missed.
+  Future<void> eventsReady() =>
+      (_nyloListening ?? Future<void>.value()).catchError((Object _) {});
+
+  Future<void> _listenToNylo() async {
+    try {
+      await client.call('streamListen', {'streamId': 'nylo'});
+    } on JsonRpcException catch (e) {
+      // 103: the stream is already subscribed on this connection.
+      if (e.code != 103) rethrow;
+    }
   }
 
   /// Parses a VM service `streamNotify` [notification] for [streamId].

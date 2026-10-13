@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math' show max;
@@ -88,6 +89,10 @@ final Map<String, LiveRunAction> liveRunActions = {
   ),
   'event': LiveRunAction('Fire one of your events', _LiveEventCommand.new),
   'toast': LiveRunAction('Show a toast notification', _LiveToastCommand.new),
+  'playbook': LiveRunAction(
+    'Play playbooks, or list them',
+    _LivePlaybookCommand.new,
+  ),
 };
 
 /// Live commands another one took over, and what to type instead.
@@ -2143,6 +2148,480 @@ String describeSeededAt(Object? seededAt, {DateTime? now}) {
     'Dec',
   ];
   return 'seeded ${time.day} ${months[time.month - 1]} $clock';
+}
+
+// ---------------------------------------------------------------------------
+// Playbooks
+// ---------------------------------------------------------------------------
+
+/// The paces `--speed` accepts, slowest last.
+const List<String> playbookSpeeds = ['instant', 'fast', 'natural', 'slow'];
+
+class _LivePlaybookCommand extends _LiveBuiltInCommand {
+  _LivePlaybookCommand(super.arguments);
+
+  @override
+  String get example => 'live:run playbook sign_up_to_dashboard --speed fast';
+
+  @override
+  void options(CommandBuilder command) {
+    command.addFlag('list', help: 'List the playbooks instead of playing one.');
+    command.addOption(
+      'speed',
+      help: 'Play at this pace instead of each playbook\'s own.',
+      allowed: playbookSpeeds,
+    );
+    command.addOption(
+      'data',
+      help: 'A JSON object every playbook reads in data, over its defaults.',
+    );
+    command.addFlag(
+      'overlay',
+      defaultValue: true,
+      help: 'Show the finger and the step caption (--no-overlay hides them).',
+    );
+    command.addFlag(
+      'loop',
+      help: 'Play the playbooks again and again until Ctrl+C.',
+    );
+  }
+
+  @override
+  Future<int> execute(
+    CommandResult result,
+    LiveOptions options,
+    LiveRunner runner,
+  ) {
+    final List<String> names = [
+      for (final String name in result.rest)
+        if (name.trim().isNotEmpty) name.trim(),
+    ];
+    final String? speed = result.getString('speed');
+    final String? dataText = result.getString('data');
+    final bool overlay = result.getBool('overlay') ?? true;
+    final bool loop = result.getBool('loop') ?? false;
+
+    if (result.getBool('list') ?? false) {
+      if (names.isNotEmpty) {
+        abort('--list shows every playbook, so leave out the names.', 64);
+      }
+      return _listPlaybooks(runner, options);
+    }
+    if (names.isEmpty) {
+      if (speed != null || dataText != null || !overlay || loop) {
+        abort(
+          'Name the playbooks to play, e.g. '
+          '${runner.runActionName('playbook')} sign_up_to_dashboard',
+          64,
+        );
+      }
+      return _listPlaybooks(runner, options);
+    }
+
+    final Map<String, Object?>? data = dataText == null
+        ? null
+        : switch (_decodeJsonArgument('--data', dataText)) {
+            final Map<String, Object?> map => map,
+            final Map map => Map<String, Object?>.from(map),
+            _ => throw const FormatException('--data must be a JSON object.'),
+          };
+
+    return playLivePlaybooks(
+      runner,
+      options,
+      names,
+      speed: speed,
+      data: data,
+      overlay: overlay,
+      loop: loop,
+    );
+  }
+}
+
+Future<int> _listPlaybooks(LiveRunner runner, LiveOptions options) {
+  final List<String> registered = runner.registered(registeredPlaybooks);
+  return runner.run(options, (app, block) async {
+    _requirePlaybooks(app);
+    final Object? payload = await app.call('playbooks.list');
+    renderPlaybookList(
+      block,
+      app.device,
+      payload,
+      registered: registered,
+      restart: runner.restartCommand,
+      play: runner.runActionName('playbook'),
+    );
+    return payload;
+  });
+}
+
+/// Plays the playbooks [names] back to back on [runner]'s apps, printing each
+/// step the moment the app reports it.
+///
+/// [speed], [data], [overlay] and [loop] are sent with `playbooks.run`. The
+/// first Ctrl+C asks the app to stop, which skips the remaining steps but
+/// still runs `tearDown`, and the output carries on until the app says the
+/// run is over, or [stopTimeout] passes. A second Ctrl+C stops waiting.
+///
+/// Inside `metro live` the shell hands Ctrl+C over through
+/// [LiveRunner.interruptHandler]; otherwise [interrupts] is watched, which
+/// defaults to the process's SIGINT.
+///
+/// Returns `0` when every playbook passed, `1` when one failed and `130`
+/// when it was stopped.
+Future<int> playLivePlaybooks(
+  LiveRunner runner,
+  LiveOptions options,
+  List<String> names, {
+  String? speed,
+  Map<String, Object?>? data,
+  bool overlay = true,
+  bool loop = false,
+  Stream<Object?>? interrupts,
+  Duration stopTimeout = const Duration(seconds: 5),
+}) async {
+  bool interrupted = false;
+  final List<void Function()> stoppers = [];
+  final List<void Function()> giveUps = [];
+  void onInterrupt() {
+    if (!interrupted) {
+      interrupted = true;
+      for (final void Function() stop in List.of(stoppers)) {
+        stop();
+      }
+    } else {
+      for (final void Function() giveUp in List.of(giveUps)) {
+        giveUp();
+      }
+    }
+  }
+
+  final void Function()? previousHandler = runner.interruptHandler;
+  StreamSubscription<Object?>? watching;
+  if (runner.session != null && interrupts == null) {
+    runner.interruptHandler = onInterrupt;
+  } else {
+    watching = (interrupts ?? _sigint())?.listen((_) => onInterrupt());
+  }
+
+  try {
+    final int code = await runner.stream(options, (app, print) async {
+      _requirePlaybooks(app);
+      final PlaybookEventRenderer renderer = PlaybookEventRenderer();
+      final List<Map<String, Object?>> events = [];
+      final List<Map<String, Object?>> early = [];
+      final Completer<Map<String, Object?>> done =
+          Completer<Map<String, Object?>>();
+      final Completer<void> gaveUp = Completer<void>();
+      String? runId;
+
+      void handle(Map<String, Object?> event) {
+        events.add(event);
+        final LiveBlock block = LiveBlock();
+        renderer.render(block, event);
+        if (!block.isEmpty) print(block);
+        if (event['event'] == 'done' && !done.isCompleted) done.complete(event);
+      }
+
+      // Listen before asking for the run, so its first steps aren't missed.
+      final StreamSubscription<LiveEvent> subscription = app.events().listen(
+        (LiveEvent event) {
+          if (event.kind != 'nylo.playbook') return;
+          if (runId == null) {
+            early.add(event.data);
+          } else if (event.data['runId'] == runId) {
+            handle(event.data);
+          }
+        },
+        onError: (Object _) {},
+        onDone: () {
+          if (!done.isCompleted) {
+            done.completeError(
+              LiveCommandException(
+                '${app.device} disconnected before the playbooks finished.',
+              ),
+            );
+          }
+        },
+      );
+
+      try {
+        await app.eventsReady();
+        final Map<String, Object?> started = _map(
+          await app.call('playbooks.run', {
+            'names': names,
+            'speed': ?speed,
+            'data': ?data,
+            if (!overlay) 'overlay': false,
+            if (loop) 'loop': true,
+          }, LiveRunner.commandTimeout),
+        );
+        final Object? id = started['runId'];
+        if (id is! String) {
+          throw LiveCommandException(
+            '${app.device} didn\'t say which run it started.',
+          );
+        }
+        runId = id;
+        for (final Map<String, Object?> event in early) {
+          if (event['runId'] == id) handle(event);
+        }
+        early.clear();
+
+        void stop() {
+          print(LiveBlock()..note('Stopping, Ctrl+C again to stop waiting'));
+          app
+              .call('playbooks.stop', {'runId': id})
+              .then((_) {}, onError: (Object _) {});
+          Timer(stopTimeout, () {
+            if (!gaveUp.isCompleted) gaveUp.complete();
+          });
+        }
+
+        stoppers.add(stop);
+        giveUps.add(() {
+          if (!gaveUp.isCompleted) gaveUp.complete();
+        });
+        if (interrupted) stop();
+
+        final Map<String, Object?>? finished = await Future.any([
+          done.future,
+          gaveUp.future.then((_) => null),
+        ]);
+        final Map<String, Object?> result = {
+          'runId': id,
+          'passed': finished?['passed'] == true,
+          'stopped': finished == null || finished['stopped'] == true,
+          'reports': [
+            for (final Map<String, Object?> event in events)
+              if (event['event'] == 'finish' && _depth(event) == 0)
+                event['report'],
+          ],
+          'events': events,
+        };
+        if (finished == null) {
+          print(
+            LiveBlock()..warning(
+              'Stopped waiting. The app may still finish the playbook.',
+            ),
+          );
+          throw LiveReportedFailure(
+            'Stopped waiting for the playbooks',
+            result,
+          );
+        }
+        if (finished['passed'] != true) {
+          throw LiveReportedFailure(
+            finished['stopped'] == true
+                ? 'The playbooks were stopped'
+                : 'A playbook failed',
+            result,
+          );
+        }
+        return result;
+      } finally {
+        await subscription.cancel();
+      }
+    });
+    return interrupted ? 130 : code;
+  } finally {
+    await watching?.cancel();
+    if (watching == null) runner.interruptHandler = previousHandler;
+  }
+}
+
+void _requirePlaybooks(LiveApp app) {
+  if (!app.status.containsKey('playbooks')) {
+    throw LiveCommandException(
+      'This app\'s Nylo version doesn\'t support playbooks yet. Update '
+      'nylo_framework, then restart the app.',
+    );
+  }
+}
+
+Stream<ProcessSignal>? _sigint() {
+  try {
+    return ProcessSignal.sigint.watch();
+  } catch (_) {
+    return null;
+  }
+}
+
+int _depth(Map<String, Object?> event) => switch (event['depth']) {
+  final int depth => depth,
+  final num depth => depth.toInt(),
+  _ => 0,
+};
+
+/// Turns the `nylo.playbook` events of one run into terminal lines, one
+/// event at a time, as they arrive.
+///
+/// Steps print when they end, with their time. A `play()` or `scene()` step
+/// prints a header when it begins, and its steps print indented under it.
+class PlaybookEventRenderer {
+  /// The group steps that have begun and not ended, innermost last, and
+  /// whether a failure has been printed inside each.
+  final List<({int depth, Object? index, bool failureShown})> _groups = [];
+
+  /// Adds the lines for [event] to [block], which stays empty for events
+  /// that print nothing.
+  void render(LiveBlock block, Map<String, Object?> event) {
+    final int depth = _depth(event);
+    final String indent = '  ${'    ' * depth}';
+    switch (event['event']) {
+      case 'start':
+        if (depth != 0) return;
+        final Object? loop = event['loop'];
+        block.heading(
+          'Playbook "${event['name']}" (${event['speed']})'
+          '${loop is num && loop > 1 ? ' · run $loop' : ''}',
+        );
+      case 'begin':
+        if (event['group'] != true) return;
+        block.plain('$indent▸ ${event['title']}');
+        _groups.add((depth: depth, index: event['index'], failureShown: false));
+      case 'step':
+        _renderStep(block, event, depth, indent);
+      case 'finish':
+        if (depth != 0) return;
+        final String name = 'Playbook "${event['name']}"';
+        final String took = describePlaybookTime(event['ms']);
+        if (event['stopped'] == true) {
+          block.warning('$name stopped after $took');
+        } else if (event['passed'] == true) {
+          block.success('$name passed in $took');
+        } else {
+          block.failure('$name failed in $took');
+        }
+      case 'done':
+        final Object? runs = event['runs'];
+        if (runs is num && runs > 1) {
+          block.note(
+            'Played $runs playbooks in ${describePlaybookTime(event['ms'])}',
+          );
+        }
+    }
+  }
+
+  void _renderStep(
+    LiveBlock block,
+    Map<String, Object?> event,
+    int depth,
+    String indent,
+  ) {
+    final Object? status = event['status'];
+    if (event['group'] == true) {
+      bool failureShown = false;
+      if (_groups.isNotEmpty &&
+          _groups.last.depth == depth &&
+          _groups.last.index == event['index']) {
+        failureShown = _groups.removeLast().failureShown;
+      }
+      // A group that passed is summed up by its steps; one that failed
+      // without saying why inside it gets a line of its own.
+      if (status == 'passed' || (status == 'failed' && failureShown)) return;
+    }
+    final String ms = '${event['ms'] ?? 0}'.padLeft(5);
+    final String title = '${event['title']}';
+    switch (status) {
+      case 'passed':
+        block.add('$indent✓ ${ms}ms  $title', LiveTone.success);
+      case 'skipped':
+        block.add('$indent· ${ms}ms  $title  (skipped)', LiveTone.note);
+      default:
+        block.add('$indent✗ ${ms}ms  $title', LiveTone.failure);
+        final Object? error = event['error'];
+        if (error != null) {
+          block.add(
+            '$error'.split('\n').map((line) => '$indent      $line').join('\n'),
+            LiveTone.failure,
+          );
+        }
+        final Object? visible = event['visible'];
+        if (visible is List && visible.isNotEmpty) {
+          final List<String> texts = [
+            for (final Object? text in visible.take(10)) '"$text"',
+          ];
+          block.add(
+            '$indent      Visible text: ${texts.join(', ')}'
+            '${visible.length > 10 ? ', …' : ''}',
+            LiveTone.note,
+          );
+        }
+        for (int i = 0; i < _groups.length; i++) {
+          final ({int depth, Object? index, bool failureShown}) group =
+              _groups[i];
+          _groups[i] = (
+            depth: group.depth,
+            index: group.index,
+            failureShown: true,
+          );
+        }
+    }
+  }
+}
+
+/// `850ms` under a second, otherwise `29.8s`.
+String describePlaybookTime(Object? ms) {
+  final int value = ms is num ? ms.round() : 0;
+  if (value < 1000) return '${value}ms';
+  return '${(value / 1000).toStringAsFixed(1)}s';
+}
+
+/// Adds the playbooks in a `playbooks.list` [payload] to [block].
+///
+/// Playbooks in [registered] (from `lib/bootstrap/playbooks.dart`) that the
+/// app didn't list were usually added after it started, so [block] ends by
+/// saying to hot restart with [restart]. [play] is how to play one from
+/// where the list was shown.
+void renderPlaybookList(
+  LiveBlock block,
+  String device,
+  Object? payload, {
+  List<String> registered = const [],
+  String restart = 'restart',
+  String play = 'playbook',
+}) {
+  final Object? list = payload is Map ? payload['playbooks'] : null;
+  final List<Map<Object?, Object?>> playbooks = [
+    if (list is List)
+      for (final Object? playbook in list)
+        if (playbook is Map) playbook,
+  ];
+  final List<String> notLoaded = _notLoaded(registered, [
+    for (final Map<Object?, Object?> playbook in playbooks)
+      '${playbook['name']}',
+  ]);
+  if (playbooks.isEmpty) {
+    if (notLoaded.isEmpty) {
+      block.note(
+        'This app has no playbooks yet. Create one with: '
+        'metro make:playbook sign_up_to_dashboard',
+      );
+    }
+    _warnNotLoaded(block, notLoaded, restart);
+    return;
+  }
+  block.heading('Playbooks on $device:');
+  block.table(
+    ['NAME', 'DESCRIPTION', 'SPEED', 'STEPS'],
+    [
+      for (final Map<Object?, Object?> playbook in playbooks)
+        [
+          '${playbook['name']}',
+          '${playbook['description'] ?? ''}',
+          '${playbook['speed'] ?? ''}',
+          switch (playbook['steps']) {
+            final List steps => '${steps.length}',
+            _ => '?',
+          },
+        ],
+    ],
+  );
+  final Object? running = payload is Map ? payload['running'] : null;
+  if (running != null) block.note('Playing now ($running)');
+  block.note('Play one with $play <name>, and add --speed fast to hurry it');
+  _warnNotLoaded(block, notLoaded, restart);
 }
 
 // ---------------------------------------------------------------------------

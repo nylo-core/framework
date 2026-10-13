@@ -13,6 +13,7 @@ void main() {
         'live:run',
       ]);
       expect(builtInCommands, contains('make:seeder'));
+      expect(builtInCommands, contains('make:playbook'));
     });
 
     test('runs everything else through live:run', () {
@@ -31,6 +32,7 @@ void main() {
         'state',
         'event',
         'toast',
+        'playbook',
       ]);
       for (final LiveRunAction action in liveRunActions.values) {
         expect(action.description, isNotEmpty);
