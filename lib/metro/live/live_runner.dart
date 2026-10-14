@@ -307,16 +307,19 @@ class LiveRunner {
   ///
   /// Blocks are prefixed with `[device]` when there is more than one app.
   /// With `--json`, nothing is printed along the way and the document [run]
-  /// prints comes at the end. Returns `0` when every app succeeded, `1` when
-  /// any failed.
+  /// prints comes at the end. [onTargets] gets every app the command runs on
+  /// before [action] runs on any of them. Returns `0` when every app
+  /// succeeded, `1` when any failed.
   Future<int> stream(
     LiveOptions options,
     Future<Object?> Function(LiveApp app, void Function(LiveBlock block) print)
-    action,
-  ) async {
+    action, {
+    void Function(List<LiveApp> targets)? onTargets,
+  }) async {
     final ({List<LiveApp> targets, int exitCode}) resolved =
         await resolveTargets(options);
     if (resolved.targets.isEmpty) return resolved.exitCode;
+    onTargets?.call(resolved.targets);
 
     final int width = resolved.targets
         .map((app) => app.device.length)

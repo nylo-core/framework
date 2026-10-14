@@ -11,6 +11,7 @@ import '/metro/live/live_manifest.dart';
 import '/metro/live/live_options.dart';
 import '/metro/live/live_platform_links.dart';
 import '/metro/live/live_output.dart';
+import '/metro/live/live_recorder.dart';
 import '/metro/live/live_registry.dart';
 import '/metro/live/live_runner.dart';
 import '/metro/live/live_shell.dart';
@@ -230,6 +231,10 @@ abstract class _LiveBuiltInCommand extends NyCustomCommand {
   /// Adds the command's own options and flags.
   void options(CommandBuilder command) {}
 
+  /// Rewrites the arguments before they're parsed, e.g. to read a value
+  /// given to a flag.
+  List<String> prepare(List<String> arguments) => arguments;
+
   /// Runs the command with the parsed [result] and shared [options].
   Future<int> execute(
     CommandResult result,
@@ -265,7 +270,7 @@ abstract class _LiveBuiltInCommand extends NyCustomCommand {
   @override
   Future<void> run() async {
     try {
-      arguments = expandLiveFileArguments(arguments);
+      arguments = prepare(expandLiveFileArguments(arguments));
       await super.run();
     } on FormatException catch (e) {
       error(e.message);
@@ -284,7 +289,7 @@ abstract class _LiveBuiltInCommand extends NyCustomCommand {
   Future<int> runWith(LiveRunner runner) async {
     final CommandBuilder command = builder(CommandBuilder());
     try {
-      final List<String> expanded = expandLiveFileArguments(arguments);
+      final List<String> expanded = prepare(expandLiveFileArguments(arguments));
       if (expanded.contains('--help') || expanded.contains('-h')) {
         runner.output.line('Usage:\n${command.usage}');
         return 0;
@@ -2160,8 +2165,33 @@ const List<String> playbookSpeeds = ['instant', 'fast', 'natural', 'slow'];
 class _LivePlaybookCommand extends _LiveBuiltInCommand {
   _LivePlaybookCommand(super.arguments);
 
+  /// The file given with `--record=<file>`.
+  String? _recordTo;
+
   @override
   String get example => 'live:run playbook sign_up_to_dashboard --speed fast';
+
+  // `--record` is a flag, so `--record=demo.mp4` is turned into the flag
+  // and the file is kept aside.
+  @override
+  List<String> prepare(List<String> arguments) {
+    final List<String> prepared = [];
+    bool options = true;
+    for (final String argument in arguments) {
+      if (argument == '--') options = false;
+      if (options && argument.startsWith('--record=')) {
+        final String file = argument.substring('--record='.length).trim();
+        if (file.isEmpty) {
+          abort('Name the file after --record=, e.g. --record=demo.mp4', 64);
+        }
+        _recordTo = file;
+        prepared.add('--record');
+      } else {
+        prepared.add(argument);
+      }
+    }
+    return prepared;
+  }
 
   @override
   void options(CommandBuilder command) {
@@ -2178,11 +2208,34 @@ class _LivePlaybookCommand extends _LiveBuiltInCommand {
     command.addFlag(
       'overlay',
       defaultValue: true,
-      help: 'Show the finger and the step caption (--no-overlay hides them).',
+      help:
+          'Draw the countdown, and the finger and captions of playbooks that '
+          'show them (--no-overlay hides them all).',
     );
     command.addFlag(
       'loop',
       help: 'Play the playbooks again and again until Ctrl+C.',
+    );
+    command.addFlag(
+      'record',
+      help:
+          'Save a video of the run in build/playbooks. Pick the file with '
+          '--record=demo.mp4 (or .gif). Needs ffmpeg.',
+    );
+    command.addFlag(
+      'captions',
+      defaultValue: true,
+      help:
+          'Save the steps as captions and chapters of a recording '
+          '(--no-captions leaves them out).',
+    );
+    command.addFlag(
+      'clean-status-bar',
+      help: 'Show 9:41 with full signal and battery while the playbooks play.',
+    );
+    command.addOption(
+      'countdown',
+      help: 'Count down this many seconds on screen before the first step.',
     );
   }
 
@@ -2200,6 +2253,22 @@ class _LivePlaybookCommand extends _LiveBuiltInCommand {
     final String? dataText = result.getString('data');
     final bool overlay = result.getBool('overlay') ?? true;
     final bool loop = result.getBool('loop') ?? false;
+    final bool record = result.getBool('record') ?? false;
+    final bool captions = result.getBool('captions') ?? true;
+    final bool cleanStatusBar = result.getBool('clean-status-bar') ?? false;
+    final String? countdownText = result.getString('countdown');
+    final int? countdown = countdownText == null
+        ? 0
+        : int.tryParse(countdownText.trim());
+    if (countdown == null || countdown < 0 || countdown > 10) {
+      abort('--countdown must be a whole number of seconds from 0 to 10.', 64);
+    }
+    final String? recordTo = _recordTo;
+    if (recordTo != null &&
+        !recordTo.toLowerCase().endsWith('.mp4') &&
+        !recordTo.toLowerCase().endsWith('.gif')) {
+      abort('--record saves an .mp4 or a .gif, not "$recordTo".', 64);
+    }
 
     if (result.getBool('list') ?? false) {
       if (names.isNotEmpty) {
@@ -2208,7 +2277,13 @@ class _LivePlaybookCommand extends _LiveBuiltInCommand {
       return _listPlaybooks(runner, options);
     }
     if (names.isEmpty) {
-      if (speed != null || dataText != null || !overlay || loop) {
+      if (speed != null ||
+          dataText != null ||
+          !overlay ||
+          loop ||
+          record ||
+          cleanStatusBar ||
+          countdown > 0) {
         abort(
           'Name the playbooks to play, e.g. '
           '${runner.runActionName('playbook')} sign_up_to_dashboard',
@@ -2234,6 +2309,11 @@ class _LivePlaybookCommand extends _LiveBuiltInCommand {
       data: data,
       overlay: overlay,
       loop: loop,
+      countdown: countdown,
+      cleanStatusBar: cleanStatusBar,
+      record: record
+          ? LivePlaybookRecording(file: recordTo, captions: captions)
+          : null,
     );
   }
 }
@@ -2255,13 +2335,47 @@ Future<int> _listPlaybooks(LiveRunner runner, LiveOptions options) {
   });
 }
 
+/// How `--record` saves a playbook run.
+class LivePlaybookRecording {
+  /// Creates a [LivePlaybookRecording].
+  const LivePlaybookRecording({
+    this.file,
+    this.captions = true,
+    this.at,
+    this.preRoll = const Duration(milliseconds: 600),
+    this.postRoll = const Duration(milliseconds: 800),
+  });
+
+  /// The `.mp4` or `.gif` to save, relative to the project, or null for one
+  /// in `build/playbooks`.
+  final String? file;
+
+  /// Whether an `.mp4` gets the steps as captions and chapters.
+  final bool captions;
+
+  /// The time in the file name, or now.
+  final DateTime? at;
+
+  /// How long the screen is recorded before the first step.
+  final Duration preRoll;
+
+  /// How long the last screen is held once the run ends.
+  final Duration postRoll;
+}
+
 /// Plays the playbooks [names] back to back on [runner]'s apps, printing each
 /// step the moment the app reports it.
 ///
-/// [speed], [data], [overlay] and [loop] are sent with `playbooks.run`. The
-/// first Ctrl+C asks the app to stop, which skips the remaining steps but
-/// still runs `tearDown`, and the output carries on until the app says the
-/// run is over, or [stopTimeout] passes. A second Ctrl+C stops waiting.
+/// [speed], [data], [overlay], [loop] and [countdown] are sent with
+/// `playbooks.run`. The first Ctrl+C asks the app to stop, which skips the
+/// remaining steps but still runs `tearDown`, and the output carries on until
+/// the app says the run is over, or [stopTimeout] passes. A second Ctrl+C
+/// stops waiting.
+///
+/// With [record], the device's screen is recorded around the run and saved
+/// with ffmpeg, even when a playbook fails. [cleanStatusBar] shows 9:41 with
+/// full signal and battery while it plays. [processes] runs the recording
+/// programs.
 ///
 /// Inside `metro live` the shell hands Ctrl+C over through
 /// [LiveRunner.interruptHandler]; otherwise [interrupts] is watched, which
@@ -2277,9 +2391,29 @@ Future<int> playLivePlaybooks(
   Map<String, Object?>? data,
   bool overlay = true,
   bool loop = false,
+  int countdown = 0,
+  bool cleanStatusBar = false,
+  LivePlaybookRecording? record,
+  LiveProcesses processes = const LiveProcesses(),
   Stream<Object?>? interrupts,
   Duration stopTimeout = const Duration(seconds: 5),
 }) async {
+  String? ffmpeg;
+  if (record != null) {
+    ffmpeg = processes.find('ffmpeg');
+    if (ffmpeg == null) {
+      const String message =
+          'Recording needs ffmpeg to save the video. Install it (e.g. brew '
+          'install ffmpeg), then try again.';
+      if (options.json) {
+        runner.output.json({'error': message});
+      } else {
+        runner.output.error(message);
+      }
+      return 1;
+    }
+  }
+
   bool interrupted = false;
   final List<void Function()> stoppers = [];
   final List<void Function()> giveUps = [];
@@ -2304,19 +2438,66 @@ Future<int> playLivePlaybooks(
     watching = (interrupts ?? _sigint())?.listen((_) => onInterrupt());
   }
 
+  List<LiveApp> targets = const [];
   try {
     final int code = await runner.stream(options, (app, print) async {
       _requirePlaybooks(app);
+      if (countdown > 0) _requireProtocol(app, 10, 'countdowns');
+      final LiveRecorder? recorder = record != null || cleanStatusBar
+          ? await findLiveRecorder(
+              app,
+              projectRoot: runner.root,
+              processes: processes,
+            )
+          : null;
+      LiveRecording? recording;
+      if (record != null) {
+        recording = LiveRecording(
+          recorder: recorder!,
+          ffmpeg: ffmpeg!,
+          captions: record.captions,
+          output: liveRecordingPath(
+            root: runner.root,
+            names: names,
+            device: app.device,
+            at: record.at ?? DateTime.now(),
+            requested: record.file,
+            several: targets.length > 1,
+            deviceId:
+                targets.where((LiveApp t) => t.device == app.device).length > 1
+                ? recorder.id
+                : null,
+          ),
+        );
+      }
+      LiveRecordingSaved? saved;
+      String? recordingError;
+
+      Future<void> save() async {
+        final LiveRecording? running = recording;
+        if (running == null || !running.isRecording) return;
+        await processes.delay(record!.postRoll);
+        print(LiveBlock()..note('Saving the recording'));
+        try {
+          saved = await running.finish();
+          print(_describeRecording(saved!, runner.root));
+        } catch (e) {
+          recordingError = describeLiveError(e);
+          print(LiveBlock()..failure(recordingError!));
+        }
+      }
+
       final PlaybookEventRenderer renderer = PlaybookEventRenderer();
       final List<Map<String, Object?>> events = [];
-      final List<Map<String, Object?>> early = [];
+      final List<(Map<String, Object?>, Duration)> early = [];
       final Completer<Map<String, Object?>> done =
           Completer<Map<String, Object?>>();
       final Completer<void> gaveUp = Completer<void>();
       String? runId;
 
-      void handle(Map<String, Object?> event) {
+      void handle(Map<String, Object?> event, Duration at) {
         events.add(event);
+        recording?.mark(event, at);
         final LiveBlock block = LiveBlock();
         renderer.render(block, event);
         if (!block.isEmpty) print(block);
@@ -2327,10 +2508,11 @@ Future<int> playLivePlaybooks(
       final StreamSubscription<LiveEvent> subscription = app.events().listen(
         (LiveEvent event) {
           if (event.kind != 'nylo.playbook') return;
+          final Duration at = recording?.elapsed ?? Duration.zero;
           if (runId == null) {
-            early.add(event.data);
+            early.add((event.data, at));
           } else if (event.data['runId'] == runId) {
-            handle(event.data);
+            handle(event.data, at);
           }
         },
         onError: (Object _) {},
@@ -2345,7 +2527,16 @@ Future<int> playLivePlaybooks(
         },
       );
 
+      Future<void> Function()? restoreStatusBar;
       try {
+        if (cleanStatusBar) {
+          restoreStatusBar = await recorder!.cleanStatusBar();
+        }
+        if (recording != null) {
+          await recording.start();
+          print(LiveBlock()..note('Recording ${app.device}'));
+          await processes.delay(record!.preRoll);
+        }
         await app.eventsReady();
         final Map<String, Object?> started = _map(
           await app.call('playbooks.run', {
@@ -2354,6 +2545,7 @@ Future<int> playLivePlaybooks(
             'data': ?data,
             if (!overlay) 'overlay': false,
             if (loop) 'loop': true,
+            if (countdown > 0) 'countdown': countdown,
           }, LiveRunner.commandTimeout),
         );
         final Object? id = started['runId'];
@@ -2363,8 +2555,8 @@ Future<int> playLivePlaybooks(
           );
         }
         runId = id;
-        for (final Map<String, Object?> event in early) {
-          if (event['runId'] == id) handle(event);
+        for (final (Map<String, Object?> event, Duration at) in early) {
+          if (event['runId'] == id) handle(event, at);
         }
         early.clear();
 
@@ -2388,6 +2580,7 @@ Future<int> playLivePlaybooks(
           done.future,
           gaveUp.future.then((_) => null),
         ]);
+        await save();
         final Map<String, Object?> result = {
           'runId': id,
           'passed': finished?['passed'] == true,
@@ -2398,6 +2591,8 @@ Future<int> playLivePlaybooks(
                 event['report'],
           ],
           'events': events,
+          if (record != null) 'recording': saved?.file,
+          if (saved?.captions != null) 'captions': saved?.captions,
         };
         if (finished == null) {
           print(
@@ -2418,16 +2613,55 @@ Future<int> playLivePlaybooks(
             result,
           );
         }
+        if (recordingError != null) {
+          throw LiveReportedFailure(recordingError!, result);
+        }
         return result;
       } finally {
         await subscription.cancel();
+        // A run that ended early, e.g. the app disconnecting, is still saved.
+        await save();
+        try {
+          await restoreStatusBar?.call();
+        } catch (_) {
+          print(LiveBlock()..warning('Couldn\'t put the status bar back.'));
+        }
       }
-    });
+    }, onTargets: (List<LiveApp> apps) => targets = apps);
     return interrupted ? 130 : code;
   } finally {
     await watching?.cancel();
     if (watching == null) runner.interruptHandler = previousHandler;
   }
+}
+
+/// The lines saying where a recording was saved.
+LiveBlock _describeRecording(LiveRecordingSaved saved, String root) {
+  String relative(String path) {
+    final String prefix = '$root${Platform.pathSeparator}';
+    return path.startsWith(prefix) ? path.substring(prefix.length) : path;
+  }
+
+  final LiveBlock block = LiveBlock()
+    ..success(
+      'Saved ${relative(saved.file)} '
+      '(${describePlaybookTime(saved.length.inMilliseconds)})',
+    );
+  final String? captions = saved.captions;
+  if (captions != null) {
+    block.note(
+      'Step captions in ${relative(captions)} '
+      '(${saved.cues} ${saved.cues == 1 ? 'step' : 'steps'})',
+    );
+  }
+  if (saved.limit != null) {
+    block.warning(
+      'Android\'s screenrecord stops after '
+      '${saved.limit!.inMinutes} minutes, so the video ends there. Install '
+      'scrcpy to record longer runs.',
+    );
+  }
+  return block;
 }
 
 void _requirePlaybooks(LiveApp app) {
@@ -2493,6 +2727,8 @@ class PlaybookEventRenderer {
         } else {
           block.failure('$name failed in $took');
         }
+      case 'countdown':
+        block.note('Starting in ${event['left']}');
       case 'done':
         final Object? runs = event['runs'];
         if (runs is num && runs > 1) {

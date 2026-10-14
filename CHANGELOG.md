@@ -1,3 +1,18 @@
+## [7.4.0] - 2026-10-14
+
+### Added
+* **Recording playbooks** - `metro live:run playbook <name> --record` records the device's screen around the run and saves it to `build/playbooks/<playbooks>-<device>-<time>.mp4`, or to the file given with `--record=demo.mp4` (or `.gif`). Recording needs ffmpeg. It uses `simctl` on the iOS Simulator, and `adb screenrecord` (up to 3 minutes) or `scrcpy` when it's installed on Android. A run that fails or is stopped is still saved, so a recording doubles as a bug report. Inside `metro live` it's `playbook <name> --record`
+  * Each step becomes a caption in a `.vtt` file beside the `.mp4`, and a chapter in it. `--no-captions` leaves them out
+  * `--clean-status-bar` shows 9:41 with full signal and battery while the playbooks play, and puts the status bar back afterwards. A simulator status bar you've already set is kept
+  * `--countdown <seconds>` counts down on screen before the first step, e.g. to start QuickTime or Control Center recording on an iPhone
+  * The video lasts exactly as long as the run, at a steady 60 fps, and a Ctrl+C that stops the playbook doesn't stop the recording from being saved
+* The `make:playbook` stub spells out `showFinger` and `caption`, and how to record the playbook
+
+### Changed
+* Bump `nylo_support` dependency from `^7.32.0` to `^7.33.0`, which brings:
+  * Playbooks hide the finger and step captions by default. Override `showFinger => true` and `caption => PlaybookCaption.bottom` (or `.top`) to show them
+  * A playbook countdown, the simulator's UDID in `status`, and Nylo Live protocol 10
+
 ## [7.3.0] - 2026-10-13
 
 ### Added

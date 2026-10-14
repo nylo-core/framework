@@ -17,11 +17,11 @@ import 'package:nylo_framework/playbook.dart';
 /// ${playbook.titleCase} Playbook
 ///
 /// A user journey your app performs on itself while it's running in debug
-/// mode: the taps, typing, scrolling and page changes listed in steps, with
-/// a visible finger.
+/// mode: the taps, typing, scrolling and page changes listed in steps.
 ///
 /// Play it:                metro live:run playbook ${playbook.snakeCase}
 /// Change the pace:        metro live:run playbook ${playbook.snakeCase} --speed fast
+/// Record a video:         metro live:run playbook ${playbook.snakeCase} --record
 /// Inside metro live:      playbook ${playbook.snakeCase}
 class ${playbook.pascalCase}Playbook extends Playbook {
   @override
@@ -29,6 +29,14 @@ class ${playbook.pascalCase}Playbook extends Playbook {
 
   @override
   PlaybookSpeed get speed => PlaybookSpeed.natural;
+
+  // Draw a finger where each step touches the screen.
+  @override
+  bool get showFinger => false;
+
+  // Show each step as a caption: PlaybookCaption.bottom or .top.
+  @override
+  PlaybookCaption get caption => PlaybookCaption.hidden;
 
   @override
   Map<String, dynamic> get defaults => {

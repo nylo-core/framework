@@ -9,6 +9,7 @@ import 'package:nylo_framework/metro/live/live_options.dart';
 import 'package:nylo_framework/metro/live/live_output.dart';
 import 'package:nylo_framework/metro/live/live_runner.dart';
 
+import 'fake_processes.dart';
 import 'fake_servers.dart';
 
 /// Posts a `nylo.playbook` event with [data] to every client of [app].
@@ -549,6 +550,185 @@ void main() {
         64,
       );
       expect(printed.toString(), contains('--data must be a JSON object.'));
+      expect(phone.calls['playbooks.run'], isNull);
+    });
+  });
+
+  group('recording', () {
+    const Map<String, Object?> simulator = {
+      'protocol': 10,
+      'platform': 'ios',
+      'simulator': 'AAA',
+      'route': '/home',
+      'playbooks': [],
+    };
+
+    late Directory out;
+    setUp(() => out = Directory.systemTemp.createTempSync('nylo_rec'));
+    tearDown(() => out.deleteSync(recursive: true));
+
+    Future<FakeNyloApp> playing(List<Map<String, Object?>> events) async {
+      late final FakeNyloApp phone;
+      phone = await app({
+        'playbooks.run': (args) async {
+          Timer(const Duration(milliseconds: 20), () {
+            for (final Map<String, Object?> event in events) {
+              post(phone, event);
+            }
+          });
+          return {'runId': 'pb_1'};
+        },
+      }, status: simulator);
+      return phone;
+    }
+
+    test('records the run and saves it with the steps as captions', () async {
+      final FakeNyloApp phone = await playing(passingRun('pb_1'));
+      final LiveRunner runner = await runnerFor({'iPhone 17': phone});
+      final FakeProcesses processes = fakeSimulatorTools();
+
+      final int code = await playLivePlaybooks(
+        runner,
+        const LiveOptions(),
+        ['log_out'],
+        countdown: 3,
+        record: LivePlaybookRecording(file: '${out.path}/demo.mp4'),
+        processes: processes,
+        interrupts: const Stream<Object?>.empty(),
+      );
+
+      expect(code, 0);
+      expect(phone.calls['playbooks.run']!.single, {
+        'names': ['log_out'],
+        'countdown': 3,
+      });
+      expect(processes.started.single, containsAll(['recordVideo', 'AAA']));
+      expect(processes.programs.single.signals, [ProcessSignal.sigint]);
+      expect(File('${out.path}/demo.mp4').readAsStringSync(), 'video');
+      expect(
+        File('${out.path}/demo.vtt').readAsStringSync(),
+        contains('Tap "Log out"'),
+      );
+      // Paths inside the project are printed relative to it.
+      final String folder = out.path.split(Platform.pathSeparator).last;
+      expect(
+        printed.toString(),
+        allOf(
+          startsWith('· Recording iPhone 17\n'),
+          contains('· Saving the recording\n✓ Saved $folder/demo.mp4 ('),
+          contains('· Step captions in $folder/demo.vtt (1 step)'),
+        ),
+      );
+    });
+
+    test('still saves the video when a playbook fails', () async {
+      final FakeNyloApp phone = await playing([
+        {
+          'runId': 'pb_1',
+          'event': 'step',
+          'index': 1,
+          'title': 'Tap "Nope"',
+          'depth': 0,
+          'status': 'failed',
+          'ms': 10,
+          'error': 'Could not find "Nope" on screen.',
+        },
+        {'runId': 'pb_1', 'event': 'done', 'passed': false, 'runs': 1},
+      ]);
+      final LiveRunner runner = await runnerFor({'iPhone 17': phone});
+
+      final int code = await playLivePlaybooks(
+        runner,
+        const LiveOptions(json: true),
+        ['broken'],
+        record: LivePlaybookRecording(file: '${out.path}/bug.mp4'),
+        processes: fakeSimulatorTools(),
+        interrupts: const Stream<Object?>.empty(),
+      );
+
+      expect(code, 1);
+      expect(File('${out.path}/bug.mp4').existsSync(), isTrue);
+      final Map<String, Object?> result =
+          ((jsonDecode(printed.toString()) as List).single as Map)['result']
+              as Map<String, Object?>;
+      expect(result['recording'], '${out.path}/bug.mp4');
+      expect(result['passed'], isFalse);
+    });
+
+    test('needs ffmpeg before anything plays', () async {
+      final FakeNyloApp phone = await playing(passingRun('pb_1'));
+      final LiveRunner runner = await runnerFor({'iPhone 17': phone});
+
+      final int code = await playLivePlaybooks(
+        runner,
+        const LiveOptions(),
+        ['log_out'],
+        record: const LivePlaybookRecording(),
+        processes: FakeProcesses(installed: {}),
+        interrupts: const Stream<Object?>.empty(),
+      );
+
+      expect(code, 1);
+      expect(printed.toString(), contains('Recording needs ffmpeg'));
+      expect(phone.calls['playbooks.run'], isNull);
+    });
+
+    test('a clean status bar is put back afterwards', () async {
+      final FakeNyloApp phone = await playing(passingRun('pb_1'));
+      final LiveRunner runner = await runnerFor({'iPhone 17': phone});
+      final FakeProcesses processes = FakeProcesses();
+
+      final int code = await playLivePlaybooks(
+        runner,
+        const LiveOptions(),
+        ['log_out'],
+        cleanStatusBar: true,
+        processes: processes,
+        interrupts: const Stream<Object?>.empty(),
+      );
+
+      expect(code, 0);
+      expect(
+        [for (final List<String> run in processes.ran) run[4]],
+        ['list', 'override', 'clear'],
+      );
+      expect(processes.started, isEmpty);
+    });
+
+    test('a countdown needs an app on protocol 10', () async {
+      final FakeNyloApp phone = await app({});
+      final LiveRunner runner = await runnerFor({'iPhone 17': phone});
+
+      final int code = await playLivePlaybooks(
+        runner,
+        const LiveOptions(),
+        ['log_out'],
+        countdown: 3,
+        interrupts: const Stream<Object?>.empty(),
+      );
+
+      expect(code, 1);
+      expect(printed.toString(), contains('doesn\'t support countdowns yet'));
+    });
+
+    test('the command checks --record and --countdown', () async {
+      final FakeNyloApp phone = await app(const {});
+      final LiveRunner runner = await runnerFor({'iPhone 17': phone});
+
+      for (final List<String> arguments in [
+        ['demo', '--record=demo.mov'],
+        ['demo', '--record='],
+        ['demo', '--countdown', '11'],
+        ['demo', '--countdown', 'soon'],
+        ['--record'],
+      ]) {
+        expect(
+          await runLiveShellCommand('playbook', arguments, runner),
+          64,
+          reason: '$arguments',
+        );
+      }
+      expect(printed.toString(), contains('--record saves an .mp4 or a .gif'));
       expect(phone.calls['playbooks.run'], isNull);
     });
   });

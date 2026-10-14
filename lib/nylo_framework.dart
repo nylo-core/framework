@@ -20,4 +20,4 @@ export 'package:date_field/date_field.dart';
 export 'package:dio/dio.dart';
 
 /// Nylo version
-const String nyloVersion = 'v7.3.0';
+const String nyloVersion = 'v7.4.0';
