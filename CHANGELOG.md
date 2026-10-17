@@ -1,3 +1,10 @@
+## [7.4.1] - 2026-10-17
+
+### Changed
+* Bump `nylo_support` dependency from `^7.33.0` to `^7.33.1`, which brings:
+  * Tapping "Clear" on a picker field calls its `onChanged` with `null`, and the cleared field is validated as empty, so `FormValidator.notEmpty()` fails again ([#311](https://github.com/nylo-core/nylo/issues/311))
+  * `flutter_local_notifications` ^22.3.2, `timezone` ^0.11.2 and `flutter_timezone` ^5.1.1
+
 ## [7.4.0] - 2026-10-14
 
 ### Added
