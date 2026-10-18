@@ -2381,6 +2381,10 @@ class LivePlaybookRecording {
 /// [LiveRunner.interruptHandler]; otherwise [interrupts] is watched, which
 /// defaults to the process's SIGINT.
 ///
+/// When no step of the run reaches Metro within [firstStepTimeout], it stops
+/// waiting and fails: the app is playing, but its events aren't arriving, as
+/// happens with an app started with `flutter run --no-dds`.
+///
 /// Returns `0` when every playbook passed, `1` when one failed and `130`
 /// when it was stopped.
 Future<int> playLivePlaybooks(
@@ -2397,6 +2401,7 @@ Future<int> playLivePlaybooks(
   LiveProcesses processes = const LiveProcesses(),
   Stream<Object?>? interrupts,
   Duration stopTimeout = const Duration(seconds: 5),
+  Duration firstStepTimeout = const Duration(seconds: 20),
 }) async {
   String? ffmpeg;
   if (record != null) {
@@ -2576,10 +2581,21 @@ Future<int> playLivePlaybooks(
         });
         if (interrupted) stop();
 
+        // The app answers playbooks.run over the VM service, but streams the
+        // steps as service events. If none arrive, nothing ever ends the run.
+        final Completer<void> silent = Completer<void>();
+        final Timer silence = Timer(firstStepTimeout, () {
+          if (events.isEmpty && !done.isCompleted && !silent.isCompleted) {
+            silent.complete();
+          }
+        });
+
         final Map<String, Object?>? finished = await Future.any([
           done.future,
           gaveUp.future.then((_) => null),
+          silent.future.then((_) => _noStepsArrived),
         ]);
+        silence.cancel();
         await save();
         final Map<String, Object?> result = {
           'runId': id,
@@ -2594,6 +2610,18 @@ Future<int> playLivePlaybooks(
           if (record != null) 'recording': saved?.file,
           if (saved?.captions != null) 'captions': saved?.captions,
         };
+        if (identical(finished, _noStepsArrived)) {
+          app
+              .call('playbooks.stop', {'runId': id})
+              .then((_) {}, onError: (Object _) {});
+          final String message =
+              '${app.device} started the playbooks, but no steps reached '
+              'Metro in ${firstStepTimeout.inSeconds}s. This happens when the '
+              'app was started with --no-dds: run it with a plain flutter run '
+              'and try again.';
+          print(LiveBlock()..failure(message));
+          throw LiveReportedFailure(message, result);
+        }
         if (finished == null) {
           print(
             LiveBlock()..warning(
@@ -2634,6 +2662,12 @@ Future<int> playLivePlaybooks(
     if (watching == null) runner.interruptHandler = previousHandler;
   }
 }
+
+/// What [playLivePlaybooks] waits on when no step of a run arrives in time.
+const Map<String, Object?> _noStepsArrived = {
+  'passed': false,
+  'stopped': false,
+};
 
 /// The lines saying where a recording was saved.
 LiveBlock _describeRecording(LiveRecordingSaved saved, String root) {

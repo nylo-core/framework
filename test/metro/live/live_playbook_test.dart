@@ -446,6 +446,30 @@ void main() {
       expect(printed.toString(), contains('Stopped waiting'));
     });
 
+    test('gives up when no step of the run ever arrives', () async {
+      final FakeNyloApp phone = await app({
+        'playbooks.run': (args) async => {'runId': 'pb_9'},
+        'playbooks.stop': (args) async => {'stopped': true},
+      });
+      final LiveRunner runner = await runnerFor({'iPhone 17e': phone});
+
+      final int code = await playLivePlaybooks(
+        runner,
+        const LiveOptions(),
+        ['demo'],
+        interrupts: const Stream<Object?>.empty(),
+        firstStepTimeout: const Duration(milliseconds: 200),
+      ).timeout(const Duration(seconds: 3));
+
+      expect(code, 1);
+      expect(printed.toString(), contains('no steps reached Metro'));
+      expect(printed.toString(), contains('--no-dds'));
+      for (int i = 0; i < 100 && phone.calls['playbooks.stop'] == null; i++) {
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+      }
+      expect(phone.calls['playbooks.stop']!.single, {'runId': 'pb_9'});
+    });
+
     test('needs an app whose Nylo version has playbooks', () async {
       final FakeNyloApp phone = await app(const {}, status: {'route': '/'});
       final LiveRunner runner = await runnerFor({'iPhone 17e': phone});
