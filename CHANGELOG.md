@@ -1,3 +1,10 @@
+## [7.4.2] - 2026-10-18
+
+### Changed
+* Bump `nylo_support` dependency from `^7.33.1` to `^7.34.0`, which brings:
+  * A `Field.textArea` (or any multi-line field) with a `prefixIcon` floats its label to the same start position as single-line fields ([#309](https://github.com/nylo-core/nylo/issues/309))
+  * `PrefixIconAlignment.top`, set through `FieldStyleTextField(prefixIconAlignment: ...)` or `InputField(prefixIconAlignment: ...)`, lines a multi-line field's prefix icon up with its first line of text ([#309](https://github.com/nylo-core/nylo/issues/309))
+
 ## [7.4.1] - 2026-10-17
 
 ### Changed
