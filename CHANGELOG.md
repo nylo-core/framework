@@ -1,3 +1,13 @@
+## [7.4.3] - 2026-10-18
+
+### Changed
+* Bump `nylo_support` dependency from `^7.34.0` to `^7.35.0`, which brings:
+  * `Find.icon` takes an optional `label` that names the icon in captions and reports, so `Find.icon(Icons.shopping_bag_outlined, label: 'bag')` reads "Tap the bag icon"
+  * `NyTest.init` adds an event bus when the app has none, so a form's submit button reaches its form in widget tests
+
+### Fixed
+* `metro live` playbook runs stop waiting when no step reaches Metro within 20 seconds, and explain why: the app is playing but its events aren't arriving, as happens with an app started with `flutter run --no-dds`
+
 ## [7.4.2] - 2026-10-18
 
 ### Changed
