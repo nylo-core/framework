@@ -1,3 +1,10 @@
+## [7.4.4] - 2026-10-19
+
+### Changed
+* Bump `nylo_support` dependency from `^7.35.0` to `^7.36.0`, which brings:
+  * `NyController.check()`: controllers validate their own fields the way pages do, with no page state, and return the `FormValidationResponseBag`
+  * `app_links` ^7.2.2, `connectivity_plus` ^7.3.2 and `url_launcher` ^6.3.3
+
 ## [7.4.3] - 2026-10-18
 
 ### Changed
