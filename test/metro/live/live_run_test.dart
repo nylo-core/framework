@@ -32,6 +32,7 @@ void main() {
         'state',
         'event',
         'toast',
+        'screenshot',
         'playbook',
       ]);
       for (final LiveRunAction action in liveRunActions.values) {

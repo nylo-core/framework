@@ -68,6 +68,25 @@ class LiveProcesses {
     );
   }
 
+  /// Runs [executable] to the end, writing what it prints to stdout into
+  /// [file] byte for byte, as `adb exec-out` needs. Returns its exit code and
+  /// what it printed to stderr.
+  Future<ProcessResult> runToFile(
+    String executable,
+    List<String> arguments,
+    String file,
+  ) async {
+    final Process process = await Process.start(executable, arguments);
+    await process.stdin.close();
+    final IOSink sink = File(file).openWrite();
+    final List<Object?> finished = await Future.wait([
+      process.stdout.pipe(sink),
+      process.stderr.transform(const Utf8Decoder(allowMalformed: true)).join(),
+      process.exitCode,
+    ]);
+    return ProcessResult(process.pid, finished[2] as int, '', finished[1]);
+  }
+
   /// Waits for [duration].
   Future<void> delay(Duration duration) => Future<void>.delayed(duration);
 
@@ -187,6 +206,13 @@ class LiveProcess {
   }
 }
 
+/// Thrown when the device an app runs on has no screen Metro can record or
+/// capture from the computer, such as an iPhone or a desktop app.
+class LiveDeviceUnsupported extends LiveCommandException {
+  /// Creates a [LiveDeviceUnsupported] with a user-facing [message].
+  LiveDeviceUnsupported(super.message);
+}
+
 /// Records the screen of the device an app runs on.
 abstract class LiveRecorder {
   /// Creates a [LiveRecorder] that runs programs with [processes].
@@ -213,6 +239,10 @@ abstract class LiveRecorder {
   /// Shows a clean status bar (9:41, full battery and signal), and returns
   /// how to put the old one back.
   Future<Future<void> Function()> cleanStatusBar();
+
+  /// Saves a PNG of the whole screen, status bar and keyboard included, to
+  /// [file].
+  Future<void> screenshot(String file);
 }
 
 /// Records the iOS Simulator with `xcrun simctl io recordVideo`.
@@ -265,6 +295,24 @@ class SimctlRecorder extends LiveRecorder {
     final LiveProcess? process = _process;
     _process = null;
     await process?.stop(const Duration(seconds: 15));
+  }
+
+  @override
+  Future<void> screenshot(String file) async {
+    final ProcessResult taken = await processes.run(xcrun, [
+      'simctl',
+      'io',
+      udid,
+      'screenshot',
+      '--type=png',
+      file,
+    ]);
+    if (taken.exitCode != 0) {
+      throw LiveCommandException(
+        'The iOS Simulator didn\'t take the screenshot: '
+        '${'${taken.stderr}'.trim()}',
+      );
+    }
   }
 
   @override
@@ -336,6 +384,22 @@ abstract class _AndroidRecorder extends LiveRecorder {
 
   Future<ProcessResult> _shell(String command) =>
       processes.run(adb, ['-s', serial, 'shell', command]);
+
+  @override
+  Future<void> screenshot(String file) async {
+    final ProcessResult taken = await processes.runToFile(adb, [
+      '-s',
+      serial,
+      'exec-out',
+      'screencap',
+      '-p',
+    ], file);
+    if (taken.exitCode != 0) {
+      throw LiveCommandException(
+        'adb didn\'t take the screenshot: ${'${taken.stderr}'.trim()}',
+      );
+    }
+  }
 
   @override
   Future<Future<void> Function()> cleanStatusBar() async {
@@ -526,8 +590,10 @@ class ScrcpyRecorder extends _AndroidRecorder {
 ///
 /// The iOS Simulator is found by the UDID the app reports (protocol 10), or
 /// else by its name. An Android device is the one running the app's
-/// `applicationId`, or `ANDROID_SERIAL`. Throws a [LiveCommandException]
-/// when the device can't be recorded.
+/// `applicationId`, or `ANDROID_SERIAL`. Throws a [LiveDeviceUnsupported]
+/// for a device Metro can't reach from the computer, such as an iPhone, and
+/// a [LiveCommandException] when the device can't be recorded for another
+/// reason.
 Future<LiveRecorder> findLiveRecorder(
   LiveApp app, {
   required String projectRoot,
@@ -540,7 +606,7 @@ Future<LiveRecorder> findLiveRecorder(
     case 'android':
       return _findAndroid(app, projectRoot, processes);
     default:
-      throw LiveCommandException(
+      throw LiveDeviceUnsupported(
         'Metro can record playbooks on the iOS Simulator and Android, not on '
         '${platform ?? app.device} yet.',
       );
@@ -559,7 +625,7 @@ Future<LiveRecorder> _findSimulator(
   final Object? protocol = app.status['protocol'];
   if (protocol is num && protocol >= 10) {
     // The app would have said which simulator it's on.
-    throw LiveCommandException(
+    throw LiveDeviceUnsupported(
       '${app.device} is an iPhone, and Metro can only record the iOS '
       'Simulator. Record it with QuickTime or Control Center, and add '
       '--countdown 3 for time to start.',
@@ -580,7 +646,7 @@ Future<LiveRecorder> _findSimulator(
     return SimctlRecorder(processes, xcrun: xcrun, udid: matches.single);
   }
   if (matches.isEmpty) {
-    throw LiveCommandException(
+    throw LiveDeviceUnsupported(
       'There\'s no booted iOS Simulator called "${app.device}". Metro can '
       'only record the iOS Simulator. On an iPhone, record with QuickTime or '
       'Control Center, and add --countdown 3 for time to start.',

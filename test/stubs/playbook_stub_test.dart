@@ -39,6 +39,26 @@ void main() {
       expect(stub, contains('/// Log Out Playbook'));
       expect(stub, contains('metro live:run playbook log_out\n'));
       expect(stub, contains('metro live:run playbook log_out --speed fast\n'));
+      expect(
+        stub,
+        contains(
+          '/// Screenshot every step:  metro live:run playbook log_out '
+          '--screenshots\n',
+        ),
+      );
+      expect(
+        stub,
+        contains(
+          'metro live:run playbook log_out --screenshots --locales all\n',
+        ),
+      );
+      expect(
+        stub,
+        contains(
+          '/// Store screenshots:      metro live:run playbook log_out '
+          '--store ios-6.9 --frame --locales all\n',
+        ),
+      );
       expect(stub, contains('/// Inside metro live:      playbook log_out\n'));
     });
 

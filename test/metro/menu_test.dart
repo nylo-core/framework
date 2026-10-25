@@ -123,6 +123,16 @@ void main() {
       });
     });
 
+    group('Project Commands section', () {
+      test('lists doctor between the helper and live commands', () {
+        final int section = metroMenu.indexOf('[Project Commands]');
+
+        expect(section, greaterThan(metroMenu.indexOf('[Helper Commands]')));
+        expect(section, lessThan(metroMenu.indexOf('[Live Commands]')));
+        expect(metroMenu.indexOf('  doctor'), greaterThan(section));
+      });
+    });
+
     group('Live Commands section', () {
       test('contains section header after the helper commands', () {
         expect(metroMenu, contains('[Live Commands]'));

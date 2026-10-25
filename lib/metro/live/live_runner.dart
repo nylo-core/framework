@@ -261,13 +261,18 @@ class LiveRunner {
   /// Runs [action] on every target app in parallel, then prints each app's
   /// output (or the `--json` document) and returns the exit code: `0` when
   /// every app succeeded, `1` when any failed.
+  ///
+  /// [onTargets] gets every app the command runs on before [action] runs on
+  /// any of them.
   Future<int> run(
     LiveOptions options,
-    Future<Object?> Function(LiveApp app, LiveBlock block) action,
-  ) async {
+    Future<Object?> Function(LiveApp app, LiveBlock block) action, {
+    void Function(List<LiveApp> targets)? onTargets,
+  }) async {
     final ({List<LiveApp> targets, int exitCode}) resolved =
         await resolveTargets(options);
     if (resolved.targets.isEmpty) return resolved.exitCode;
+    onTargets?.call(resolved.targets);
 
     final List<LiveOutcome> outcomes = await Future.wait(
       resolved.targets.map((app) async {

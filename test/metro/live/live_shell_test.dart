@@ -1468,7 +1468,39 @@ void main() {
       expect(optionsOf('seed:rollback'), containsAll(['--restart', '--all']));
       expect(
         optionsOf('playbook'),
-        containsAll(['--list', '--speed', '--data', '--overlay', '--loop']),
+        containsAll([
+          '--list',
+          '--speed',
+          '--data',
+          '--overlay',
+          '--loop',
+          '--screenshots',
+          '--scale',
+          '--locales',
+          '--themes',
+          '--store',
+          '--frame',
+          '--background',
+        ]),
+      );
+      expect(
+        optionsOf('screenshot'),
+        containsAll([
+          '--area',
+          '--scale',
+          '--locales',
+          '--themes',
+          '--out',
+          '--open',
+          '--copy',
+          '--native',
+          '--clean-status-bar',
+          '--store',
+          '--frame',
+          '--caption',
+          '--background',
+          '--all',
+        ]),
       );
     });
   });

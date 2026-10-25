@@ -2,6 +2,7 @@ import 'dart:io';
 
 import '/metro/live/live_registry.dart';
 import '/metro/ny_cli.dart';
+import '/metro/playbook_routes.dart';
 import '/metro/stubs/playbook_stub.dart';
 import 'package:recase/recase.dart';
 
@@ -16,6 +17,7 @@ Future<void> main(List<String> arguments) async =>
 ///
 /// Usage:
 ///   [From Terminal] metro make:playbook sign_up_to_dashboard
+///   [From Terminal] metro make:playbook tour --from-routes
 class _MakePlaybookCommand extends NyCustomCommand {
   _MakePlaybookCommand(super.arguments);
 
@@ -34,6 +36,10 @@ class _MakePlaybookCommand extends NyCustomCommand {
     command.addOption(
       "description",
       help: "A one-line description, shown when Metro lists playbooks.",
+    );
+    command.addFlag(
+      "from-routes",
+      help: "Visit every page in $routerPath and take a screenshot of each.",
     );
     return command;
   }
@@ -55,11 +61,24 @@ class _MakePlaybookCommand extends NyCustomCommand {
     );
     final String? creationPath = projectFile.creationPath;
 
+    final bool fromRoutes = result.getBool("from-routes") ?? false;
+    final List<PlaybookRoute> routes = fromRoutes
+        ? readPlaybookRoutes()
+        : const [];
+    if (fromRoutes && routes.isEmpty) {
+      info(
+        '[Playbook] Metro reads pages from the router.add(SomePage.path) '
+        'lines in $routerPath. There were none to read, so this is the '
+        'starter playbook: add a visit() for each page.',
+      );
+    }
+
     await makePlaybookFile(
       playbook.snakeCase,
       playbookStub(
         playbook: playbook,
         description: result.getString("description"),
+        routes: routes,
       ),
       forceCreate: result.hasForceFlag,
       creationPath: creationPath,
@@ -98,6 +117,17 @@ class _MakePlaybookCommand extends NyCustomCommand {
     success(
       '[Playbook] Play it while your app is running: metro live:run playbook ${playbook.snakeCase}',
     );
+    final int guarded = routes
+        .where(
+          (PlaybookRoute route) => route.guarded || route.parameters.isNotEmpty,
+        )
+        .length;
+    if (guarded > 0) {
+      info(
+        '[Playbook] ${guarded == 1 ? '1 page has' : '$guarded pages have'} a '
+        'comment saying what setUp may need to reach it.',
+      );
+    }
     info(
       '[Playbook] If your app is already running, hot restart it first: '
       'restart in metro live',

@@ -68,6 +68,9 @@ class FakeProcesses extends LiveProcesses {
   /// Every [run], as the executable followed by its arguments.
   final List<List<String>> ran = [];
 
+  /// What [runToFile] writes, by executable; nothing when it's missing.
+  final Map<String, List<int>> printsToFile = {};
+
   /// Every [start], as the executable followed by its arguments.
   final List<List<String>> started = [];
 
@@ -85,6 +88,21 @@ class FakeProcesses extends LiveProcesses {
   Future<ProcessResult> run(String executable, List<String> arguments) async {
     ran.add([executable, ...arguments]);
     return onRun?.call(executable, arguments) ?? ProcessResult(0, 0, '', '');
+  }
+
+  @override
+  Future<ProcessResult> runToFile(
+    String executable,
+    List<String> arguments,
+    String file,
+  ) async {
+    ran.add([executable, ...arguments]);
+    final ProcessResult answer =
+        onRun?.call(executable, arguments) ?? ProcessResult(0, 0, '', '');
+    if (answer.exitCode == 0) {
+      File(file).writeAsBytesSync(printsToFile[executable] ?? const []);
+    }
+    return answer;
   }
 
   @override

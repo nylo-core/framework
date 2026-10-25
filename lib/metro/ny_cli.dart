@@ -1736,6 +1736,9 @@ class CommandResult {
     return get<int>(name) ?? defaultValue;
   }
 
+  /// Whether [name] was given on the command line, rather than defaulted
+  bool wasParsed(String name) => _results.wasParsed(name);
+
   /// Get all the command line arguments
   List<String> get arguments => _results.arguments;
 

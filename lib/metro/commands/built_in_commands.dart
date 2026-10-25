@@ -1,3 +1,6 @@
+// Project commands
+import 'doctor.dart' as doctor;
+
 // Make commands
 import 'make/api_service.dart' as make_api_service;
 import 'make/bottom_sheet_modal.dart' as make_bottom_sheet_modal;
@@ -28,6 +31,7 @@ import 'live/live_commands.dart' show liveBuiltInCommands;
 
 /// Map of built-in commands to their main functions
 final Map<String, Future<void> Function(List<String>)> builtInCommands = {
+  'doctor': doctor.main,
   'make:api_service': make_api_service.main,
   'make:bottom_sheet_modal': make_bottom_sheet_modal.main,
   'make:button': make_button.main,

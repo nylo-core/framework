@@ -14,6 +14,7 @@ import '/metro/live/live_output.dart';
 import '/metro/live/live_recorder.dart';
 import '/metro/live/live_registry.dart';
 import '/metro/live/live_runner.dart';
+import '/metro/live/live_screenshots.dart';
 import '/metro/live/live_shell.dart';
 import '/metro/live/live_snapshot.dart';
 import '/metro/live/live_state_fields.dart';
@@ -90,6 +91,10 @@ final Map<String, LiveRunAction> liveRunActions = {
   ),
   'event': LiveRunAction('Fire one of your events', _LiveEventCommand.new),
   'toast': LiveRunAction('Show a toast notification', _LiveToastCommand.new),
+  'screenshot': LiveRunAction(
+    'Save a screenshot of the app, or of one --area',
+    _LiveScreenshotCommand.new,
+  ),
   'playbook': LiveRunAction(
     'Play playbooks, or list them',
     _LivePlaybookCommand.new,
@@ -2156,6 +2161,738 @@ String describeSeededAt(Object? seededAt, {DateTime? now}) {
 }
 
 // ---------------------------------------------------------------------------
+// Screenshots
+// ---------------------------------------------------------------------------
+
+class _LiveScreenshotCommand extends _LiveBuiltInCommand {
+  _LiveScreenshotCommand(super.arguments);
+
+  /// Whether `--store` came without a store, which lists them.
+  bool _listStores = false;
+
+  @override
+  String get example => 'live:run screenshot --open';
+
+  // `--store` on its own lists the stores, so it's kept aside rather than
+  // asking for a value.
+  @override
+  List<String> prepare(List<String> arguments) {
+    final List<String> prepared = [];
+    for (int i = 0; i < arguments.length; i++) {
+      final String argument = arguments[i];
+      final bool bare =
+          argument == '--store' &&
+          (i + 1 == arguments.length || arguments[i + 1].startsWith('-'));
+      if (bare || argument == '--store=') {
+        _listStores = true;
+      } else {
+        prepared.add(argument);
+      }
+    }
+    return prepared;
+  }
+
+  @override
+  void options(CommandBuilder command) {
+    command.addOption(
+      'area',
+      help: 'Capture only this ScreenshotArea, by its name.',
+    );
+    command.addOption(
+      'scale',
+      help:
+          'The size relative to the device\'s own, up to 4, e.g. 0.5 for '
+          'half.',
+    );
+    command.addOption(
+      'locales',
+      help:
+          'Capture the screen in each of these locales, e.g. en,es, or all '
+          'of the app\'s.',
+    );
+    command.addOption(
+      'themes',
+      help:
+          'Capture the screen in each of these themes, e.g. light,dark, or '
+          'all of the app\'s.',
+    );
+    command.addOption(
+      'out',
+      help:
+          'Save to this .png, or into this folder (default: screenshots/ in '
+          'your project).',
+    );
+    command.addFlag('open', help: 'Open the screenshot once it\'s saved.');
+    command.addFlag('copy', help: 'Copy the screenshot to the clipboard.');
+    command.addFlag(
+      'native',
+      defaultValue: true,
+      help:
+          'Capture with the iOS Simulator or adb, status bar and keyboard '
+          'included (--no-native uses the app\'s own capture).',
+    );
+    command.addFlag(
+      'clean-status-bar',
+      help: 'Show 9:41 with full signal and battery in a --native capture.',
+    );
+    _storeOptions(command, caption: true);
+  }
+
+  @override
+  Future<int> execute(
+    CommandResult result,
+    LiveOptions options,
+    LiveRunner runner,
+  ) {
+    if (_listStores) return listLiveStores(runner, options);
+    final String? area = result.getString('area')?.trim();
+    final double? scale = _scaleOption(result);
+    final List<String>? locales = _listOption(result, 'locales', 'en,es');
+    final List<String>? themes = _listOption(result, 'themes', 'light,dark');
+    // Native is the default, and gives way to the options only the app's
+    // own capture has, unless --native was asked for.
+    bool native = result.getBool('native') ?? true;
+    final bool askedNative = native && result.wasParsed('native');
+    final bool cleanStatusBar = result.getBool('clean-status-bar') ?? false;
+    final String? store = result.getString('store')?.trim();
+    final bool frame = result.getBool('frame') ?? false;
+    final String? caption = result.getString('caption');
+    final String? background = _backgroundOption(result);
+    _requireFrame(
+      frame,
+      store: store,
+      caption: caption,
+      background: background,
+    );
+    if (store != null && scale != null) {
+      abort('--store sets the size, so leave out --scale.', 64);
+    }
+    final String? out = result.getString('out')?.trim();
+    if (out != null) {
+      if (out.isEmpty) {
+        abort('Name the file after --out, e.g. --out home.png', 64);
+      }
+      if (!out.toLowerCase().endsWith('.png') &&
+          !liveOutIsFolder(out, root: runner.root)) {
+        abort(
+          '--out saves a .png, or into a folder ending in /, not "$out".',
+          64,
+        );
+      }
+    }
+    String? alongside;
+    if (native) {
+      alongside = area != null
+          ? '--area'
+          : scale != null
+          ? '--scale'
+          : store != null
+          ? '--store'
+          : frame
+          ? '--frame'
+          : null;
+      if (alongside != null) {
+        if (askedNative) {
+          abort(
+            '--native captures the whole screen as it is now, so leave out '
+            '$alongside.',
+            64,
+          );
+        }
+        native = false;
+      }
+    }
+    if (!native && cleanStatusBar) {
+      abort(
+        alongside != null
+            ? '--clean-status-bar goes with the native capture of the whole '
+                  'screen, so leave out $alongside.'
+            : '--clean-status-bar goes with --native, the capture that shows '
+                  'the status bar.',
+        64,
+      );
+    }
+    return takeLiveScreenshot(
+      runner,
+      options,
+      area: area == null || area.isEmpty ? null : area,
+      pixelRatio: scale,
+      locales: locales,
+      themes: themes,
+      native: native,
+      nativeQuietly: !askedNative,
+      cleanStatusBar: cleanStatusBar,
+      store: store,
+      frame: frame,
+      caption: caption,
+      background: background,
+      out: out,
+      open: result.getBool('open') ?? false,
+      copy: result.getBool('copy') ?? false,
+    );
+  }
+}
+
+/// Adds `--store`, `--frame` and `--background` to [command], and
+/// `--caption` when [caption].
+void _storeOptions(CommandBuilder command, {bool caption = false}) {
+  command.addOption(
+    'store',
+    help:
+        'Draw at an app store\'s screenshot size, e.g. ios-6.9 (--store on '
+        'its own lists them).',
+  );
+  command.addFlag(
+    'frame',
+    help: 'Draw the screen inside a phone outline, on a background.',
+  );
+  if (caption) {
+    command.addOption(
+      'caption',
+      help: 'Text above the --frame, or a translation key.',
+    );
+  }
+  command.addOption(
+    'background',
+    help:
+        'The color around the screen, behind a --frame or beside a --store '
+        'size of another shape, e.g. "#1B2027".',
+  );
+}
+
+/// The `--background` of [result] as `#RRGGBB` (or `#AARRGGBB`), or null
+/// when it isn't given.
+String? _backgroundOption(CommandResult result) {
+  final String? text = result.getString('background')?.trim();
+  if (text == null) return null;
+  final String hex = text.startsWith('#') ? text.substring(1) : text;
+  if (!RegExp(r'^([0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$').hasMatch(hex)) {
+    throw _LiveUsageError(
+      '--background takes a hex color, e.g. --background "#1B2027"',
+      64,
+    );
+  }
+  return '#$hex';
+}
+
+/// Stops a `--caption` that came without `--frame`, and a `--background`
+/// that came without `--store` or `--frame`.
+void _requireFrame(
+  bool frame, {
+  String? store,
+  String? caption,
+  String? background,
+}) {
+  if (frame) return;
+  if (caption != null) {
+    throw _LiveUsageError(
+      '--caption goes with --frame, which draws the phone it sits above.',
+      64,
+    );
+  }
+  if (background != null && store == null) {
+    throw _LiveUsageError(
+      '--background goes with --store or --frame, the captures with room '
+      'around the screen.',
+      64,
+    );
+  }
+}
+
+/// Lists the app store sizes each of [runner]'s apps can capture at.
+Future<int> listLiveStores(LiveRunner runner, LiveOptions options) {
+  return runner.run(options, (app, block) async {
+    _requireProtocol(app, 13, 'store screenshots');
+    renderStoreList(
+      block,
+      app.status,
+      use: runner.runActionName('screenshot --store'),
+    );
+    return {'stores': app.status['stores']};
+  });
+}
+
+/// The `--scale` of [result], or null when it isn't given.
+double? _scaleOption(CommandResult result) {
+  final String? text = result.getString('scale');
+  if (text == null) return null;
+  final double? scale = double.tryParse(text.trim());
+  if (scale == null || scale <= 0 || scale > 4) {
+    throw _LiveUsageError(
+      '--scale must be a number above 0 and up to 4, e.g. --scale 0.5',
+      64,
+    );
+  }
+  return scale;
+}
+
+/// The comma-separated values of the option [name] in [result], or null when
+/// it isn't given. [example] shows what to type.
+List<String>? _listOption(CommandResult result, String name, String example) {
+  final String? text = result.getString(name);
+  if (text == null) return null;
+  final List<String> values = _csv(text);
+  if (values.isEmpty) {
+    throw _LiveUsageError(
+      'Name them after --$name, e.g. --$name $example, or --$name all',
+      64,
+    );
+  }
+  return values;
+}
+
+/// Saves a PNG of the screen of each of [runner]'s apps, and prints a line
+/// for each file with its size and how long the capture took.
+///
+/// [area] captures one `ScreenshotArea` instead of the whole screen, and
+/// [pixelRatio] sizes the PNG relative to the device. [locales] and [themes]
+/// capture the screen once in each pair of them, into a folder; see
+/// [liveCells]. [out] is the `.png` or folder to save in, relative to the
+/// project; see [liveScreenshotPath] and [liveCellScreenshotPaths].
+///
+/// [store] draws the capture at that app store's size (see [liveStore]), and
+/// adds it to the file names, with [background] beside a screen of another
+/// shape. [frame] draws the screen in a phone outline on [background], with
+/// [caption] above it.
+///
+/// With [native], the iOS Simulator or adb captures the whole screen, with a
+/// clean status bar when [cleanStatusBar]; with [locales] or [themes] the
+/// app switches to each in turn, and back afterwards. Any other device gets
+/// the app's own capture and a note. With [nativeQuietly], as when native is
+/// the default rather than asked for, a device Metro can't capture gets the
+/// app's own capture without the note. With [open] the file (or folder)
+/// opens in the system's viewer, and with [copy] the first file is copied to
+/// the clipboard. Programs run through [processes]. [now] is the time in the
+/// file name.
+///
+/// Returns `0` when every app was captured, `1` when one wasn't.
+Future<int> takeLiveScreenshot(
+  LiveRunner runner,
+  LiveOptions options, {
+  String? area,
+  double? pixelRatio,
+  List<String>? locales,
+  List<String>? themes,
+  bool native = false,
+  bool nativeQuietly = false,
+  bool cleanStatusBar = false,
+  String? store,
+  bool frame = false,
+  String? caption,
+  String? background,
+  String? out,
+  bool open = false,
+  bool copy = false,
+  LiveProcesses processes = const LiveProcesses(),
+  DateTime Function() now = DateTime.now,
+  String? os,
+}) {
+  final Map<String, Object?> drawn = {
+    'store': ?store,
+    if (frame) 'frame': true,
+    if (frame) 'caption': ?caption,
+    'background': ?background,
+  };
+  final String suffix = store == null ? '' : '-$store';
+  List<LiveApp> targets = const [];
+  return runner.run(options, (app, block) async {
+    Future<void> openAndCopy(String opened, String copied) async {
+      if (open) {
+        await _runFor(block, 'open', processes, () {
+          return liveOpenProgram(opened, os: os, processes: processes);
+        });
+      }
+      if (copy) {
+        final bool done = await _runFor(block, 'copy', processes, () {
+          return liveCopyProgram(copied, os: os, processes: processes);
+        });
+        if (done) block.note('Copied to the clipboard');
+      }
+    }
+
+    if (native) {
+      LiveRecorder? recorder;
+      try {
+        recorder = await findLiveRecorder(
+          app,
+          projectRoot: runner.root,
+          processes: processes,
+        );
+      } on LiveCommandException catch (e) {
+        if (!nativeQuietly) {
+          if (e is! LiveDeviceUnsupported) rethrow;
+          block.note(
+            '--native captures the iOS Simulator and Android devices, so this '
+            'is the app\'s own capture of ${app.device}.',
+          );
+        }
+      }
+      if (recorder != null && (locales != null || themes != null)) {
+        _requireProtocol(app, 12, 'screenshots in other locales and themes');
+        final List<LiveCell> cells = liveCells(
+          app.status,
+          locales: locales,
+          themes: themes,
+        );
+        final List<String> paths = liveCellScreenshotPaths(
+          root: runner.root,
+          device: app.device,
+          mode: '${app.status['mode'] ?? 'debug'}',
+          at: now(),
+          cells: cells,
+          requested: out,
+          several: targets.length > 1,
+          suffix: '-native',
+        );
+        // Made straight away, so apps saving at once get their own folder.
+        final Directory folder = File(paths.first).parent
+          ..createSync(recursive: true);
+        final List<Map<String, Object?>> files =
+            await _takeNativeCellScreenshots(
+              runner,
+              app,
+              block,
+              recorder,
+              cells: cells,
+              paths: paths,
+              cleanStatusBar: cleanStatusBar,
+              processes: processes,
+            );
+        renderScreenshotFolders(block, [
+          for (final String path in paths) liveRelativePath(path, runner.root),
+        ]);
+        await openAndCopy(folder.path, paths.first);
+        return {'folder': folder.path, 'files': files};
+      }
+      if (recorder != null) {
+        final Map<String, Object?> saved = await _takeNativeScreenshot(
+          runner,
+          app,
+          block,
+          recorder,
+          cleanStatusBar: cleanStatusBar,
+          out: out,
+          several: targets.length > 1,
+          at: now(),
+          processes: processes,
+        );
+        await openAndCopy('${saved['file']}', '${saved['file']}');
+        return saved;
+      }
+    }
+
+    if (drawn.isNotEmpty) {
+      _requireProtocol(app, 13, 'store screenshots and frames');
+      if (store != null) liveStore(app.status, store);
+    }
+
+    if (locales != null || themes != null) {
+      _requireProtocol(app, 12, 'screenshots in other locales and themes');
+      final List<LiveCell> cells = liveCells(
+        app.status,
+        locales: locales,
+        themes: themes,
+      );
+      final List<String> paths = liveCellScreenshotPaths(
+        root: runner.root,
+        device: app.device,
+        mode: '${app.status['mode'] ?? 'debug'}',
+        at: now(),
+        cells: cells,
+        requested: out,
+        several: targets.length > 1,
+        suffix: suffix,
+      );
+      // Made straight away, so apps saving at once get their own folder.
+      final Directory folder = File(paths.first).parent
+        ..createSync(recursive: true);
+      final List<Map<String, Object?>> files = [];
+      for (int i = 0; i < cells.length; i++) {
+        files.add({
+          ...await _captureInApp(
+            runner,
+            app,
+            block,
+            paths[i],
+            area: area,
+            pixelRatio: pixelRatio,
+            cell: cells[i],
+            drawn: drawn,
+          ),
+          'locale': ?cells[i].locale,
+          'theme': ?cells[i].theme,
+        });
+      }
+      renderScreenshotFolders(block, [
+        for (final String path in paths) liveRelativePath(path, runner.root),
+      ]);
+      await openAndCopy(folder.path, paths.first);
+      return {'folder': folder.path, 'files': files};
+    }
+
+    _requireProtocol(app, 11, 'screenshots');
+    final Map<String, Object?> saved = await _captureInApp(
+      runner,
+      app,
+      block,
+      null,
+      area: area,
+      pixelRatio: pixelRatio,
+      drawn: drawn,
+      name: (String mode) => liveScreenshotPath(
+        root: runner.root,
+        device: app.device,
+        mode: mode,
+        at: now(),
+        requested: out,
+        several: targets.length > 1,
+        suffix: suffix,
+      ),
+    );
+    await openAndCopy('${saved['file']}', '${saved['file']}');
+    return saved;
+  }, onTargets: (List<LiveApp> apps) => targets = apps);
+}
+
+/// Captures [app]'s screen with `screenshot.capture`, in [cell] when it's
+/// given and drawn the way [drawn] asks (`store`, `frame`, `caption`,
+/// `background`), saves it to [path] (or where [name] puts a capture in its
+/// mode), and adds its line to [block].
+Future<Map<String, Object?>> _captureInApp(
+  LiveRunner runner,
+  LiveApp app,
+  LiveBlock block,
+  String? path, {
+  String? area,
+  double? pixelRatio,
+  LiveCell? cell,
+  Map<String, Object?> drawn = const {},
+  String Function(String mode)? name,
+}) async {
+  final Stopwatch took = Stopwatch()..start();
+  final Map<String, Object?> payload = _map(
+    await app.call('screenshot.capture', {
+      'area': ?area,
+      'pixelRatio': ?pixelRatio,
+      'locale': ?cell?.locale,
+      'theme': ?cell?.theme,
+      ...drawn,
+    }, LiveRunner.commandTimeout),
+  );
+  took.stop();
+  final List<int> bytes = liveScreenshotBytes(payload);
+
+  // Named and written in one go, so apps saving at once get their own file.
+  final String saved =
+      path ?? name!('${payload['mode'] ?? app.status['mode'] ?? 'debug'}');
+  final File file = File(saved);
+  file.parent.createSync(recursive: true);
+  file.writeAsBytesSync(bytes);
+
+  block.success(
+    '${liveRelativePath(saved, runner.root)}  '
+    '${payload['width']}×${payload['height']} · '
+    '${_describeSize(bytes.length)} · '
+    '${describePlaybookTime(took.elapsedMilliseconds)}',
+  );
+  return {
+    'file': saved,
+    'width': payload['width'],
+    'height': payload['height'],
+    'bytes': bytes.length,
+    'ms': took.elapsedMilliseconds,
+    'area': ?area,
+    'store': ?drawn['store'],
+    'route': payload['route'],
+    'locale': payload['locale'],
+    'theme': payload['theme'],
+    'mode': payload['mode'],
+  };
+}
+
+/// Captures the screen of the device [app] runs on with [recorder], saves
+/// it to [saveTo] (or a path named from [out]), and adds its line to
+/// [block].
+Future<Map<String, Object?>> _takeNativeScreenshot(
+  LiveRunner runner,
+  LiveApp app,
+  LiveBlock block,
+  LiveRecorder recorder, {
+  required bool cleanStatusBar,
+  String? saveTo,
+  String? out,
+  bool several = false,
+  DateTime? at,
+  required LiveProcesses processes,
+}) async {
+  final String path =
+      saveTo ??
+      liveScreenshotPath(
+        root: runner.root,
+        device: app.device,
+        mode: '${app.status['mode'] ?? 'debug'}',
+        at: at ?? DateTime.now(),
+        requested: out,
+        several: several,
+        suffix: '-native',
+      );
+  // Kept until the capture replaces it, so apps saving at once get their
+  // own file.
+  final File file = File(path);
+  file.parent.createSync(recursive: true);
+  file.writeAsBytesSync(const []);
+
+  final Stopwatch took = Stopwatch()..start();
+  Future<void> Function()? restoreStatusBar;
+  try {
+    if (cleanStatusBar) {
+      restoreStatusBar = await recorder.cleanStatusBar();
+      // Give the device a moment to draw it.
+      await processes.delay(const Duration(milliseconds: 500));
+    }
+    await recorder.screenshot(path);
+  } catch (_) {
+    if (file.existsSync() && file.lengthSync() == 0) file.deleteSync();
+    rethrow;
+  } finally {
+    try {
+      await restoreStatusBar?.call();
+    } catch (_) {
+      block.warning('Couldn\'t put the status bar back.');
+    }
+  }
+  took.stop();
+
+  final List<int> bytes = file.readAsBytesSync();
+  final ({int width, int height})? size = livePngSize(bytes);
+  block.success(
+    '${liveRelativePath(path, runner.root)}  '
+    '${size == null ? '' : '${size.width}×${size.height} · '}'
+    '${_describeSize(bytes.length)} · '
+    '${describePlaybookTime(took.elapsedMilliseconds)}',
+  );
+  return {
+    'file': path,
+    'width': ?size?.width,
+    'height': ?size?.height,
+    'bytes': bytes.length,
+    'ms': took.elapsedMilliseconds,
+    'native': true,
+    'mode': app.status['mode'],
+  };
+}
+
+/// Captures the screen of the device [app] runs on with [recorder] in each
+/// of [cells], saving them to [paths]. The app's locale and theme are
+/// switched for each, and put back afterwards.
+Future<List<Map<String, Object?>>> _takeNativeCellScreenshots(
+  LiveRunner runner,
+  LiveApp app,
+  LiveBlock block,
+  LiveRecorder recorder, {
+  required List<LiveCell> cells,
+  required List<String> paths,
+  required bool cleanStatusBar,
+  required LiveProcesses processes,
+}) async {
+  final Map<String, Object?> before = _map(await app.call('status'));
+  final List<Map<String, Object?>> files = [];
+  bool switchedLocale = false;
+  bool switchedTheme = false;
+  Future<void> Function()? restoreStatusBar;
+  try {
+    if (cleanStatusBar) restoreStatusBar = await recorder.cleanStatusBar();
+    for (int i = 0; i < cells.length; i++) {
+      final LiveCell cell = cells[i];
+      if (cell.locale != null) {
+        switchedLocale = true;
+        await app.call('locale.set', {
+          'language': cell.locale,
+        }, LiveRunner.commandTimeout);
+      }
+      if (cell.theme != null) {
+        switchedTheme = true;
+        await app.call('theme.set', {
+          'id': cell.theme,
+          'save': false,
+        }, LiveRunner.commandTimeout);
+      }
+      // Give the app a moment to draw it.
+      await processes.delay(const Duration(milliseconds: 500));
+      files.add({
+        ...await _takeNativeScreenshot(
+          runner,
+          app,
+          block,
+          recorder,
+          cleanStatusBar: false,
+          saveTo: paths[i],
+          processes: processes,
+        ),
+        'locale': ?cell.locale,
+        'theme': ?cell.theme,
+      });
+    }
+  } finally {
+    final List<String> restored = [];
+    try {
+      if (switchedLocale && before['locale'] is String) {
+        await app.call('locale.set', {
+          'language': before['locale'],
+        }, LiveRunner.commandTimeout);
+        restored.add('locale ${before['locale']}');
+      }
+      if (switchedTheme && before['theme'] is String) {
+        await app.call('theme.set', {
+          'id': before['theme'],
+          'save': false,
+        }, LiveRunner.commandTimeout);
+        restored.add('theme ${before['theme']}');
+      }
+    } catch (e) {
+      block.warning(
+        'Couldn\'t put the app\'s locale and theme back '
+        '(${describeLiveError(e)}).',
+      );
+    }
+    if (restored.isNotEmpty) block.note('Restored ${restored.join(' and ')}.');
+    try {
+      await restoreStatusBar?.call();
+    } catch (_) {
+      block.warning('Couldn\'t put the status bar back.');
+    }
+  }
+  return files;
+}
+
+/// Runs the program [program] gives to [verb] a screenshot, adding a
+/// warning to [block] when it can't. Returns whether it ran.
+Future<bool> _runFor(
+  LiveBlock block,
+  String verb,
+  LiveProcesses processes,
+  LiveProgram Function() program,
+) async {
+  try {
+    final LiveProgram run = program();
+    final ProcessResult result = await processes.run(
+      run.executable,
+      run.arguments,
+    );
+    if (result.exitCode == 0) return true;
+    final String reason = '${result.stderr}'.trim().split('\n').last;
+    block.warning(
+      'Couldn\'t $verb the screenshot${reason.isEmpty ? '' : ' ($reason)'}',
+    );
+  } on LiveCommandException catch (e) {
+    block.warning(e.message);
+  } on ProcessException catch (e) {
+    block.warning('Couldn\'t $verb the screenshot (${e.message})');
+  }
+  return false;
+}
+
+// ---------------------------------------------------------------------------
 // Playbooks
 // ---------------------------------------------------------------------------
 
@@ -2168,11 +2905,15 @@ class _LivePlaybookCommand extends _LiveBuiltInCommand {
   /// The file given with `--record=<file>`.
   String? _recordTo;
 
+  /// The mode given with `--screenshots=<mode>`, or `off` for
+  /// `--no-screenshots`.
+  String? _screenshots;
+
   @override
   String get example => 'live:run playbook sign_up_to_dashboard --speed fast';
 
-  // `--record` is a flag, so `--record=demo.mp4` is turned into the flag
-  // and the file is kept aside.
+  // `--record` and `--screenshots` are flags, so `--record=demo.mp4` and
+  // `--screenshots=all` are turned into the flag and the value is kept aside.
   @override
   List<String> prepare(List<String> arguments) {
     final List<String> prepared = [];
@@ -2186,6 +2927,19 @@ class _LivePlaybookCommand extends _LiveBuiltInCommand {
         }
         _recordTo = file;
         prepared.add('--record');
+      } else if (options && argument.startsWith('--screenshots=')) {
+        final String mode = argument.substring('--screenshots='.length).trim();
+        if (!liveScreenshotModes.contains(mode)) {
+          abort(
+            '--screenshots= takes all, auto, marked, failures or off, not '
+            '"$mode".',
+            64,
+          );
+        }
+        _screenshots = mode;
+        prepared.add('--screenshots');
+      } else if (options && argument == '--no-screenshots') {
+        _screenshots = 'off';
       } else {
         prepared.add(argument);
       }
@@ -2231,12 +2985,43 @@ class _LivePlaybookCommand extends _LiveBuiltInCommand {
     );
     command.addFlag(
       'clean-status-bar',
-      help: 'Show 9:41 with full signal and battery while the playbooks play.',
+      help:
+          'Show 9:41 with full signal and battery while the playbooks play, '
+          'for recordings and native screenshots.',
     );
     command.addOption(
       'countdown',
       help: 'Count down this many seconds on screen before the first step.',
     );
+    command.addFlag(
+      'screenshots',
+      help:
+          'Save every step\'s screen as well, for a playbook without '
+          'screenshot() steps (--screenshots=all for every playbook). '
+          'screenshot() steps are always saved in screenshots/<playbook>, and '
+          'a failing step\'s screen in build/playbooks/failures; '
+          '--screenshots=off turns that off.',
+    );
+    command.addOption(
+      'scale',
+      help:
+          'The size of screenshots relative to the device\'s own, up to 4, '
+          'e.g. 0.5 for half.',
+    );
+    command.addOption(
+      'locales',
+      help:
+          'Play once in each of these locales, e.g. en,es, or all of the '
+          'app\'s. The app\'s locale is put back afterwards.',
+    );
+    command.addOption(
+      'themes',
+      help:
+          'Play once in each of these themes (in each locale), e.g. '
+          'light,dark, or all of the app\'s. The theme is put back '
+          'afterwards.',
+    );
+    _storeOptions(command);
   }
 
   @override
@@ -2263,6 +3048,31 @@ class _LivePlaybookCommand extends _LiveBuiltInCommand {
     if (countdown == null || countdown < 0 || countdown > 10) {
       abort('--countdown must be a whole number of seconds from 0 to 10.', 64);
     }
+    final String screenshots =
+        _screenshots ??
+        ((result.getBool('screenshots') ?? false) ? 'auto' : 'marked');
+    final double? scale = _scaleOption(result);
+    final List<String>? locales = _listOption(result, 'locales', 'en,es');
+    final List<String>? themes = _listOption(result, 'themes', 'light,dark');
+    final String? store = result.getString('store')?.trim();
+    final bool frame = result.getBool('frame') ?? false;
+    final String? background = _backgroundOption(result);
+    _requireFrame(frame, store: store, background: background);
+    final String? drawing = store != null
+        ? '--store'
+        : frame
+        ? '--frame'
+        : background != null
+        ? '--background'
+        : null;
+    if (drawing != null &&
+        (screenshots == 'off' || screenshots == 'failures')) {
+      abort(
+        '$drawing goes with screenshots, so leave out '
+        '--screenshots=$screenshots.',
+        64,
+      );
+    }
     final String? recordTo = _recordTo;
     if (recordTo != null &&
         !recordTo.toLowerCase().endsWith('.mp4') &&
@@ -2283,7 +3093,12 @@ class _LivePlaybookCommand extends _LiveBuiltInCommand {
           loop ||
           record ||
           cleanStatusBar ||
-          countdown > 0) {
+          countdown > 0 ||
+          screenshots != 'marked' ||
+          scale != null ||
+          drawing != null ||
+          locales != null ||
+          themes != null) {
         abort(
           'Name the playbooks to play, e.g. '
           '${runner.runActionName('playbook')} sign_up_to_dashboard',
@@ -2314,6 +3129,13 @@ class _LivePlaybookCommand extends _LiveBuiltInCommand {
       record: record
           ? LivePlaybookRecording(file: recordTo, captions: captions)
           : null,
+      screenshots: screenshots,
+      pixelRatio: scale,
+      locales: locales,
+      themes: themes,
+      store: store,
+      frame: frame,
+      background: background,
     );
   }
 }
@@ -2377,6 +3199,24 @@ class LivePlaybookRecording {
 /// full signal and battery while it plays. [processes] runs the recording
 /// programs.
 ///
+/// [screenshots] is one of [liveScreenshotModes], `marked` by default, which
+/// saves the `screenshot()` steps and failing steps' screens. [pixelRatio]
+/// sizes the screenshots relative to the device. Both are sent to apps on
+/// protocol 11 and up, and each screenshot is saved as its step arrives; see
+/// [PlaybookScreenshotFiles] for where.
+///
+/// [store] draws step and `screenshot()` screenshots at that app store's
+/// size, saved in a folder for it, with [background] beside a screen of
+/// another shape, and [frame] draws them in a phone outline on [background].
+/// Failure screenshots stay as the screen was.
+///
+/// [locales] and [themes] play the playbooks once for each pair of them (see
+/// [liveCells]), switching the app with `locale.set` and `theme.set` (with
+/// `save: false`, so the developer's saved theme stays as it is) before each
+/// pass, and switching it back afterwards, however the run ends. With
+/// [loop], the passes play again and again; the countdown comes before the
+/// first.
+///
 /// Inside `metro live` the shell hands Ctrl+C over through
 /// [LiveRunner.interruptHandler]; otherwise [interrupts] is watched, which
 /// defaults to the process's SIGINT.
@@ -2398,6 +3238,13 @@ Future<int> playLivePlaybooks(
   int countdown = 0,
   bool cleanStatusBar = false,
   LivePlaybookRecording? record,
+  String screenshots = 'marked',
+  double? pixelRatio,
+  List<String>? locales,
+  List<String>? themes,
+  String? store,
+  bool frame = false,
+  String? background,
   LiveProcesses processes = const LiveProcesses(),
   Stream<Object?>? interrupts,
   Duration stopTimeout = const Duration(seconds: 5),
@@ -2448,13 +3295,47 @@ Future<int> playLivePlaybooks(
     final int code = await runner.stream(options, (app, print) async {
       _requirePlaybooks(app);
       if (countdown > 0) _requireProtocol(app, 10, 'countdowns');
-      final LiveRecorder? recorder = record != null || cleanStatusBar
+      if (screenshots == 'auto' || screenshots == 'all') {
+        _requireProtocol(app, 11, 'playbook screenshots');
+      }
+      if (store != null || frame) {
+        _requireProtocol(app, 13, 'store screenshots and frames');
+        if (store != null) liveStore(app.status, store);
+      }
+      final Object? protocol = app.status['protocol'];
+      final bool sendsScreenshots = protocol is num && protocol >= 11;
+      final bool matrix = locales != null || themes != null;
+      List<LiveCell> cells = const [LiveCell()];
+      Map<String, Object?> before = const {};
+      if (matrix) {
+        _requireProtocol(app, 12, 'playing in several locales and themes');
+        before = _map(await app.call('status'));
+        cells = liveCells(before, locales: locales, themes: themes);
+      }
+      final bool capturing = sendsScreenshots && screenshots != 'off';
+      LiveRecorder? recorder = record != null || cleanStatusBar
           ? await findLiveRecorder(
               app,
               projectRoot: runner.root,
               processes: processes,
             )
           : null;
+      // Apps on protocol 14 hand screenshot() steps to Metro
+      // when it can capture the device; otherwise they capture them
+      // themselves.
+      final bool offersNative = capturing && protocol >= 14;
+      if (offersNative) {
+        try {
+          recorder ??= await findLiveRecorder(
+            app,
+            projectRoot: runner.root,
+            processes: processes,
+          );
+        } on LiveCommandException {
+          // The app takes its own captures and says why.
+        }
+      }
+      final LiveRecorder? nativeRecorder = offersNative ? recorder : null;
       LiveRecording? recording;
       if (record != null) {
         recording = LiveRecording(
@@ -2492,19 +3373,79 @@ Future<int> playLivePlaybooks(
         }
       }
 
+      // Native screenshots by their id, as Metro takes them, until their
+      // steps arrive.
+      final Map<String, Future<String?>> nativeShots = {};
+      Directory? nativeFolder;
+      final String? deviceFolder = targets.length > 1
+          ? _deviceFolder(app, targets)
+          : null;
+      PlaybookScreenshotFiles? shotFiles;
+      final PlaybookScreenshotSaver? shotSaver = capturing
+          ? PlaybookScreenshotSaver(
+              app,
+              onFailed: (PlaybookScreenshotFile file, String reason) => print(
+                LiveBlock()..warning('Couldn\'t save ${file.file} ($reason)'),
+              ),
+              nativeFile: (String id) async => await nativeShots[id],
+            )
+          : null;
+
+      // Captures the device for a screenshot() step, then lets
+      // the app carry on, saying whether it worked.
+      void takeNative(Map<String, Object?> event) {
+        final Object? id = event['id'];
+        if (id is! String) return;
+        nativeShots[id] = () async {
+          String? file;
+          String? error;
+          final LiveRecorder? native = nativeRecorder;
+          if (native == null) {
+            error = 'Metro has no native capture for ${app.device}';
+          } else {
+            try {
+              final Directory folder = nativeFolder ??= (Directory(
+                '${runner.root}/build/playbooks/.native',
+              )..createSync(recursive: true)).createTempSync();
+              file = '${folder.path}/${event['runId']}-$id.png';
+              await native.screenshot(file);
+            } catch (e) {
+              file = null;
+              error = describeLiveError(e);
+            }
+          }
+          try {
+            await app.call('screenshot.taken', {
+              'runId': event['runId'],
+              'id': id,
+              'ok': error == null,
+              'error': ?error,
+            }, LiveRunner.commandTimeout);
+          } catch (_) {
+            // The app gives up waiting and takes its own capture.
+          }
+          return file;
+        }();
+      }
+
       final PlaybookEventRenderer renderer = PlaybookEventRenderer();
       final List<Map<String, Object?>> events = [];
       final List<(Map<String, Object?>, Duration)> early = [];
-      final Completer<Map<String, Object?>> done =
-          Completer<Map<String, Object?>>();
+      Completer<Map<String, Object?>> done = Completer<Map<String, Object?>>();
       final Completer<void> gaveUp = Completer<void>();
       String? runId;
 
       void handle(Map<String, Object?> event, Duration at) {
         events.add(event);
         recording?.mark(event, at);
+        if (event['event'] == 'native') takeNative(event);
+        final List<PlaybookScreenshotFile> shots =
+            shotFiles?.filesFor(event) ?? const [];
+        for (final PlaybookScreenshotFile shot in shots) {
+          shotSaver!.collect(shot);
+        }
         final LiveBlock block = LiveBlock();
-        renderer.render(block, event);
+        renderer.render(block, event, shots: shots);
         if (!block.isEmpty) print(block);
         if (event['event'] == 'done' && !done.isCompleted) done.complete(event);
       }
@@ -2532,6 +3473,49 @@ Future<int> playLivePlaybooks(
         },
       );
 
+      String? stopSent;
+      void stopRun() {
+        final String? id = runId;
+        if (id == null || stopSent == id) return;
+        stopSent = id;
+        app
+            .call('playbooks.stop', {'runId': id})
+            .then((_) {}, onError: (Object _) {});
+      }
+
+      // Puts the locale and theme back the way they were before the passes.
+      bool switched = false;
+      Future<void> restore() async {
+        if (!switched) return;
+        switched = false;
+        final List<String> restored = [];
+        try {
+          if (locales != null && before['locale'] is String) {
+            await app.call('locale.set', {
+              'language': before['locale'],
+            }, LiveRunner.commandTimeout);
+            restored.add('locale ${before['locale']}');
+          }
+          if (themes != null && before['theme'] is String) {
+            await app.call('theme.set', {
+              'id': before['theme'],
+              'save': false,
+            }, LiveRunner.commandTimeout);
+            restored.add('theme ${before['theme']}');
+          }
+        } catch (e) {
+          print(
+            LiveBlock()..warning(
+              'Couldn\'t put the app\'s locale and theme back '
+              '(${describeLiveError(e)}).',
+            ),
+          );
+        }
+        if (restored.isNotEmpty) {
+          print(LiveBlock()..note('Restored ${restored.join(' and ')}.'));
+        }
+      }
+
       Future<void> Function()? restoreStatusBar;
       try {
         if (cleanStatusBar) {
@@ -2542,34 +3526,10 @@ Future<int> playLivePlaybooks(
           print(LiveBlock()..note('Recording ${app.device}'));
           await processes.delay(record!.preRoll);
         }
-        await app.eventsReady();
-        final Map<String, Object?> started = _map(
-          await app.call('playbooks.run', {
-            'names': names,
-            'speed': ?speed,
-            'data': ?data,
-            if (!overlay) 'overlay': false,
-            if (loop) 'loop': true,
-            if (countdown > 0) 'countdown': countdown,
-          }, LiveRunner.commandTimeout),
-        );
-        final Object? id = started['runId'];
-        if (id is! String) {
-          throw LiveCommandException(
-            '${app.device} didn\'t say which run it started.',
-          );
-        }
-        runId = id;
-        for (final (Map<String, Object?> event, Duration at) in early) {
-          if (event['runId'] == id) handle(event, at);
-        }
-        early.clear();
 
         void stop() {
           print(LiveBlock()..note('Stopping, Ctrl+C again to stop waiting'));
-          app
-              .call('playbooks.stop', {'runId': id})
-              .then((_) {}, onError: (Object _) {});
+          stopRun();
           Timer(stopTimeout, () {
             if (!gaveUp.isCompleted) gaveUp.complete();
           });
@@ -2581,26 +3541,122 @@ Future<int> playLivePlaybooks(
         });
         if (interrupted) stop();
 
-        // The app answers playbooks.run over the VM service, but streams the
-        // steps as service events. If none arrive, nothing ever ends the run.
-        final Completer<void> silent = Completer<void>();
-        final Timer silence = Timer(firstStepTimeout, () {
-          if (events.isEmpty && !done.isCompleted && !silent.isCompleted) {
-            silent.complete();
-          }
-        });
+        final List<Map<String, Object?>> passes = [];
+        Map<String, Object?>? finished;
+        bool first = true;
+        playing:
+        do {
+          for (final LiveCell cell in cells) {
+            if (!first && (interrupted || gaveUp.isCompleted)) break playing;
+            if (!cell.isEmpty) {
+              print(LiveBlock()..heading('▸ ${cell.label}'));
+              switched = true;
+              if (cell.locale != null) {
+                await app.call('locale.set', {
+                  'language': cell.locale,
+                }, LiveRunner.commandTimeout);
+              }
+              if (cell.theme != null) {
+                await app.call('theme.set', {
+                  'id': cell.theme,
+                  'save': false,
+                }, LiveRunner.commandTimeout);
+              }
+            }
+            shotFiles = capturing
+                ? PlaybookScreenshotFiles(
+                    root: runner.root,
+                    device: deviceFolder,
+                    cell: cell.isEmpty ? null : cell,
+                  )
+                : null;
+            done = Completer<Map<String, Object?>>();
+            runId = null;
+            final int seen = events.length;
 
-        final Map<String, Object?>? finished = await Future.any([
-          done.future,
-          gaveUp.future.then((_) => null),
-          silent.future.then((_) => _noStepsArrived),
-        ]);
-        silence.cancel();
+            await app.eventsReady();
+            final Map<String, Object?> started = _map(
+              await app.call('playbooks.run', {
+                'names': names,
+                'speed': ?speed,
+                'data': ?data,
+                if (!overlay) 'overlay': false,
+                // With passes, Metro plays them again itself.
+                if (loop && !matrix) 'loop': true,
+                if (countdown > 0 && first) 'countdown': countdown,
+                if (sendsScreenshots) 'screenshots': screenshots,
+                if (sendsScreenshots) 'pixelRatio': ?pixelRatio,
+                if (nativeRecorder != null) 'native': true,
+                'store': ?store,
+                if (frame) 'frame': true,
+                'background': ?background,
+                if (!cell.isEmpty) 'matrix': cell.toJson(),
+              }, LiveRunner.commandTimeout),
+            );
+            first = false;
+            final Object? id = started['runId'];
+            if (id is! String) {
+              throw LiveCommandException(
+                '${app.device} didn\'t say which run it started.',
+              );
+            }
+            runId = id;
+            for (final (Map<String, Object?> event, Duration at) in early) {
+              if (event['runId'] == id) handle(event, at);
+            }
+            early.clear();
+            if (interrupted) stopRun();
+
+            // The app answers playbooks.run over the VM service, but streams
+            // the steps as service events. If none arrive, nothing ever ends
+            // the run.
+            final Completer<void> silent = Completer<void>();
+            final Timer silence = Timer(firstStepTimeout, () {
+              if (events.length == seen &&
+                  !done.isCompleted &&
+                  !silent.isCompleted) {
+                silent.complete();
+              }
+            });
+
+            finished = await Future.any([
+              done.future,
+              gaveUp.future.then((_) => null),
+              silent.future.then((_) => _noStepsArrived),
+            ]);
+            silence.cancel();
+            passes.add({
+              'locale': ?cell.locale,
+              'theme': ?cell.theme,
+              'runId': id,
+              'passed': finished?['passed'] == true,
+              'stopped': finished == null || finished['stopped'] == true,
+            });
+            if (finished == null || identical(finished, _noStepsArrived)) {
+              break playing;
+            }
+          }
+        } while (matrix && loop && !interrupted && !gaveUp.isCompleted);
+
         await save();
+        if (finished != null && shotSaver != null) {
+          await shotSaver.done;
+          final LiveBlock saved = LiveBlock();
+          renderScreenshotSummary(saved, shotSaver.saved);
+          if (!saved.isEmpty) print(saved);
+        }
+        final bool stopped =
+            finished == null ||
+            (matrix && interrupted) ||
+            passes.any((Map<String, Object?> pass) => pass['stopped'] == true);
+        final bool passed =
+            !stopped &&
+            passes.every((Map<String, Object?> pass) => pass['passed'] == true);
         final Map<String, Object?> result = {
-          'runId': id,
-          'passed': finished?['passed'] == true,
-          'stopped': finished == null || finished['stopped'] == true,
+          'runId': runId,
+          'passed': passed,
+          'stopped': stopped,
+          if (matrix) 'passes': passes,
           'reports': [
             for (final Map<String, Object?> event in events)
               if (event['event'] == 'finish' && _depth(event) == 0)
@@ -2609,11 +3665,14 @@ Future<int> playLivePlaybooks(
           'events': events,
           if (record != null) 'recording': saved?.file,
           if (saved?.captions != null) 'captions': saved?.captions,
+          if (shotSaver != null)
+            'screenshots': [
+              for (final PlaybookScreenshotFile file in shotSaver.saved)
+                file.toJson(),
+            ],
         };
         if (identical(finished, _noStepsArrived)) {
-          app
-              .call('playbooks.stop', {'runId': id})
-              .then((_) {}, onError: (Object _) {});
+          stopRun();
           final String message =
               '${app.device} started the playbooks, but no steps reached '
               'Metro in ${firstStepTimeout.inSeconds}s. This happens when the '
@@ -2633,11 +3692,9 @@ Future<int> playLivePlaybooks(
             result,
           );
         }
-        if (finished['passed'] != true) {
+        if (!passed) {
           throw LiveReportedFailure(
-            finished['stopped'] == true
-                ? 'The playbooks were stopped'
-                : 'A playbook failed',
+            stopped ? 'The playbooks were stopped' : 'A playbook failed',
             result,
           );
         }
@@ -2646,7 +3703,20 @@ Future<int> playLivePlaybooks(
         }
         return result;
       } finally {
+        await restore();
         await subscription.cancel();
+        // The native screenshots that were taken are moved into place by
+        // now, so whatever is left is cleared away.
+        await Future.wait(nativeShots.values);
+        final Directory? folder = nativeFolder;
+        if (folder != null) {
+          try {
+            folder.deleteSync(recursive: true);
+            if (folder.parent.listSync().isEmpty) folder.parent.deleteSync();
+          } on FileSystemException {
+            // A folder left in build/ is harmless.
+          }
+        }
         // A run that ended early, e.g. the app disconnecting, is still saved.
         await save();
         try {
@@ -2661,6 +3731,15 @@ Future<int> playLivePlaybooks(
     await watching?.cancel();
     if (watching == null) runner.interruptHandler = previousHandler;
   }
+}
+
+/// The folder for [app]'s screenshots when several of [targets] play at
+/// once: its device name, and its number when another has the same name.
+String _deviceFolder(LiveApp app, List<LiveApp> targets) {
+  final String name = liveSlug(app.device);
+  final bool shared =
+      targets.where((LiveApp target) => target.device == app.device).length > 1;
+  return shared ? '$name-${targets.indexOf(app) + 1}' : name;
 }
 
 /// What [playLivePlaybooks] waits on when no step of a run arrives in time.
@@ -2733,7 +3812,16 @@ class PlaybookEventRenderer {
 
   /// Adds the lines for [event] to [block], which stays empty for events
   /// that print nothing.
-  void render(LiveBlock block, Map<String, Object?> event) {
+  ///
+  /// [shots] are the screenshots the step reported: their file names follow
+  /// the step, and a failing step's screenshot gets a line under its error.
+  /// A `screenshot()` the app took after Metro couldn't gets a line saying
+  /// why.
+  void render(
+    LiveBlock block,
+    Map<String, Object?> event, {
+    List<PlaybookScreenshotFile> shots = const [],
+  }) {
     final int depth = _depth(event);
     final String indent = '  ${'    ' * depth}';
     switch (event['event']) {
@@ -2749,7 +3837,7 @@ class PlaybookEventRenderer {
         block.plain('$indent▸ ${event['title']}');
         _groups.add((depth: depth, index: event['index'], failureShown: false));
       case 'step':
-        _renderStep(block, event, depth, indent);
+        _renderStep(block, event, depth, indent, shots);
       case 'finish':
         if (depth != 0) return;
         final String name = 'Playbook "${event['name']}"';
@@ -2778,6 +3866,7 @@ class PlaybookEventRenderer {
     Map<String, Object?> event,
     int depth,
     String indent,
+    List<PlaybookScreenshotFile> shots,
   ) {
     final Object? status = event['status'];
     if (event['group'] == true) {
@@ -2792,7 +3881,12 @@ class PlaybookEventRenderer {
       if (status == 'passed' || (status == 'failed' && failureShown)) return;
     }
     final String ms = '${event['ms'] ?? 0}'.padLeft(5);
-    final String title = '${event['title']}';
+    final List<String> files = [
+      for (final PlaybookScreenshotFile shot in shots)
+        if (!shot.isFailure) shot.shown,
+    ];
+    final String title =
+        '${event['title']}${files.isEmpty ? '' : '  → ${files.join(', ')}'}';
     switch (status) {
       case 'passed':
         block.add('$indent✓ ${ms}ms  $title', LiveTone.success);
@@ -2806,6 +3900,11 @@ class PlaybookEventRenderer {
             '$error'.split('\n').map((line) => '$indent      $line').join('\n'),
             LiveTone.failure,
           );
+        }
+        for (final PlaybookScreenshotFile shot in shots) {
+          if (shot.isFailure) {
+            block.add('$indent      Screenshot: ${shot.file}', LiveTone.note);
+          }
         }
         final Object? visible = event['visible'];
         if (visible is List && visible.isNotEmpty) {
@@ -2827,6 +3926,15 @@ class PlaybookEventRenderer {
             failureShown: true,
           );
         }
+    }
+    for (final PlaybookScreenshotFile shot in shots) {
+      final String? fallback = shot.nativeFallback;
+      if (fallback == null) continue;
+      block.add(
+        '$indent      ${shot.shown} is the app\'s own capture '
+        '(${fallback.replaceAll(RegExp(r'\.$'), '')})',
+        LiveTone.note,
+      );
     }
   }
 }
