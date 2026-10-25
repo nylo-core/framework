@@ -1,3 +1,20 @@
+## [7.5.0] - 2026-10-25
+
+### Added
+* `metro doctor` checks how a project is wired up (routes, decoders, languages, env and assets) and exits non-zero when something is wired wrong. `metro doctor --strict` also fails on notes worth a look
+* `metro make:model <name> --one-of="accepted,rejected"` creates a sealed parent with one subtype per name and registers a `OneOf.byKey` entry for it in `decoders.dart`. Pass `--one-of` on its own to be asked for the subtype names
+* `metro make:playbook <name> --from-routes` creates a playbook that visits every page the router adds and takes a screenshot of each
+* `metro live:run screenshot` saves a PNG of the running app, with `--area` for one `ScreenshotArea`, `--store` and `--frame` for app store sizes, and `--open` or `--copy` once it's saved
+* `metro live:run playbook <name>` saves the playbook's `screenshot()` steps under `screenshots/<playbook>/`, and takes `--locales` and `--themes` to capture each screen in every language and theme, `--store`, `--frame` and `--background` for store listings, and `--clean-status-bar` for 9:41 with full signal and battery on native captures
+
+### Changed
+* Bump `nylo_support` dependency from `^7.36.0` to `^7.37.0`, which brings:
+  * `Screenshot.capture()` and `Screenshot.area()` for PNGs of the app's screen, sized for App Store and Google Play listings with `forStore()`
+  * `NyDecoder`, `Decode` and `OneOf` typed decoders, with `NyResponse.dataAs<X>()` and `dataIs<X>()` to read a `OneOf` response
+  * `FormFieldStyle` (`filled`, `outlined`, `underlined`, `grouped`) and `NyFieldColors`, so form fields follow the app's theme
+  * `previewRoute(data:, queryParameters:, stack:)`, `NyApp.refreshLocale()` and `NyThemeManager.showTheme()`
+  * Form field spacing, grouped rows and card corners, `StyledText` text color, and themed text that follows a change of theme
+
 ## [7.4.4] - 2026-10-19
 
 ### Changed
