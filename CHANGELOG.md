@@ -1,3 +1,9 @@
+## [7.5.2] - 2026-11-12
+
+### Changed
+* Bump `nylo_support` dependency from `^7.37.1` to `^7.37.2`, which brings:
+  * `app_badge_plus` ^1.4.0 and `crypto` ^3.0.8
+
 ## [7.5.1] - 2026-11-01
 
 ### Changed
