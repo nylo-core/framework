@@ -6,7 +6,7 @@ String navigationTabJourneyStateStub(
   required ReCase parentNavigationHub,
   bool isLastStep = false,
 }) =>
-    '''import 'package:flutter/material.dart';
+    '''import 'package:material_ui/material_ui.dart';
 import '/resources/pages/navigation_hubs/${parentNavigationHub.snakeCase}/${parentNavigationHub.snakeCase}_navigation_hub.dart';
 import '/resources/widgets/buttons/buttons.dart';
 import 'package:nylo_framework/nylo_framework.dart';

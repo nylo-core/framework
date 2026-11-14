@@ -32,12 +32,11 @@ class FakeConnection {
       notify('streamNotify', {'streamId': streamId, 'event': event});
 }
 
-typedef FakeHandler =
-    FutureOr<Object?> Function(
-      String method,
-      Map<String, Object?> params,
-      FakeConnection connection,
-    );
+typedef FakeHandler = FutureOr<Object?> Function(
+  String method,
+  Map<String, Object?> params,
+  FakeConnection connection,
+);
 
 /// An in-process JSON-RPC 2.0 WebSocket server.
 class FakeJsonRpcServer {

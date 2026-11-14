@@ -85,9 +85,8 @@ void main() {
 
     test('adds /ws to a WebSocket URI without it', () {
       expect(
-        LiveDiscovery.normalizeVmServiceUri(
-          'ws://127.0.0.1:53844/F0ZlHE-L7fI=',
-        ).toString(),
+        LiveDiscovery.normalizeVmServiceUri('ws://127.0.0.1:53844/F0ZlHE-L7fI=')
+            .toString(),
         'ws://127.0.0.1:53844/F0ZlHE-L7fI=/ws',
       );
     });

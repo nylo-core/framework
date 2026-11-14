@@ -2,6 +2,7 @@ import '/metro/ny_cli.dart';
 import '/metro/stubs/navigation_hub_stub.dart';
 import '/metro/stubs/navigation_tab_state_journey.dart';
 import '/metro/stubs/widget_stateful_stub.dart';
+
 import 'package:recase/recase.dart';
 
 /// Entry point for the make:navigation_hub command.

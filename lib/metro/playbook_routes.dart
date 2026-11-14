@@ -116,18 +116,17 @@ List<PlaybookRoute> playbookRoutesIn(
         page: page,
         import: import,
         guarded:
-            RegExp(
-              r'authenticatedRoute|routeGuards|addRouteGuard',
-            ).hasMatch(statement) ||
+            RegExp(r'authenticatedRoute|routeGuards|addRouteGuard')
+                .hasMatch(statement) ||
             guardedGroups.any(
               ((int, int) group) =>
                   match.start > group.$1 && match.start < group.$2,
             ),
         path: source == null
             ? null
-            : RegExp(
-                r'''\bpath\s*=\s*\(\s*['"]([^'"]*)['"]''',
-              ).firstMatch(withoutComments(source))?.group(1),
+            : RegExp(r'''\bpath\s*=\s*\(\s*['"]([^'"]*)['"]''')
+                  .firstMatch(withoutComments(source))
+                  ?.group(1),
       ),
     );
   }

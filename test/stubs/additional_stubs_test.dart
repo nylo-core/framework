@@ -337,7 +337,7 @@ void main() {
     test('imports flutter material', () {
       final String stub = bottomSheetModalStub(ReCase('test'));
 
-      expect(stub, contains("import 'package:flutter/material.dart'"));
+      expect(stub, contains("import 'package:material_ui/material_ui.dart'"));
     });
   });
 

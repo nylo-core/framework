@@ -4,6 +4,7 @@ import '/metro/live/live_registry.dart';
 import '/metro/ny_cli.dart';
 import '/metro/playbook_routes.dart';
 import '/metro/stubs/playbook_stub.dart';
+
 import 'package:recase/recase.dart';
 
 /// Where new playbooks are created.
@@ -48,8 +49,7 @@ class _MakePlaybookCommand extends NyCustomCommand {
   Future<void> handle(CommandResult result) async {
     final String playbookName = requireArgument(
       result,
-      message:
-          'A playbook name is required, e.g. metro make:playbook sign_up_to_dashboard',
+      message: 'A playbook name is required, e.g. metro make:playbook sign_up_to_dashboard',
     );
 
     final MetroProjectFile projectFile = MetroService.createMetroProjectFile(

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:nylo_support/themes/ny_themes.dart';
 
 /// Class to help manage current theme in the app.

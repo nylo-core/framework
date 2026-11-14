@@ -153,14 +153,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.8"
+  cupertino_ui:
+    dependency: transitive
+    description:
+      name: cupertino_ui
+      sha256: "369e39a1c5c030a6212589c3da1809920b1c2cfade7b02aade7695bfa4b88c3a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.6"
   date_field:
     dependency: transitive
     description:
       name: date_field
-      sha256: "5714b1ac0ba1c860877b3040601a6fd20cb846042c9ae6d8216ffede422d43d1"
+      sha256: "10caa86264e5a4cdc5b9c670995aaa66c697e8d7fe14864322da8ea726b52682"
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.3+1"
+    version: "7.0.0"
   dbus:
     dependency: transitive
     description:
@@ -469,6 +477,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
+  listen:
+    dependency: transitive
+    description:
+      name: listen
+      sha256: "47501a08016a43fcad79252439d723f50f14f88fa7bfd8a177e0a417e5c9e1f2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   logging:
     dependency: transitive
     description:
@@ -501,6 +517,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.13.0"
+  material_ui:
+    dependency: "direct dev"
+    description:
+      name: material_ui
+      sha256: "474c135fd46b56ff1d35ca982155e8863d28fbc6464d1192acf4ee53a738680e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.11.0"
   meta:
     dependency: transitive
     description:
@@ -531,15 +555,15 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "7.5.2"
+    version: "7.6.0"
   nylo_support:
     dependency: transitive
     description:
       name: nylo_support
-      sha256: bcaf2fbf843b63a993c3a6ad822f3598b77e11770700f6468427c04366d8d907
+      sha256: "1d95da728bd859f4364a64f8c7e2aecb9fdb8932e093c46c7896b0bebc3fb1b1"
       url: "https://pub.dev"
     source: hosted
-    version: "7.37.2"
+    version: "7.38.0"
   objective_c:
     dependency: transitive
     description:
@@ -797,10 +821,10 @@ packages:
     dependency: transitive
     description:
       name: test_api
-      sha256: "2a122cbe059f8b610d3a5415f42e255b6c17b1f21eee1d960f31080237fb4f11"
+      sha256: "0a10344e901e5b2e63819567951cb6a06673ed6b84f40462188ff5a0c41f371f"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.12"
+    version: "0.7.14"
   timezone:
     dependency: transitive
     description:
@@ -893,10 +917,10 @@ packages:
     dependency: transitive
     description:
       name: vector_math
-      sha256: f36f9f3be64c6198714492bb455c11056e33e2f85d9a0b676a48301e44fdcf47
+      sha256: fa49e1674cb84acb900141714e6c6e1f9ae099827c24d141430ff6819db4e1bc
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.2"
+    version: "2.4.4"
   vm_service:
     dependency: transitive
     description:
@@ -946,5 +970,5 @@ packages:
     source: hosted
     version: "3.1.4"
 sdks:
-  dart: ">=3.12.0 <4.0.0"
-  flutter: ">=3.44.0"
+  dart: ">=3.13.0 <4.0.0"
+  flutter: ">=3.47.0"

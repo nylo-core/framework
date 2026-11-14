@@ -4,6 +4,7 @@ import '/metro/ny_cli.dart';
 import '/metro/stubs/model_stub.dart';
 import '/metro/stubs/one_of_model_stub.dart';
 import '/json_dart_generator/dart_code_generator.dart';
+
 import 'package:recase/recase.dart';
 
 /// Entry point for the make:model command.
@@ -32,8 +33,7 @@ class _MakeModelCommand extends NyCustomCommand {
     command.addFlag(
       "help",
       abbr: "h",
-      help:
-          'To create a new model, use e.g. "flutter pub run nylo_framework:main make:model user"',
+      help: 'To create a new model, use e.g. "flutter pub run nylo_framework:main make:model user"',
     );
     command.addFlag(
       "force",
@@ -47,8 +47,7 @@ class _MakeModelCommand extends NyCustomCommand {
     );
     command.addOption(
       "one-of",
-      help:
-          'Creates a OneOf model: a sealed parent with the given subtypes, e.g. --one-of="accepted,rejected"',
+      help: 'Creates a OneOf model: a sealed parent with the given subtypes, e.g. --one-of="accepted,rejected"',
     );
 
     return command;

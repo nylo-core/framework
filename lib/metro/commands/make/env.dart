@@ -37,8 +37,7 @@ class _MakeEnvCommand extends NyCustomCommand {
     command.addFlag(
       "dart-define",
       abbr: "d",
-      help:
-          "Use --dart-define mode for APP_KEY injection at build time instead of runtime.",
+      help: "Use --dart-define mode for APP_KEY injection at build time instead of runtime.",
     );
     return command;
   }

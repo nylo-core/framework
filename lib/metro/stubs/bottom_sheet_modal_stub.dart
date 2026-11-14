@@ -3,7 +3,7 @@ import 'package:recase/recase.dart';
 /// This stub is used to create a Bottom Sheet Modal in the /resources/widgets/bottom_sheet_modals/modals/ directory.
 String bottomSheetModalStub(ReCase rc) =>
     '''
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 
 /// ${rc.titleCase} Modal

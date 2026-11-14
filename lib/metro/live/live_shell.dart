@@ -14,12 +14,11 @@ import 'live_session.dart';
 
 /// Runs one command inside `metro live` and returns its exit code, or null
 /// when no command has that name.
-typedef LiveShellDispatch =
-    Future<int?> Function(
-      String name,
-      List<String> arguments,
-      LiveRunner runner,
-    );
+typedef LiveShellDispatch = Future<int?> Function(
+  String name,
+  List<String> arguments,
+  LiveRunner runner,
+);
 
 /// A command `metro live` lists in `help` and completes with Tab.
 typedef LiveShellCommand = ({

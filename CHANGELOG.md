@@ -1,3 +1,16 @@
+## [7.6.0] - 2026-11-14
+
+### Changed
+* Built on `package:material_ui`: the framework's widgets and the example app import `package:material_ui/material_ui.dart`
+* Metro's `make:page`, `make:stateful_widget`, `make:stateless_widget`, `make:state_managed_widget`, `make:navigation_hub`, `make:journey_widget`, `make:bottom_sheet_modal`, `make:button` and `make:playbook` generate files that import `package:material_ui/material_ui.dart`
+* Requires Flutter 3.47.0 or later, with Dart 3.13
+* Adds `material_ui` ^1.11.0 and `date_field` ^7.0.0
+* Bump `nylo_support` dependency from `^7.37.2` to `^7.38.0`, which brings:
+  * Nylo's widgets built on `package:material_ui` and `package:cupertino_ui`
+  * `NyRouter.navigate` and `routeTo` called before the app's first frame wait for the navigator to mount and then navigate
+  * `CollectionView` and `Pullable` draw refresh headers with the app's theme and Material localizations
+  * Toast content sits on a transparent `Material`, so ink effects and text styles render as designed
+
 ## [7.5.2] - 2026-11-12
 
 ### Changed

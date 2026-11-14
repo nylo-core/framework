@@ -6,6 +6,7 @@ import '/metro/live/live_registry.dart';
 import '/metro/ny_cli.dart';
 import '/metro/stubs/custom_command_stub.dart';
 import '/metro/stubs/live_command_stub.dart';
+
 import 'package:recase/recase.dart';
 
 /// Entry point for the make:command command.
@@ -39,8 +40,7 @@ class _MakeCommandCommand extends NyCustomCommand {
     );
     command.addFlag(
       "live",
-      help:
-          "Creates a live command that runs inside your running app, e.g. make:command seed_cart --live",
+      help: "Creates a live command that runs inside your running app, e.g. make:command seed_cart --live",
     );
     command.addOption(
       "description",

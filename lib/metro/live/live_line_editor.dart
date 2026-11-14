@@ -237,9 +237,8 @@ class LiveLineEditor {
 
   void _listen() {
     if (_subscription != null || _inputDone || _closed) return;
-    final ByteConversionSink decoder = const Utf8Decoder(
-      allowMalformed: true,
-    ).startChunkedConversion(_TextSink(_onText));
+    final ByteConversionSink decoder = const Utf8Decoder(allowMalformed: true)
+        .startChunkedConversion(_TextSink(_onText));
     _subscription = _input.listen(
       decoder.add,
       onError: (Object _) {

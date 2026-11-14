@@ -1,10 +1,13 @@
 import 'package:collection/collection.dart';
+
 import 'class_type.dart';
 import 'extension.dart';
 
 /// Callback that provides a class name prefix or suffix.
-typedef ClassNamePrefixSuffixBuilder =
-    String? Function(String name, bool isPrefix);
+typedef ClassNamePrefixSuffixBuilder = String? Function(
+  String name,
+  bool isPrefix,
+);
 
 /// Parses JSON data and generates Dart class definitions.
 class JsonDef {

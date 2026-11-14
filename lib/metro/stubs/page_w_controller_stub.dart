@@ -6,7 +6,7 @@ String pageWithControllerStub({
   String? creationPath,
 }) =>
     '''
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 import '/app/controllers/${creationPath != null ? "$creationPath/${className.snakeCase}" : className.snakeCase}_controller.dart';
 

@@ -8,7 +8,7 @@ String navigationHubStub({
   required List<String> navigationEntries,
 }) =>
     '''
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 ${imports.join('\n')}
 

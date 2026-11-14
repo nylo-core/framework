@@ -134,9 +134,8 @@ class PlatformLinks {
       r'<data\s[^>]*>',
       dotAll: true,
     ).allMatches(manifest)) {
-      final RegExpMatch? value = RegExp(
-        'android:$name\\s*=\\s*"([^"]*)"',
-      ).firstMatch(tag.group(0)!);
+      final RegExpMatch? value = RegExp('android:$name\\s*=\\s*"([^"]*)"')
+          .firstMatch(tag.group(0)!);
       // A manifest placeholder like ${applicationId} says nothing useful.
       if (value != null && !value.group(1)!.contains(r'${')) {
         found.add(value.group(1)!);

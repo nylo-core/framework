@@ -34,9 +34,8 @@ String playbookStub({
     // waitForPage('/dashboard'),
     // see('Welcome'),
     pause(seconds: 1),'''
-      : [
-          for (final PlaybookRoute route in routes) _visitAndCapture(route),
-        ].join('\n');
+      : [for (final PlaybookRoute route in routes) _visitAndCapture(route)]
+            .join('\n');
 
   return '''
 import 'package:nylo_framework/nylo_framework.dart';

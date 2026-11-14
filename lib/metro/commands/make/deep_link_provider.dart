@@ -1,5 +1,6 @@
 import '/metro/ny_cli.dart';
 import '/metro/stubs/deep_link_provider_stub.dart';
+
 import 'package:recase/recase.dart';
 
 /// Entry point for the make:deep_link_provider command.

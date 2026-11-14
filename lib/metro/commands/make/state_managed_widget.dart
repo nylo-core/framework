@@ -1,5 +1,6 @@
 import '/metro/ny_cli.dart';
 import '/metro/stubs/widget_state_managed_stub.dart';
+
 import 'package:recase/recase.dart';
 
 /// Entry point for the make:state_managed_widget command.

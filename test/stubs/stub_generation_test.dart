@@ -121,7 +121,7 @@ void main() {
     test('imports flutter material', () {
       final String stub = pageStub(className: 'dashboard');
 
-      expect(stub, contains("import 'package:flutter/material.dart'"));
+      expect(stub, contains("import 'package:material_ui/material_ui.dart'"));
     });
 
     test('imports nylo_framework', () {

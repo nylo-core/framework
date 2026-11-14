@@ -2,6 +2,7 @@ import 'dart:io';
 
 import '/metro/ny_cli.dart';
 import '/metro/stubs/navigation_tab_state_journey.dart';
+
 import 'package:recase/recase.dart';
 
 /// Entry point for the make:journey_widget command.

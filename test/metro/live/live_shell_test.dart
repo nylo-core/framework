@@ -1694,9 +1694,8 @@ void main() {
           contains("import '/app/seeders/demo_user_seeder.dart';"),
         );
         expect(
-          File(
-            '${project.path}/lib/app/providers/app_provider.dart',
-          ).readAsStringSync(),
+          File('${project.path}/lib/app/providers/app_provider.dart')
+              .readAsStringSync(),
           contains('seeders: seeders'),
         );
         // Metro's own "[Seeder] demo_user_seeder created" line goes to the

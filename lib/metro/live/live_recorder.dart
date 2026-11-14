@@ -36,9 +36,8 @@ class LiveProcesses {
       process.stdout.transform(decoder).join(),
       process.stderr.transform(decoder).join(),
     ]);
-    final RegExpMatch? exit = RegExp(
-      r'nylo-exit:(\d+)\s*$',
-    ).firstMatch(printed[1]);
+    final RegExpMatch? exit = RegExp(r'nylo-exit:(\d+)\s*$')
+        .firstMatch(printed[1]);
     return ProcessResult(
       process.pid,
       exit == null ? -1 : int.parse(exit.group(1)!),

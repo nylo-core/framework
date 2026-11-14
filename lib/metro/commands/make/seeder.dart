@@ -3,6 +3,7 @@ import 'dart:io';
 import '/metro/live/live_registry.dart';
 import '/metro/ny_cli.dart';
 import '/metro/stubs/seeder_stub.dart';
+
 import 'package:recase/recase.dart';
 
 /// Entry point for the make:seeder command.

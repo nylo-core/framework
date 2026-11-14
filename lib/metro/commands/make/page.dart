@@ -2,6 +2,7 @@ import '/metro/ny_cli.dart';
 import '/metro/stubs/page_stub.dart';
 import '/metro/stubs/page_w_controller_stub.dart';
 import '/metro/stubs/controller_stub.dart';
+
 import 'package:recase/recase.dart';
 
 /// Entry point for the make:page command.

@@ -6,12 +6,15 @@ library;
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:args/args.dart';
 import 'package:dio/dio.dart';
 import 'package:recase/recase.dart';
 import 'package:yaml/yaml.dart';
 export 'package:nylo_support/metro/ny_metro.dart';
+
 export '/metro/helpers/metro_helpers.dart';
+
 import 'package:nylo_support/metro/ny_metro.dart'
     show MetroService, forceFlag, helpFlag;
 export 'package:dio/dio.dart';
@@ -792,9 +795,9 @@ abstract class NyCustomCommand {
     String content = await readFile(filePath);
 
     // Find the last class declaration and track its closing brace
-    final List<RegExpMatch> classMatches = RegExp(
-      r'class\s+\w+',
-    ).allMatches(content).toList();
+    final List<RegExpMatch> classMatches = RegExp(r'class\s+\w+')
+        .allMatches(content)
+        .toList();
     if (classMatches.isNotEmpty) {
       final int lastClassStart = classMatches.last.start;
       int braceCount = 0;

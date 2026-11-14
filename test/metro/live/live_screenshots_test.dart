@@ -944,9 +944,10 @@ void main() {
       await takeLiveScreenshot(runner, const LiveOptions(), now: at);
 
       expect(
-        Directory(
-            '${root.path}/screenshots',
-          ).listSync().map((entry) => entry.path.split('/').last).toList()
+        Directory('${root.path}/screenshots')
+            .listSync()
+            .map((entry) => entry.path.split('/').last)
+            .toList()
           ..sort(),
         [
           'debug-iphone-17-20261013-2251.png',
@@ -1526,9 +1527,10 @@ void main() {
           ['play-phone', 'play-phone'],
         );
         expect(
-          Directory(
-              '${root.path}/store',
-            ).listSync().map((entry) => entry.path.split('/').last).toList()
+          Directory('${root.path}/store')
+              .listSync()
+              .map((entry) => entry.path.split('/').last)
+              .toList()
             ..sort(),
           ['en-play-phone.png', 'es-play-phone.png'],
         );

@@ -57,9 +57,9 @@ void main() {
     ..createSync(recursive: true)
     ..writeAsStringSync(contents);
 
-  DoctorCheck check(String label) => runDoctor(
-    projectRoot: project.path,
-  ).firstWhere((DoctorCheck check) => check.label == label);
+  DoctorCheck check(String label) =>
+      runDoctor(projectRoot: project.path)
+          .firstWhere((DoctorCheck check) => check.label == label);
 
   group('metro doctor', () {
     test('skips every check in an empty project and exits 0', () {

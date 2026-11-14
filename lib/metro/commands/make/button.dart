@@ -2,6 +2,7 @@ import 'dart:io';
 
 import '/metro/ny_cli.dart';
 import '/metro/stubs/button_stub.dart';
+
 import 'package:recase/recase.dart';
 
 /// Entry point for the make:button command.
@@ -142,9 +143,9 @@ class _MakeButtonCommand extends NyCustomCommand {
     final String staticMethod = buttonStaticMethodStub(nameReCase);
 
     // Find the closing brace of the last class in the file
-    final List<RegExpMatch> classMatches = RegExp(
-      r'class\s+\w+',
-    ).allMatches(fileContent).toList();
+    final List<RegExpMatch> classMatches = RegExp(r'class\s+\w+')
+        .allMatches(fileContent)
+        .toList();
     if (classMatches.isNotEmpty) {
       final int lastClassStart = classMatches.last.start;
       int braceCount = 0;

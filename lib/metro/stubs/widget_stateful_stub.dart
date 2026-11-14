@@ -3,7 +3,7 @@ import 'package:recase/recase.dart';
 /// This stub is used to create a Stateful Widget in the /resources/widgets/ directory.
 String widgetStatefulStub(ReCase rc, {String? content}) =>
     '''
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 
 class ${rc.pascalCase} extends StatefulWidget {

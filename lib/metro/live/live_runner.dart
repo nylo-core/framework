@@ -83,8 +83,10 @@ class LiveOutcome {
 }
 
 /// Creates the [LiveDiscovery] a [LiveRunner] uses.
-typedef LiveDiscoveryFactory =
-    LiveDiscovery Function(LiveProject project, Duration timeout);
+typedef LiveDiscoveryFactory = LiveDiscovery Function(
+  LiveProject project,
+  Duration timeout,
+);
 
 /// Finds the target apps for a live command and runs it on them.
 class LiveRunner {

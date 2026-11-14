@@ -403,9 +403,8 @@ void main() {
       final Directory root = Directory.systemTemp.createTempSync('nylo_app');
       addTearDown(() => root.deleteSync(recursive: true));
       Directory('${root.path}/android/app').createSync(recursive: true);
-      File(
-        '${root.path}/android/app/build.gradle.kts',
-      ).writeAsStringSync('applicationId = "com.shop.app"');
+      File('${root.path}/android/app/build.gradle.kts')
+          .writeAsStringSync('applicationId = "com.shop.app"');
 
       final FakeProcesses processes = FakeProcesses(
         installed: {'adb': '/sdk/adb'},

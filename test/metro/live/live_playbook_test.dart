@@ -894,15 +894,13 @@ void main() {
         {'id': 's2'},
       ]);
       expect(
-        File(
-          '${root.path}/screenshots/log_out/01-tap-log-out.png',
-        ).readAsStringSync(),
+        File('${root.path}/screenshots/log_out/01-tap-log-out.png')
+            .readAsStringSync(),
         'png s1',
       );
       expect(
-        File(
-          '${root.path}/screenshots/log_out/02-see-get-started.png',
-        ).readAsStringSync(),
+        File('${root.path}/screenshots/log_out/02-see-get-started.png')
+            .readAsStringSync(),
         'png s2',
       );
       expect(
@@ -947,9 +945,8 @@ void main() {
         'screenshots': 'marked',
       });
       expect(
-        File(
-          '${root.path}/build/playbooks/failures/broken-01.png',
-        ).existsSync(),
+        File('${root.path}/build/playbooks/failures/broken-01.png')
+            .existsSync(),
         isTrue,
       );
       expect(
@@ -1035,9 +1032,8 @@ void main() {
       expect(code, 0);
       for (final String device in ['iphone-17', 'pixel-9']) {
         expect(
-          File(
-            '${root.path}/screenshots/log_out/$device/01-tap-log-out.png',
-          ).existsSync(),
+          File('${root.path}/screenshots/log_out/$device/01-tap-log-out.png')
+              .existsSync(),
           isTrue,
           reason: device,
         );
@@ -1273,9 +1269,8 @@ void main() {
       expect(runs.first['screenshots'], 'all');
       for (final String cell in ['en-dark', 'es-dark']) {
         expect(
-          File(
-            '${root.path}/screenshots/log_out/$cell/01-tap-log-out.png',
-          ).existsSync(),
+          File('${root.path}/screenshots/log_out/$cell/01-tap-log-out.png')
+              .existsSync(),
           isTrue,
           reason: cell,
         );
@@ -1520,9 +1515,8 @@ void main() {
           'background': '#1B2027',
         });
         expect(
-          File(
-            '${root.path}/screenshots/log_out/ios-6.9/welcome.png',
-          ).readAsStringSync(),
+          File('${root.path}/screenshots/log_out/ios-6.9/welcome.png')
+              .readAsStringSync(),
           'png s1',
         );
         expect(

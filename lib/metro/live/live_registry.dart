@@ -147,9 +147,9 @@ String? insertRegistryEntry(
 
   final RegExpMatch? guarded = _guardedMap(variable, type).firstMatch(file);
   if (guarded != null) {
-    final String entries = _entries(
-      guarded.group(1)!,
-    ).map((String line) => '        $line\n').join();
+    final String entries = _entries(guarded.group(1)!)
+        .map((String line) => '        $line\n')
+        .join();
     return file.replaceRange(
       guarded.start,
       guarded.end,
@@ -509,9 +509,8 @@ String? _addConfigureArgument(
   required String argument,
   required String import,
 }) {
-  final RegExpMatch? call = RegExp(
-    r'\bnylo\s*\.\s*configure\s*\(',
-  ).firstMatch(source);
+  final RegExpMatch? call = RegExp(r'\bnylo\s*\.\s*configure\s*\(')
+      .firstMatch(source);
   if (call == null) return null;
   final int open = call.end - 1;
   final ({int close, int lastSignificant})? arguments = _scanArguments(
@@ -534,9 +533,9 @@ String? _addConfigureArgument(
       // One argument per line: add ours on a new line with the same indent,
       // after anything (such as a comment) that ends the last argument's line.
       final int lineStart = source.lastIndexOf('\n', last) + 1;
-      final String indent = RegExp(
-        r'^[ \t]*',
-      ).firstMatch(source.substring(lineStart))!.group(0)!;
+      final String indent = RegExp(r'^[ \t]*')
+          .firstMatch(source.substring(lineStart))!
+          .group(0)!;
       updated = source.replaceRange(lineEnd, lineEnd, '\n$indent$argument,');
       if (!hasComma) updated = updated.replaceRange(last + 1, last + 1, ',');
     } else {

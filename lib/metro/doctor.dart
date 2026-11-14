@@ -222,9 +222,8 @@ DoctorCheck checkDecoders({String projectRoot = '.'}) {
     );
   }
 
-  final bool decodersList = RegExp(
-    r'modelDecoders\s*=\s*decoders\s*\(',
-  ).hasMatch(registry);
+  final bool decodersList = RegExp(r'modelDecoders\s*=\s*decoders\s*\(')
+      .hasMatch(registry);
   String entry(String name, String map) => switch (map) {
     'modelDecoders' when decodersList => 'Decode($name.fromJson),',
     'modelDecoders' => '$name: (data) => $name.fromJson(data),',

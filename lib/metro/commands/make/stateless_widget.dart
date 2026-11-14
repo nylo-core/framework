@@ -1,5 +1,6 @@
 import '/metro/ny_cli.dart';
 import '/metro/stubs/widget_stateless_stub.dart';
+
 import 'package:recase/recase.dart';
 
 /// Entry point for the make:stateless_widget command.
