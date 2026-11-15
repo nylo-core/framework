@@ -1,3 +1,9 @@
+## [7.6.1] - 2026-11-15
+
+### Changed
+* Bump `nylo_support` dependency from `^7.38.0` to `^7.38.1`, which brings:
+  * Modal content taller than the modal scrolls, and the actions stay on screen. A `child` that is a `ScrollView` or `SingleChildScrollView` scrolls by itself, so its controller and physics keep working ([#314](https://github.com/nylo-core/nylo/issues/314))
+
 ## [7.6.0] - 2026-11-14
 
 ### Changed
